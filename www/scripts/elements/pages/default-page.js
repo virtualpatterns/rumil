@@ -33,6 +33,7 @@ class DefaultPage extends NavigatedPage {
       this.getContent().querySelector('#goCache').addEventListener('click', this._onGoCache = this.onGoCache.bind(this))
 
     this.getContent().querySelector('#goTests').addEventListener('click', this._onGoTests = this.onGoTests.bind(this))
+    this.getContent().querySelector('#goCoverage').addEventListener('click', this._onGoCoverage = this.onGoCoverage.bind(this))
     this.getContent().querySelector('#goAlert').addEventListener('click', this._onGoAlert = this.onGoAlert.bind(this))
     this.getContent().querySelector('#goConfirmation').addEventListener('click', this._onGoConfirmation = this.onGoConfirmation.bind(this))
 
@@ -42,6 +43,7 @@ class DefaultPage extends NavigatedPage {
 
     this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation)
     this.getContent().querySelector('#goAlert').removeEventListener('click', this._onGoAlert)
+    this.getContent().querySelector('#goCoverage').removeEventListener('click', this._onGoCoverage)
     this.getContent().querySelector('#goTests').removeEventListener('click', this._onGoTests)
 
     if (this.getContent().querySelector('#goCache'))
@@ -81,8 +83,29 @@ class DefaultPage extends NavigatedPage {
 
   onGoTests() {
     Log.debug('- DefaultPage.onGoTests()')
-    window.application.pushPage(new TestPage())
-      .catch((error) => window.application.showError(error))
+
+    // window.application.pushPage(new TestPage())
+    //   .catch((error) => window.application.showError(error))
+
+    try {
+      window.open('./index.html?page=./test-page.js')
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
+
+  }
+
+  onGoCoverage() {
+    Log.debug('- DefaultPage.onGoCoverage()')
+
+    try {
+      window.open('./coverage/lcov-report/index.html')
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
+
   }
 
   onGoAlert() {
