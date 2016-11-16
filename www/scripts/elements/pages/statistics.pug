@@ -1,0 +1,61 @@
+extends ../../element.pug
+block body
+  ons-list(modifier='inset')
+    //- style='font-size: smaller;')
+    //- ons-list-header
+    //-   | STATISTICS
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Result
+      if element.statistics
+        if element.statistics.failures
+          div.right.rum-failed
+            ons-icon( icon='close',
+                      size='20px')
+            | Failed
+        else if element.statistics.pending
+          div.right.rum-pending
+            ons-icon( icon='circle-o',
+                      size='20px')
+            | Pending
+        else if element.statistics.passes
+          div.right.rum-succeeded
+            ons-icon( icon='check',
+                      size='20px')
+            | Succeeded
+        else
+          div.right
+            ons-icon( icon='question',
+                      size='20px')
+      else
+        div.right
+          ons-icon( icon='ellipsis-h',
+                    size='20px')
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | # of Tests
+    //-   div.right(style='font-size: 20px;')
+    //-     = element.statistics ? element.statistics.tests : '(unknown)'
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | # of Passes
+    //-   div.right(style='font-size: 20px;')
+    //-     = element.statistics ? element.statistics.passes : '(unknown)'
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | # of Failures
+    //-   div.right(style='font-size: 20px;')
+    //-     = element.statistics ? element.statistics.failures : '(unknown)'
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | # Pending
+    //-   div.right(style='font-size: 20px;')
+    //-     = element.statistics ? element.statistics.pending : '(unknown)'
+
+  div.rum-memo
+    span.rum-memo-bold
+      | NOTE:&nbsp;&nbsp;
+    | Refresh the page before re-running the tests.
+    //-  or click&nbsp;
+    //- a(href='/www/index.html?page=./test-page.js')
+    //-   | here

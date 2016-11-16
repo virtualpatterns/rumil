@@ -1,0 +1,12 @@
+*.bts
+*.err
+*.log
+*.out
+*.pid
+cacheTimestamp.json
+index.manifest
+node_modules
+sandbox
+www/coverage/*
+www/index.manifest
+www/scripts/bundles/*

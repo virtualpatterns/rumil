@@ -1,0 +1,16 @@
+extends ./navigated-page.pug
+block back
+  | Features
+block center
+  | Updates
+block right
+  ons-toolbar-button(id='goRefresh')
+    | Refresh
+    ons-icon( icon='fa-refresh',
+              size='18px')
+block contents
+  div
+    != element.cacheElement
+  //- ons-button( id='goUpdate',
+  //-             modifier='large')
+  //-   | Update

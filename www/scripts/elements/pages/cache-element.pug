@@ -1,0 +1,57 @@
+extends ../../element.pug
+block body
+  ons-list(modifier='inset')
+    ons-list-item(modifier='longdivider')
+      if status.isEventUndefined
+        if application.isCacheEnabled
+          div.left
+            ons-icon( icon='fa-ellipsis-h',
+                      size='20px')
+          div.center
+            span.list__item__title
+              | Checking
+            span.list__item__subtitle
+              | Checking for application updates ...
+      else if status.isDownloading
+        div.left
+          ons-icon( icon='fa-cloud-download',
+                    size='20px')
+        div.center
+          span.list__item__title
+            | Downloading Updates
+          span.list__item__subtitle
+            | Downloading application updates ...
+      else if status.isUpdateRequired
+        div.left
+          ons-icon( icon='fa-cloud-download',
+                    size='20px')
+        div.center
+          span.list__item__title
+            | Updates Downloaded
+          span.list__item__subtitle
+            | Application updates have been downloaded and will be applied in 5 seconds.
+      else if status.isError
+        div.left
+          ons-icon( icon='fa-cloud',
+                    size='20px')
+        div.center
+          span.list__item__title
+            | Error
+          span.list__item__subtitle
+            | An error occurred checking for and/or downloading application updates.
+      else
+        div.left
+          ons-icon( icon='fa-cloud',
+                    size='20px')
+        div.center
+          span.list__item__title
+            | No Updates Available
+          span.list__item__subtitle
+            | Your version of the application is the latest version.  No updates are available.
+
+  div.rum-memo
+    | This information refreshes automatically every minute if updates are not required.  Click the&nbsp;
+    span(style='font-weight: bold')
+      | Refresh
+    ons-icon(icon='fa-refresh')
+    | &nbsp;button above to force a refresh.

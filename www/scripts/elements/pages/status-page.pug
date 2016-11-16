@@ -1,0 +1,24 @@
+extends ./navigated-page.pug
+//- extends ../page.pug
+//- block body
+//-   ons-toolbar
+//-     if application.canPopPage()
+//-       div.left
+//-         ons-toolbar-button(id='goBack')
+//-           ons-icon( icon='ion-chevron-left',
+//-                     size='18px')
+//-           |  Features
+//-     div.center
+//-       | Server Status
+block back
+  | Features
+block center
+  | Server Status
+block right
+  ons-toolbar-button(id='goRefresh')
+    | Refresh
+    ons-icon( icon='fa-refresh',
+              size='18px')
+block contents
+  div
+    != element.statusElement.renderContent()

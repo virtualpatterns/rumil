@@ -1,0 +1,42 @@
+extends ./navigated-page.pug
+//- block body
+//-   ons-toolbar
+//-     if application.canPopPage()
+//-       div.left
+//-         ons-toolbar-button(id='goBack')
+//-           ons-icon( icon='ion-chevron-left',
+//-                     size='18px')
+//-           |  Back
+//-     div.center
+//-       | Features
+block back
+  | Back
+block center
+  | Features
+block contents
+  ons-list(modifier='inset')
+    ons-list-item(  id='goStatus',
+                    modifier='chevron longdivider',
+                    tappable)
+      | Server Status
+    if application.isCacheEnabled
+      ons-list-item(  id='goCache',
+                      modifier='chevron longdivider',
+                      tappable)
+        | Updates
+    ons-list-item(  id='goTests',
+                    modifier='chevron longdivider',
+                    tappable)
+      | Tests
+
+  ons-list(modifier='inset')
+    ons-list-header
+      | DIALOGS
+    ons-list-item(  id='goAlert',
+                    modifier='longdivider',
+                    tappable)
+      | Alert
+    ons-list-item(  id='goConfirmation',
+                    modifier='longdivider',
+                    tappable)
+      | Confirmation

@@ -1,0 +1,11 @@
+extends ./simple-alert-dialog.pug
+block body
+  div.alert-dialog-title
+    = element.title
+  div.alert-dialog-content
+    != element.text
+  div.alert-dialog-footer
+    button(id='yes').alert-dialog-button
+      | Yes
+    button(id='no').alert-dialog-button
+      | No

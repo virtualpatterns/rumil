@@ -1,0 +1,88 @@
+/* rumil-specific styles */
+
+.rum-invisible {
+  opacity: 0.0;
+  transition-duration: .20s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.rum-visible {
+  opacity: 1.0;
+  transition-duration: .20s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+/* mocha-specific styles */
+
+div#mocha {
+  margin-bottom: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 0px;
+}
+
+div#mocha > ul#mocha-report > li.suite {
+  margin-left: 0px;
+}
+
+div#mocha > ul#mocha-report > li.suite > h1 {
+  margin-top: 0px;
+}
+
+ul#mocha-stats {
+  display: none;
+}
+
+/* onsenui-specific styles */
+
+ons-toolbar > div.left > ons-toolbar-button > ons-icon {
+  margin-right: 5px;
+}
+
+ons-toolbar > div.right > ons-toolbar-button > ons-icon {
+  margin-left: 5px;
+}
+
+ons-list.list--inset:first-child {
+  margin-top: 10px;
+}
+
+ons-list.list--inset {
+  margin-bottom: 10px;
+}
+
+ons-list-item > div.left {
+  font-weight: bolder ;
+}
+
+ons-list > ons-list-item > div.right > ons-icon {
+  margin-right: 5px;
+}
+
+/* rumil-specific styles */
+
+div.rum-memo {
+  font-size: smaller;
+  margin-bottom: 10px;
+  margin-left: 24px;
+  margin-right: 24px;
+  margin-top: 10px;
+}
+
+span.rum-memo-bold {
+  font-weight: bolder;
+}
+
+div.rum-failed {
+  color: red;
+}
+
+div.rum-pending {
+  color: blue;
+}
+
+div.rum-succeeded {
+  color: green;
+}

@@ -1,0 +1,17 @@
+extends ../page.pug
+block body
+  ons-toolbar
+    div.left
+      block left
+        if application.canPopPage()
+          ons-toolbar-button(id='goBack')
+            ons-icon( icon='fa-chevron-left',
+                      size='18px')
+            block back
+              |  Back
+    div.center
+      block center
+        | Features
+    div.right
+      block right
+  block contents

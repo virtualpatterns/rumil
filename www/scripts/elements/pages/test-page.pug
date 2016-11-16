@@ -1,0 +1,23 @@
+extends ./navigated-page.pug
+//- extends ../page.pug
+//- block body
+//-   ons-toolbar
+//-     if application.canPopPage()
+//-       div.left
+//-         ons-toolbar-button(id='goBack')
+//-           ons-icon( icon='ion-chevron-left',
+//-                     size='18px')
+//-           |  Features
+//-     div.center
+//-       | Tests
+block back
+  | Features
+block center
+  | Tests
+block contents
+  div
+    != element.statisticsElement.renderContent()
+  ons-list(modifier='inset')
+    ons-list-item(modifier='longdivider')
+      div.left
+        div(id='mocha')
