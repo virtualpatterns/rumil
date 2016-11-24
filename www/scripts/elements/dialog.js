@@ -11,7 +11,7 @@ const ContentFn = require('./dialog.pug')
 class Dialog extends Element {
 
   constructor(contentFn = ContentFn) {
-    super(contentFn)
+    super(false, contentFn)
   }
 
   emitShown() {

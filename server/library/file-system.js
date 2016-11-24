@@ -18,7 +18,7 @@ FileSystem.accessUnlink = function(path, mode, callback) {
 
   const Log = require('./log')
 
-  // Log.info('> FileSystem.accessUnlink(%j, %d, callback)', Path.trim(path), mode)
+  // Log.debug('> FileSystem.accessUnlink(%j, %d, callback)', Path.trim(path), mode)
 
   FileSystem.access(path, mode, (error) => {
     if (error) {
@@ -27,7 +27,7 @@ FileSystem.accessUnlink = function(path, mode, callback) {
       callback()
     }
     else {
-      // Log.info('- FileSystem.unlink(%j, callback)', Path.trim(path))
+      // Log.debug('- FileSystem.unlink(%j, callback)', Path.trim(path))
       FileSystem.unlink(path, callback)
     }
   })
@@ -39,7 +39,7 @@ FileSystem.whenFileExists = function(timeout, maximumDuration, path) {
   const Log = require('./log')
   const Process = require('./process')
 
-  Log.info('- FileSystem.whenFileExists(%d, %d, %j) { ... }', timeout, maximumDuration, Path.trim(path))
+  Log.debug('- FileSystem.whenFileExists(%d, %d, %j) { ... }', timeout, maximumDuration, Path.trim(path))
 
   return Process.when(timeout, maximumDuration, (callback) => FileSystem.access(path, FileSystem.F_OK, callback))
 
@@ -50,7 +50,7 @@ FileSystem.whenFileNotExists = function(timeout, maximumDuration, path) {
   const Log = require('./log')
   const Process = require('./process')
 
-  Log.info('- FileSystem.whenFileNotExists(%d, %d, %j) { ... }', timeout, maximumDuration, Path.trim(path))
+  Log.debug('- FileSystem.whenFileNotExists(%d, %d, %j) { ... }', timeout, maximumDuration, Path.trim(path))
 
   return Process.when(timeout, maximumDuration, (callback) => {
     FileSystem.access(path, FileSystem.F_OK, (error) => {
@@ -66,6 +66,7 @@ FileSystem.whenFileNotExists = function(timeout, maximumDuration, path) {
 FileSystem.Promise = {}
 FileSystem.Promise.access = Promisify(FileSystem.access)
 FileSystem.Promise.accessUnlink = Promisify(FileSystem.accessUnlink)
+FileSystem.Promise.readFile = Promisify(FileSystem.readFile)
 FileSystem.Promise.unlink = Promisify(FileSystem.unlink)
 FileSystem.Promise.writeFile = Promisify(FileSystem.writeFile)
 

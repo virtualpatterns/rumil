@@ -1,6 +1,6 @@
 'use strict'
 
-class Selection {
+class Select {
 
   constructor() {
   }
@@ -72,4 +72,4 @@ class Selection {
 
 }
 
-module.exports = Selection
+module.exports = Select

@@ -12,6 +12,8 @@ const Utilities = require('util')
 
 const Log = require('./log')
 
+const ElementError = require('./errors/element-error')
+
 const ContentFn = require('./element.pug')
 
 // const VirtualizeHTMLFn = _VirtualizeHTMLFn({
@@ -21,19 +23,23 @@ const ContentFn = require('./element.pug')
 
 class Element {
 
-  constructor(contentFn = ContentFn) {
-    this.id = Utilities.format('id_%d', Element.nextId++)
+  constructor(isUpdateable = false, contentFn = ContentFn) {
+    this.id = `id_${Element.nextId++}` // Utilities.format('id_%d', Element.nextId++)
+    this.isUpdateable = isUpdateable
     this.contentFn = contentFn
     this.emitter = Emitter(this)
   }
 
   addContent(parentOrSelector = 'html > body', location = 'beforeend', data = {}) {
     // Log.debug('- Element.addContent(%s, %j, data)\n%s\n\n', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location, this.renderContent())
-    Log.debug('- Element.addContent(%s, %j, data)', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location)
+    // Log.debug('- Element.addContent(%s, %j, data)', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location)
 
     let parent = Is.string(parentOrSelector) ? document.querySelector(parentOrSelector) : parentOrSelector
+    let content = this.renderContent(data)
 
-    parent.insertAdjacentHTML(location, this.renderContent(data))
+    // parent.insertAdjacentHTML(location, this.isUpdateable ? require('./elements/container').renderContent(this.id, content) : content)
+
+    parent.insertAdjacentHTML(location, content)
 
     this.addContentElement()
     this.bindEvents()
@@ -47,11 +53,14 @@ class Element {
   }
 
   renderContent(data = {}) {
+    // Log.debug('- Element.renderContent(data, %j)\n\n%s\n\n', isContainerIncluded, Utilities.inspect(data))
 
     data.application = window.application
     data.element = this
 
     return this.contentFn(data)
+
+    // return this.isUpdateable ? require('./elements/container').renderContent(this.id, this.contentFn(data)) : this.contentFn(data)
 
   }
 
@@ -60,20 +69,29 @@ class Element {
   }
 
   updateContent(data = {}) {
-    Log.debug('- Element.updateContent()')
+    // Log.debug('- Element.updateContent()')
 
-    let parent = this.getContent().parentNode
+    if (this.isUpdateable) {
 
-    this.removeContent()
-    this.addContent(parent, 'beforeend', data)
+      let parent = this.getContent().parentNode
+
+      this.removeContent()
+      this.addContent(parent, 'beforeend', data)
+
+    }
+    else
+      throw new ElementError(`The element is not updateable.`)
 
   }
 
   removeContent() {
-    Log.debug('- Element.removeContent() this.id=%j', this.id)
+    // Log.debug('- Element.removeContent() this.id=%j', this.id)
+
     this.unbindEvents()
     this.removeContentElement()
+
     this.getContent().remove()
+
   }
 
   removeContentElement() {
@@ -102,7 +120,15 @@ class Element {
   }
 
   toString() {
-    return this.renderContent()
+    // return this.renderContent()
+
+    if (this.isUpdateable) {
+      const Container = require('./elements/container')
+      return Container.renderContent(this)
+    }
+    else
+      return this.renderContent()
+
   }
 
 }

@@ -1,11 +1,12 @@
  'use strict'
 
-const Emitter = require('event-emitter')
+const Search = require('query-string')
 
 const Application = require('../application')
 const Log = require('../log')
-const NavigatedAutomation = require('./navigated-automation')
-const NavigatedSelection = require('./navigated-selection')
+const NavigatedAutomate = require('./navigated-automate')
+const NavigatedSelect = require('./navigated-select')
+const PageContext = require.context('../elements/pages', true, /-page\.js/)
 
 const ContentFn = require('./navigated-application.pug')
 
@@ -55,14 +56,46 @@ class NavigatedApplication extends Application {
     super.unbindEvents()
   }
 
+  onReady(Page) {
+
+    // try {
+
+      // super.onReady()
+      //
+      // let search = Search.parse(window.location.search);
+      //
+      // Log.debug('- NavigatedApplication.onReady() search.page=%j', search.page);
+
+      Promise.resolve()
+        .then(() => {
+          super.onReady()
+
+          let search = Search.parse(window.location.search);
+
+          // Log.debug('- NavigatedApplication.onReady() search.page=%j', search.page);
+
+          return Promise.resolve(search.page ? PageContext(search.page) : Page)
+
+        })
+        .then((Page) => Promise.resolve(new Page()))
+        .then((page) => this.pushPage(page))
+        .catch((error) => window.application.showError(error))
+
+    // }
+    // catch (error) {
+    //   window.application.showError(error)
+    // }
+
+  }
+
   onInit(event) {
-    Log.debug('- NavigatedApplication.onInit() event.target.id=%j', event.target.id)
+    // Log.debug('- NavigatedApplication.onInit() event.target.id=%j', event.target.id)
     this.pages.last().addContentElement()
     this.pages.last().bindEvents()
   }
 
   onDestroy(event) {
-    Log.debug('- NavigatedApplication.onDestroy() event.target.id=%j', event.target.id)
+    // Log.debug('- NavigatedApplication.onDestroy() event.target.id=%j', event.target.id)
     this.pages.last().unbindEvents()
     this.pages.last().removeContentElement()
   }
@@ -80,34 +113,35 @@ class NavigatedApplication extends Application {
   pushPage(page, options = {
     'animation': 'slide'
   }) {
-    // Log.debug('- NavigatedApplication.pushPage(page, options)\n%s\n\n', page.renderContent())
-    Log.debug('- NavigatedApplication.pushPage(page, options)')
-
-    let hiddenPage = this.pages.last()
-    let shownPage = page
-
-    this.pages.push(shownPage)
-
-    return this.getContent().pushPage(null, {
-      'pageHTML': shownPage.renderContent(),
-      'animation': options.animation,
-      'animationOptions': options.animationOptions,
-      'data': options.data
-    })
+    return Promise.resolve()
       .then(() => {
+        // Log.debug('- NavigatedApplication.pushPage(page, options)\n%s\n\n', page.renderContent())
+        Log.debug('- NavigatedApplication.pushPage(page, options)')
 
-        // throw new Error('You suck!')
+        let hiddenPage = this.pages.last()
+        let shownPage = page
+
+        this.pages.push(shownPage)
+
+        return this.getContent().pushPage(null, {
+          'pageHTML': shownPage.renderContent(),
+          'animation': options.animation,
+          'animationOptions': options.animationOptions,
+          'data': options.data
+        })
+          .then(() => Promise.resolve(shownPage, hiddenPage))
+
+      })
+      .then((shownPage, hiddenPage) => {
 
         if (hiddenPage)
           this.emitPageHidden(hiddenPage, false)
 
         this.emitPageShown(shownPage, true)
 
-        return Promise.resolve(shownPage)
+        return Promise.resolve(shownPage, hiddenPage)
 
       })
-      // .catch((error) => Promise.reject(error))
-
   }
 
   canPopPage() {
@@ -117,38 +151,36 @@ class NavigatedApplication extends Application {
   popPage(options = {
     'animation': 'slide'
   }) {
-    Log.debug('- NavigatedApplication.popPage(options)')
+    return Promise.resolve()
+      .then(() => {
+        Log.debug('- NavigatedApplication.popPage(options)')
 
-    if (this.canPopPage()) {
+        if (this.canPopPage()) {
+          return this.getContent().popPage({
+            'animation': options.animation,
+            'animationOptions': options.animationOptions
+          })
+            .then(() => {
 
-      return this.getContent().popPage({
-        'animation': options.animation,
-        'animationOptions': options.animationOptions
+              let hiddenPage = this.pages.pop()
+              let shownPage = this.pages.last()
+
+              this.emitPageHidden(hiddenPage, true)
+              this.emitPageShown(shownPage, false)
+
+              return Promise.resolve(hiddenPage, shownPage)
+
+            })
+        }
+        else
+          return Promise.reject(new RangeError('The last page on the stack cannot be removed.'))
+
       })
-        .then(() => {
-
-          let hiddenPage = this.pages.pop()
-          let shownPage = this.pages.last()
-
-          this.emitPageHidden(hiddenPage, true)
-          this.emitPageShown(shownPage, false)
-
-          return Promise.resolve(hiddenPage)
-
-        })
-        // .catch((error) => Promise.reject(error))
-
-    }
-    else
-      return Promise.reject(new RangeError('The last page on the stack cannot be removed.'))
-
   }
-
-  // replacePage(options) {}
 
 }
 
-NavigatedApplication.Automation = NavigatedAutomation
-NavigatedApplication.Selection = NavigatedSelection
+NavigatedApplication.Automate = NavigatedAutomate
+NavigatedApplication.Select = NavigatedSelect
 
 module.exports = NavigatedApplication

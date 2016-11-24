@@ -3,9 +3,9 @@
 const Dialog = require('../dialog')
 const Log = require('../../log')
 
-const ContentFn = require('./test-dialog.pug')
+const ContentFn = require('./spinner-dialog.pug')
 
-class TestDialog extends Dialog {
+class SpinnerDialog extends Dialog {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)
@@ -13,4 +13,4 @@ class TestDialog extends Dialog {
 
 }
 
-module.exports = TestDialog
+module.exports = SpinnerDialog

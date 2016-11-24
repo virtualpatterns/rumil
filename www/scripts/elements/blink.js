@@ -1,57 +1,77 @@
 'use strict'
 
+const Is = require('@pwn/is')
+const Queue = require('../update-content-queue')
+const Utilities = require('util')
+
 const Element = require('../element')
 const Log = require('../log')
 
 class Blink extends Element {
 
   constructor(contentFn) {
-    super(contentFn)
+    super(true, contentFn)
+    this.queue = new Queue()
   }
 
-  updateContent(data = {}) {
-    Log.debug('- Blink.updateContent(data)')
+  updateContent(data = {}, options = {
+    'off': ['rum-invisible'],
+    'on': ['rum-visible']
+  }) {
 
-    return new Promise((resolve, reject) => {
+    return this.queue.push(() => {
 
-      let content = this.getContent()
-      let parent = content.parentNode
+      return new Promise((resolve, reject) => {
+        // Log.debug('> Blink.updateContent(data)\n\n%s\n\n', Utilities.inspect(data))
 
-      let afterVisible = (event) => {
-        Log.debug('- afterVisible(event) { ... }')
+        let content = this.getContent()
+        let parent = content.parentNode
 
-        parent.removeEventListener('transitionend', afterVisible)
+        let afterVisible = (event) => {
+          // Log.debug('- afterVisible(event) { ... }')
 
-        // Log.debug('- parent.classList.remove(\'rum-invisible\')')
-        parent.classList.remove('rum-invisible')
+          parent.removeEventListener('transitionend', afterVisible)
 
-        // Log.debug('- parent.classList.remove(\'rum-visible\')')
-        parent.classList.remove('rum-visible')
+          // Log.debug('- parent.classList.remove(\'rum-invisible\')')
+          // parent.classList.remove('rum-invisible')
+          parent.classList.remove.apply(parent.classList, options.off)
 
-        resolve()
+          // Log.debug('- parent.classList.remove(\'rum-visible\')')
+          // parent.classList.remove('rum-visible')
+          parent.classList.remove.apply(parent.classList, options.on)
 
-      }
+          // Log.debug('< Blink.updateContent(data)')
 
-      let afterInvisible = (event) => {
-        Log.debug('- afterInvisible() { ... }')
+          resolve()
 
-        parent.removeEventListener('transitionend', afterInvisible)
+        }
 
-        // this.removeContent()
-        // this.addContent(parent)
-        super.updateContent(data)
+        let afterInvisible = (event) => {
+          // Log.debug('- afterInvisible() { ... }')
 
-        parent.classList.add('rum-visible')
+          parent.removeEventListener('transitionend', afterInvisible)
 
-        Log.debug('- parent.addEventListener(\'transitionend\', afterVisible)')
-        parent.addEventListener('transitionend', afterVisible)
+          // this.removeContent()
+          // this.addContent(parent)
+          super.updateContent(data)
 
-      }
+          // parent.classList.add('rum-visible')
+          parent.classList.add.apply(parent.classList, options.on)
 
-      parent.classList.add('rum-invisible')
+          // Log.debug('- parent.addEventListener(\'transitionend\', afterVisible)')
+          parent.addEventListener('transitionend', afterVisible)
 
-      Log.debug('- parent.addEventListener(\'transitionend\', afterInvisible)')
-      parent.addEventListener('transitionend', afterInvisible)
+        }
+
+        // parent.classList.add('rum-invisible')
+        // Log.debug('- parent.classList.add.apply(parent.classList, %j)', options.off)
+        parent.classList.add.apply(parent.classList, options.off)
+        // parent.classList.add(options.off)
+
+        // Log.debug('- parent.addEventListener(\'transitionend\', afterInvisible)')
+        parent.addEventListener('transitionend', afterInvisible)
+
+      })
 
     })
 

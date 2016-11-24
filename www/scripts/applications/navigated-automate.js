@@ -1,16 +1,16 @@
 'use strict'
 
-const Automation = require('../automation')
+const Automate = require('../automate')
 const Log = require('../log')
 
-class NavigatedAutomation extends Automation {
+class NavigatedAutomate extends Automate {
 
   constructor() {
     super()
   }
 
   static whenPageShown(whenFn) {
-    Log.debug('- Automation.whenPageShown(whenFn)')
+    Log.debug('- Automate.whenPageShown(whenFn)')
     return new Promise((resolve, reject) => {
 
       // Log.debug('> window.application.on(\'pageShown\', (page, isInitial) => { ... })')
@@ -25,17 +25,17 @@ class NavigatedAutomation extends Automation {
   }
 
   // static clickToolbarButton(text) {
-  //   Selection
+  //   Select
   //     .getToolbarButton(text)
   //     .click()
   // }
   //
   // static clickTappableListItem(text) {
-  //   Selection
+  //   Select
   //     .getTappableListItem(text)
   //     .click()
   // }
 
 }
 
-module.exports = NavigatedAutomation
+module.exports = NavigatedAutomate

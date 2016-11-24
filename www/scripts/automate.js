@@ -3,15 +3,15 @@
 const Utilities = require('util')
 
 const Log = require('./log')
-const Selection = require('./selection')
+const Select = require('./select')
 
-class Automation {
+class Automate {
 
   constructor() {
   }
 
   static whenDialogShown(whenFn) {
-    Log.debug('- Automation.whenDialogShown(whenFn)')
+    Log.debug('- Automate.whenDialogShown(whenFn)')
     return new Promise((resolve, reject) => {
 
       // Log.debug('> window.application.on(\'dialogShown\', (dialog) => { ... })')
@@ -26,7 +26,7 @@ class Automation {
   }
 
   static whenDialogHidden(whenFn) {
-    Log.debug('- Automation.whenDialogHidden(whenFn)')
+    Log.debug('- Automate.whenDialogHidden(whenFn)')
     return new Promise((resolve, reject) => {
 
       // Log.debug('> window.application.on(\'dialogHidden\', (dialog, response) => { ... })')
@@ -41,7 +41,7 @@ class Automation {
   }
 
   static clickAlertButton(text) {
-    Selection
+    Select
       .getAlertButton(text)
       .click()
   }
@@ -52,4 +52,4 @@ class Automation {
 
 }
 
-module.exports = Automation
+module.exports = Automate

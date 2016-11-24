@@ -1,8 +1,8 @@
 'use strict'
 
 const _Server = require('restify')
-// const Utilities = require('util')
 
+const Log = require('./log')
 const Package = require('../../package.json')
 const Path = require('./path')
 const Process = require('./process')
@@ -11,7 +11,8 @@ let Server = Object.create(_Server)
 
 Server.createServer = function(staticPath, modulesPath) {
 
-  const Log = require('./handlers/log')
+  const Authorize = require('./routes/authorize')
+  const _Log = require('./handlers/log')
   const Static = require('./routes/static')
   const Status = require('./routes/status')
 
@@ -24,8 +25,13 @@ Server.createServer = function(staticPath, modulesPath) {
     response.send(error)
   })
 
-  Log.createHandlers(server)
+  server.use(Server.CORS());
+  server.use(Server.queryParser());
+  server.use(Server.bodyParser());
 
+  _Log.createHandlers(server)
+
+  Authorize.createRoutes(server)
   Static.createRoutes(server, staticPath, modulesPath)
   Status.createRoutes(server)
 

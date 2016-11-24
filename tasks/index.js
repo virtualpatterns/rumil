@@ -12,6 +12,7 @@ const Package = require('../package.json')
 const Path = require('../server/library/path')
 const Process = require('../server/library/process')
 
+const INDEX_PATH = Path.join(__dirname, '..', 'index.json')
 const LOG_PATH = Path.join(Process.LOG_PATH, `${Package.name}.jake.log`)
 const RESOURCES_PATH = Path.join(__dirname, 'resources')
 
@@ -45,51 +46,84 @@ namespace('bundle', () => {
   desc('Create the application bundle')
   task('create', {'async': true}, () => {
 
-    let CACHE_TIMESTAMP = new Date().toISOString()
-
-    let Bundle = Bundler({
-      'devtool': 'source-map',
-      'entry': './www/scripts/index.js',
-      'output': {
-        'filename': 'index.js',
-        'path': './www/scripts/bundles'
-      },
-      'module': {
-        'loaders': [
-          {
-            'test': /\.js$/,
-            'loader': 'babel-loader',
-            'exclude': /node_modules/
-          },
-          {
-            'test': /\.json$/,
-            'loader': 'json-loader'
-          },
-          {
-            'test': /\.pug$/,
-            'loader': 'pug-loader?pretty=true'
-          }
-        ]
-      },
-      'plugins': [
-        new Bundler.DefinePlugin({
-          'CACHE_TIMESTAMP': JSON.stringify(CACHE_TIMESTAMP)
-        }),
-        new Bundler.ExtendedAPIPlugin()
-      ]
-    })
-
-    Bundle.Promise = {}
-    Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+    let CACHE_TIMESTAMP = null
+    // let INDEX = null
 
     return Promise.resolve()
-      .then(() => Log.info('Started bundle:create ...'))
-      .then(() => Bundle.Promise.run())
-      .then((statistics) => Log.info('\n\n%s\n', statistics.toString()))
+      .then(() => Log.debug('Started bundle:create ...'))
+      .then(() => {
+        return Promise.resolve()
+          .then(() => FileSystem.Promise.access(INDEX_PATH, FileSystem.F_OK))
+          .then(() => FileSystem.Promise.readFile(INDEX_PATH, {
+            'encoding': 'utf-8'
+          }))
+          .then((data) => {
+
+            let index = JSON.parse(data)
+            index.value++
+
+            return Promise.resolve(index)
+
+          })
+          .catch((error) => Promise.resolve({
+            'value': 0
+          }))
+      })
+      .then((index) => FileSystem.Promise.writeFile(INDEX_PATH, JSON.stringify(index), {
+        'encoding': 'utf-8'
+      }))
+      .then(() => {
+
+        CACHE_TIMESTAMP = new Date().toISOString()
+
+        // INDEX = index
+        // INDEX.value++
+
+        let Bundle = Bundler({
+          'devtool': 'source-map',
+          'entry': './www/scripts/index.js',
+          'output': {
+            'filename': 'index.js',
+            'path': './www/scripts/bundles'
+          },
+          'module': {
+            'loaders': [
+              {
+                'test': /\.js$/,
+                'loader': 'babel-loader',
+                'exclude': /node_modules/
+              },
+              {
+                'test': /\.json$/,
+                'loader': 'json-loader'
+              },
+              {
+                'test': /\.pug$/,
+                'loader': 'pug-loader?pretty=true'
+              }
+            ]
+          },
+          'plugins': [
+            new Bundler.DefinePlugin({
+              'CACHE_TIMESTAMP': JSON.stringify(CACHE_TIMESTAMP)
+              // ,
+              // 'INDEX': JSON.stringify(INDEX)
+            }),
+            new Bundler.ExtendedAPIPlugin()
+          ]
+        })
+
+        Bundle.Promise = {}
+        Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+
+        return Bundle.Promise.run()
+
+      })
+      .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
       .then(() => FileSystem.Promise.writeFile('./cacheTimestamp.json', `{ "value": "${CACHE_TIMESTAMP}" }\n`, {
         'encoding': 'utf-8'
       }))
-      .then(() => Log.info('... bundle:create finished'))
+      .then(() => Log.debug('... bundle:create finished'))
 
   })
 
@@ -124,7 +158,7 @@ namespace('manifest', () => {
     let CACHE_TIMESTAMP = new Date().toISOString()
 
     return Promise.resolve()
-      .then(() => Log.info('Started manifest:create ...'))
+      .then(() => Log.debug('Started manifest:create ...'))
       .then(() => Shell('appcache-manifest  --network-star \
                                             --output ./www/index.manifest \
                                             --prefix /www \
@@ -136,7 +170,7 @@ namespace('manifest', () => {
                                               "./www/vendor/mocha/mocha.js" \
                                               "./www/vendor/**/*.{css,min.js,eot,otf,svg,ttf,woff,woff2}"'))
       .then(() => Shell(`echo "# ${CACHE_TIMESTAMP}" >> ./www/index.manifest`))
-      .then(() => Log.info('... manifest:create finished'))
+      .then(() => Log.debug('... manifest:create finished'))
   })
 
   watchTask('watch', ['manifest:create'], function () {
@@ -187,10 +221,10 @@ namespace('server', () => {
   desc('Restart the server using defaults')
   task('restart', {'async': true}, () => {
     return Promise.resolve()
-      .then(() => Log.info('Started server:restart ...'))
+      .then(() => Log.debug('Started server:restart ...'))
       .then(() => Shell('jake server:stop'))
       .then(() => Shell('jake server:start'))
-      .then(() => Log.info('... server:restart finished'))
+      .then(() => Log.debug('... server:restart finished'))
   })
 
   watchTask('watch', ['server:restart'], function () {
@@ -269,10 +303,10 @@ namespace('watch', () => {
   desc('Restart the watch tasks')
   task('restart', {'async': true}, () => {
     return Promise.resolve()
-      .then(() => Log.info('Started watch:restart ...'))
+      .then(() => Log.debug('Started watch:restart ...'))
       .then(() => Shell('jake watch:stop'))
       .then(() => Shell('jake watch:start'))
-      .then(() => Log.info('... watch:restart finished'))
+      .then(() => Log.debug('... watch:restart finished'))
   })
 
   watchTask('watch', ['watch:restart'], function () {

@@ -32,7 +32,7 @@ Process.when = function(timeout, maximumDuration, testFn) {
 
   const Log = require('./log')
 
-  Log.info('> Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
+  Log.debug('> Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
 
   return new Promise((resolve, reject) => {
 
@@ -49,7 +49,7 @@ Process.when = function(timeout, maximumDuration, testFn) {
           reject(new ProcessError('Duration exceeded.'))
         }
         else {
-          Log.info('< Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
+          Log.debug('< Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
           resolve()
         }
       })
@@ -82,7 +82,7 @@ Process.existsPID = function(path) {
     process.kill(pid, 0)
   } catch (error) {
 
-    Log.info('- FileSystem.unlinkSync(%j)', Path.trim(path))
+    Log.debug('- FileSystem.unlinkSync(%j)', Path.trim(path))
     FileSystem.unlinkSync(path)
 
     return false
@@ -98,13 +98,13 @@ Process.createPID = function(path) {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
-  Log.info('> Process.createPID(%j)', Path.trim(path))
+  Log.debug('> Process.createPID(%j)', Path.trim(path))
 
   if (this.existsPID(path))
     throw new ArgumentError(`The path ${Path.trim(path)} exists.`)
   else {
 
-    Log.info('- FileSystem.writeFileSync(%j, %d, ...)', Path.trim(path), process.pid)
+    Log.debug('- FileSystem.writeFileSync(%j, %d, ...)', Path.trim(path), process.pid)
     FileSystem.writeFileSync(path, process.pid, {
       encoding: 'utf-8'
     })
@@ -124,7 +124,7 @@ Process.createPID = function(path) {
 
   }
 
-  Log.info('< Process.createPID(%j)', Path.trim(path))
+  Log.debug('< Process.createPID(%j)', Path.trim(path))
 
   return this;
 
@@ -135,7 +135,7 @@ Process.killPID = function(path, signal = 'SIGINT') {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
-  Log.info('> Process.killPID(%j, %j)', Path.trim(path), signal)
+  Log.debug('> Process.killPID(%j, %j)', Path.trim(path), signal)
 
   if (this.existsPID(path)) {
 
@@ -143,7 +143,7 @@ Process.killPID = function(path, signal = 'SIGINT') {
       encoding: 'utf-8'
     })
 
-    Log.info('- process.kill(%d, %j)', pid, signal)
+    Log.debug('- process.kill(%d, %j)', pid, signal)
 
     process.kill(pid, signal)
 
@@ -151,7 +151,7 @@ Process.killPID = function(path, signal = 'SIGINT') {
   else
     throw new ArgumentError(`The path ${Path.trim(path)} does not exist.`)
 
-  Log.info('< Process.killPID(%j, %j)', Path.trim(path), signal)
+  Log.debug('< Process.killPID(%j, %j)', Path.trim(path), signal)
 
   return this;
 
@@ -161,7 +161,7 @@ Process.exit = function(code = 0) {
 
   const Log = require('./log')
 
-  Log.info('> Process.exit(%d) ...', code)
+  Log.debug('> Process.exit(%d) ...', code)
 
   setTimeout(() => process.exit(code), EXIT_TIMEOUT)
 

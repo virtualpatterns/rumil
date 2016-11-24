@@ -4,6 +4,7 @@
 *.out
 *.pid
 cacheTimestamp.json
+index.json
 index.manifest
 node_modules
 sandbox

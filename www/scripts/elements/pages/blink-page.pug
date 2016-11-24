@@ -2,18 +2,18 @@ extends ./navigated-page.pug
 block back
   | Features
 block center
-  | Updates
+  | Blink
 block right
   ons-toolbar-button(id='goRefresh')
     | Refresh
     ons-icon( icon='fa-refresh',
               size='18px')
 block contents
-  != element.cacheElement
+  != element.blinkElement
 
   div.rum-memo
     | Click the&nbsp;
     span(style='font-weight: bold')
       | Refresh
     ons-icon(icon='fa-refresh')
-    | &nbsp;button above to update this information.
+    | &nbsp;button above to update the list.

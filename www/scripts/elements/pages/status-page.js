@@ -1,12 +1,15 @@
 'use strict'
 
 const Is = require('@pwn/is')
-const Timeout = require('timer-promise')
+// const Timeout = require('timer-promise')
 
-// const Page = require('../page')
+// const Interval = require('../../interval')
 const Log = require('../../log')
 const NavigatedPage = require('./navigated-page')
+// const Page = require('../page')
 const StatusElement = require('./status-element')
+
+// const IntervalError = require('../../errors/interval-error')
 
 const ContentFn = require('./status-page.pug')
 
@@ -28,6 +31,8 @@ class StatusPage extends NavigatedPage {
 
   unbindEvents() {
 
+    // Interval.stopBySelector(`#${this.id} #onRefreshInterval`)
+
     this.statusElement.unbindEvents()
 
     this.getContent().querySelector('#goRefresh').removeEventListener('click', this._onGoRefresh)
@@ -36,23 +41,60 @@ class StatusPage extends NavigatedPage {
   }
 
   onGoRefresh() {
-    Log.debug('- StatusPage.onGoRefresh()')
-
     Promise.resolve()
-      .then(() => this.statusElement.updateContent())
-      .catch((error) => window.application.showError(error))
+      .then(() => {
 
+        Log.debug('- StatusPage.onGoRefresh()')
+
+        // Interval.stopBySelector(`#${this.id} #onRefreshInterval`)
+
+      })
+      // .then(() => window.application.showSpinner())
+      .then(() => this.statusElement.updateContent())
+      // .then(() => window.application.hideSpinner())
+      // .then(() => Interval.startBySelector(`#${this.id} #onRefreshInterval`))
+      .catch((error) => {
+        // window.application.hideSpinner()
+        window.application.showError(error)
+      })
+      // .catch((error) => {
+      //
+      //   if (Is.error(error)) {
+      //     Log.error('- StatusPage.onGoRefresh()')
+      //     Log.error(error)
+      //   }
+      //   else
+      //     window.application.showError(error)
+      //
+      // })
   }
 
   onShown(isInitial) {
-    super.onShown(isInitial)
-
-    Log.debug('- StatusPage.onShown(%s)', isInitial)
-
     Promise.resolve()
-      .then(() => this.statusElement.updateContent())
-      .catch((error) => window.application.showError(error))
+      .then(() => {
 
+        super.onShown(isInitial)
+
+        Log.debug('- StatusPage.onShown(%s)', isInitial)
+
+      })
+      // .then(() => window.application.showSpinner())
+      .then(() => this.statusElement.updateContent())
+      // .then(() => window.application.hideSpinner())
+      .catch((error) => {
+        // window.application.hideSpinner()
+        window.application.showError(error)
+      })
+      // .catch((error) => {
+      //
+      //   if (Is.error(error)) {
+      //     Log.error('- StatusPage.onGoRefresh()')
+      //     Log.error(error)
+      //   }
+      //   else
+      //     window.application.showError(error)
+      //
+      // })
   }
 
   // onHidden(isFinal) {

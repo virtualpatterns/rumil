@@ -47,12 +47,16 @@ class Log {
       levelFn(message)
 
     }
-    else if (Is.error(parameters[0])) {
+    // else if (Is.error(parameters[0])) {
+    else if (parameters[0] instanceof Error) {
 
       let error = parameters[0]
 
-      levelFn(Utilities.format('-  error.message=%h', error.message))
-      levelFn(Utilities.format('-  error.stack ...\n\n%s\n\n', error.stack))
+      // levelFn(Utilities.format('-   error.message=%j', error.message))
+      // levelFn(Utilities.format('-   error.stack ...\n\n%s\n\n', error.stack))
+
+      Log.error('-   error.message=%j', error.message)
+      Log.error('-   error.stack ...\n\n%s\n\n', error.stack)
 
     }
     else {

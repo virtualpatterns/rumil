@@ -9,7 +9,7 @@ const Utilities = require('util')
 // const Page = require('../page')
 const Log = require('../../log')
 const NavigatedPage = require('./navigated-page')
-const Statistics = require('./statistics')
+const TestElement = require('./test-element')
 
 const ContentFn = require('./test-page.pug')
 
@@ -17,7 +17,7 @@ class TestPage extends NavigatedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)
-    this.statisticsElement = new Statistics()
+    this.testElement = new TestElement()
   }
 
   bindEvents() {
@@ -80,7 +80,7 @@ class TestPage extends NavigatedPage {
 
   onFinished(statistics) {
     Log.debug('- TestPage.onFinished(statistics)\n\n%s\n\n', Utilities.inspect(statistics))
-    this.statisticsElement.updateContent(statistics)
+    this.testElement.updateContent(statistics)
       .catch((error) => window.application.showError(error))
   }
 

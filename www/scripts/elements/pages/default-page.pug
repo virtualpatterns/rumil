@@ -18,7 +18,8 @@ block contents
     ons-list-item(  id='goStatus',
                     modifier='chevron longdivider',
                     tappable)
-      | Server Status
+      //- | Server Status
+      | Status
     if application.isCacheEnabled
       ons-list-item(  id='goCache',
                       modifier='chevron longdivider',
@@ -32,6 +33,18 @@ block contents
                     modifier='chevron longdivider',
                     tappable)
       | Coverage
+    ons-list-item(  id='goInterval',
+                    modifier='longdivider',
+                    tappable)
+      | Countdown&nbsp;
+      span(id='goIntervalInterval')
+        span(style='font-style: italic;')
+          | n
+      | &nbsp;seconds
+    ons-list-item(  id='goBlink',
+                    modifier='chevron longdivider',
+                    tappable)
+      | Blink
 
   ons-list(modifier='inset')
     ons-list-header
@@ -44,3 +57,19 @@ block contents
                     modifier='longdivider',
                     tappable)
       | Confirmation
+    ons-list-item(  id='goSpinner',
+                    modifier='longdivider',
+                    tappable)
+      | Spinner
+
+  ons-list(modifier='inset')
+    ons-list-header
+      | LOGIN
+    ons-list-item(  id='goGitHub',
+                    modifier='chevron longdivider',
+                    tappable)
+      div.left
+        ons-icon( icon='fa-github',
+                  size='20px')
+      div.center
+        | GitHub

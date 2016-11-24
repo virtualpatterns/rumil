@@ -2,27 +2,27 @@
 
 const Utilities = require('util')
 
-const DefaultSelection = require('./default-selection')
-const NavigatedAutomation = require('./navigated-automation')
+const DefaultSelect = require('./default-select')
+const NavigatedAutomate = require('./navigated-automate')
 
-class DefaultAutomation extends NavigatedAutomation {
+class DefaultAutomate extends NavigatedAutomate {
 
   constructor() {
     super()
   }
 
   static clickToolbarButton(text) {
-    DefaultSelection
+    DefaultSelect
       .getToolbarButton(text)
       .click()
   }
 
   static clickListItem(text) {
-    DefaultSelection
+    DefaultSelect
       .getListItem(text)
       .click()
   }
 
 }
 
-module.exports = DefaultAutomation
+module.exports = DefaultAutomate

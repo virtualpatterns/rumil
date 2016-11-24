@@ -5,43 +5,48 @@ const Path = require('./path')
 const Process = require('./process')
 const Server = require('./server')
 
-let Application = Object.create({})
+class Application {
 
-Application.start = function (address, port, staticPath, modulesPath, pidPath) {
+  constructor() {
+  }
 
-  Log.info('> Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
+  static start(address, port, staticPath, modulesPath, pidPath) {
 
-  Process
-    .createPID(pidPath)
-    .once('SIGINT', () => {
-      Log.info('- Process.once(\'SIGINT\', () => { ... })')
-      Process.exit(1)
-    })
-    .once('SIGTERM', () => {
-      Log.info('- Process.once(\'SIGTERM\', () => { ... })')
-      Process.exit(1)
-    })
-    .once('uncaughtException', function(error) {
-      Log.error('- Process.once(\'uncaughtException\', function(error) { ... })\n\n%s\n', error.stack)
-      Process.exit(2)
-    })
+    // Log.debug('> Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
 
-  Server
-    .createServer(staticPath, modulesPath)
-    .listen(port, address)
+    Process
+      .createPID(pidPath)
+      .once('SIGINT', () => {
+        Log.debug('- Process.once(\'SIGINT\', () => { ... })')
+        Process.exit(1)
+      })
+      .once('SIGTERM', () => {
+        Log.debug('- Process.once(\'SIGTERM\', () => { ... })')
+        Process.exit(1)
+      })
+      .once('uncaughtException', function(error) {
+        Log.error('- Process.once(\'uncaughtException\', function(error) { ... })\n\n%s\n', error.stack)
+        Process.exit(2)
+      })
 
-  Log.info('< Application.start(%j, %d, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(pidPath))
+    Server
+      .createServer(staticPath, modulesPath)
+      .listen(port, address)
 
-}
+    // Log.debug('< Application.start(%j, %d, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(pidPath))
 
-Application.stop = function (pidPath) {
+  }
 
-  Log.info('> Application.stop(%j) { ... }', Path.trim(pidPath))
+  static stop(pidPath) {
 
-  if (Process.existsPID(pidPath))
-    Process.killPID(pidPath)
+    // Log.debug('> Application.stop(%j) { ... }', Path.trim(pidPath))
 
-  Log.info('< Application.stop(%j) { ... }', Path.trim(pidPath))
+    if (Process.existsPID(pidPath))
+      Process.killPID(pidPath)
+
+    // Log.debug('< Application.stop(%j) { ... }', Path.trim(pidPath))
+
+  }
 
 }
 

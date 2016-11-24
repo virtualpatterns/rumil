@@ -1,8 +1,8 @@
 'use strict'
 
-const NavigatedSelection = require('./navigated-selection')
+const NavigatedSelect = require('./navigated-select')
 
-class DefaultSelection extends NavigatedSelection {
+class DefaultSelect extends NavigatedSelect {
 
   constructor() {
     super()
@@ -53,4 +53,4 @@ class DefaultSelection extends NavigatedSelection {
 
 }
 
-module.exports = DefaultSelection
+module.exports = DefaultSelect

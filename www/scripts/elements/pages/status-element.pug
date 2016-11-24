@@ -2,42 +2,6 @@ extends ../../element.pug
 block body
   ons-list(modifier='inset')
     ons-list-item(modifier='longdivider')
-      div.left
-        | Name
-      div.right
-        = status.name || '(unknown)'
-    ons-list-item(modifier='longdivider')
-      div.left
-        | Version
-      div.right
-        = status.version || '(unknown)'
-    ons-list-item(modifier='longdivider')
-      div.left
-        | Date
-      div.right
-        = status.nowAsDateString || '(unknown)'
-    ons-list-item(modifier='longdivider')
-      div.left
-        | Time
-      div.right
-        = status.nowAsTimeString || '(unknown)'
-
-  ons-list(modifier='inset')
-    ons-list-header
-      | HEAP
-    ons-list-item(modifier='longdivider')
-      div.left
-        | Total
-      div.right
-        = status.heap ? status.heap.totalAsString : '(unknown)'
-    ons-list-item(modifier='longdivider')
-      div.left
-        | Used
-      div.right
-        = status.heap ? status.heap.usedAsString : '(unknown)'
-
-  ons-list(modifier='inset')
-    ons-list-item(modifier='longdivider')
       if status.isRefreshRequired
         div.left
           ons-icon( icon='fa-ellipsis-h',
@@ -66,9 +30,43 @@ block body
           span.list__item__subtitle
             | Your version of the application is the latest version.  No updates are available.
 
-  div.rum-memo
-    | This information refreshes automatically every minute.  Click the&nbsp;
-    span(style='font-weight: bold')
-      | Refresh
-    ons-icon(icon='fa-refresh')
-    | &nbsp;button above to force a refresh.
+  ons-list(modifier='inset')
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | Name
+    //-   div.right
+    //-     = status.name || '(unknown)'
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Server Version
+      div.right
+        = status.version || '(unknown)'
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Local Version
+      div.right
+        = application.version
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Server Date
+      div.right
+        = status.nowAsDateString || '(unknown)'
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Server Time
+      div.right
+        = status.nowAsTimeString || '(unknown)'
+
+  ons-list(modifier='inset')
+    ons-list-header
+      | HEAP
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Total
+      div.right
+        = status.heap ? status.heap.totalAsString : '(unknown)'
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Used
+      div.right
+        = status.heap ? status.heap.usedAsString : '(unknown)'

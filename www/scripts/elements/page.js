@@ -10,7 +10,7 @@ const ContentFn = require('./page.pug')
 class Page extends Element {
 
   constructor(contentFn = ContentFn) {
-    super(contentFn)
+    super(false, contentFn)
   }
 
   emitShown(isInitial) {

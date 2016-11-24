@@ -1,37 +1,43 @@
 'use strict'
 
+const Index = require('../../../index.json')
 const Package = require('../../../package.json')
 const Timestamp = require('../../../cacheTimestamp.json')
 const Process = require('../process')
 
-let Status = Object.create({})
+class Status {
 
-Status.createRoutes = function(server) {
+  constructor() {
+  }
 
-  server.head('/api/status', (request, response, next) => {
-    response.send(200)
-    next()
-  })
+  static createRoutes(server) {
 
-  server.get('/api/status', (request, response, next) => {
+    server.head('/api/status', (request, response, next) => {
+      response.send(200)
+      next()
+    })
 
-    let memory = Process.memoryUsage()
+    server.get('/api/status', (request, response, next) => {
 
-    let status = {
-      'cacheTimestamp': Timestamp.value,
-      'name': Package.name,
-      'now': new Date().toISOString(),
-      'version': Package.version,
-      'heap': {
-        'total': memory.heapTotal,
-        'used': memory.heapUsed
+      let memory = Process.memoryUsage()
+
+      let status = {
+        'cacheTimestamp': Timestamp.value,
+        'name': Package.name,
+        'now': new Date().toISOString(),
+        'version': `${Package.version}-${Index.value}`,
+        'heap': {
+          'total': memory.heapTotal,
+          'used': memory.heapUsed
+        }
       }
-    }
 
-    response.send(status)
-    next()
+      response.send(status)
+      next()
 
-  })
+    })
+
+  }
 
 }
 

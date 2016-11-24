@@ -45,10 +45,10 @@ Command
       .line()
 
     Process.on('SIGHUP', () => {
-      Log.info('> Process.once(\'SIGHUP\', () => { ... })')
+      Log.debug('> Process.once(\'SIGHUP\', () => { ... })')
       Log.removeFile(options.logPath || LOG_PATH)
       Log.addFile(options.logPath || LOG_PATH)
-      Log.info('< Process.once(\'SIGHUP\', () => { ... })')
+      Log.debug('< Process.once(\'SIGHUP\', () => { ... })')
     })
 
     try {

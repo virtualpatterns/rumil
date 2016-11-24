@@ -29,7 +29,7 @@ class AlertDialog extends SimpleAlertDialog {
 
   onOk() {
     Log.debug('- AlertDialog.onOk()')
-    window.application.hideDialog(this)
+    window.application.hideDialog(this, false)
   }
 
 }

@@ -25,7 +25,7 @@ class CachePage extends NavigatedPage {
 
     this.getContent().querySelector('#goRefresh').addEventListener('click', this._onGoRefresh = this.onGoRefresh.bind(this))
 
-    // window.applicationCache.addEventListener('checking', this._onUpdating = this.cacheElement.onUpdating.bind(this.cacheElement));
+    window.applicationCache.addEventListener('checking', this._onUpdating = this.cacheElement.onUpdating.bind(this.cacheElement));
     window.applicationCache.addEventListener('downloading', this._onDownloading = this.cacheElement.onDownloading.bind(this.cacheElement));
     // window.applicationCache.addEventListener('progress', this._onDownloaded = this.cacheElement.onDownloaded.bind(this.cacheElement));
     // window.applicationCache.addEventListener('cached', this._onUpdated = this.cacheElement.onUpdated.bind(this.cacheElement));
@@ -45,7 +45,7 @@ class CachePage extends NavigatedPage {
     // window.applicationCache.removeEventListener('cached', this._onUpdated);
     // window.applicationCache.removeEventListener('progress', this._onDownloaded);
     window.applicationCache.removeEventListener('downloading', this._onDownloading);
-    // window.applicationCache.removeEventListener('checking', this._onUpdating);
+    window.applicationCache.removeEventListener('checking', this._onUpdating);
 
     this.getContent().querySelector('#goRefresh').removeEventListener('click', this._onGoRefresh)
 
