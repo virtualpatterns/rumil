@@ -9,9 +9,6 @@ const Process = require('../process')
 
 class Authorize {
 
-  constructor() {
-  }
-
   static createRoutes(server) {
 
     server.head('/www/authorize/:system', (request, response, next) => {

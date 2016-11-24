@@ -7,9 +7,6 @@ const Process = require('../process')
 
 class Status {
 
-  constructor() {
-  }
-
   static createRoutes(server) {
 
     server.head('/api/status', (request, response, next) => {

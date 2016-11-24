@@ -67,6 +67,8 @@ Process.existsPID = function(path) {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
+  Log.debug('- Process.existsPID(%j)', Path.trim(path))
+
   try {
     FileSystem.accessSync(path, FileSystem.F_OK)
   }
@@ -82,7 +84,7 @@ Process.existsPID = function(path) {
     process.kill(pid, 0)
   } catch (error) {
 
-    Log.debug('- FileSystem.unlinkSync(%j)', Path.trim(path))
+    // Log.debug('- FileSystem.unlinkSync(%j)', Path.trim(path))
     FileSystem.unlinkSync(path)
 
     return false
@@ -98,33 +100,36 @@ Process.createPID = function(path) {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
-  Log.debug('> Process.createPID(%j)', Path.trim(path))
+  // Log.debug('> Process.createPID(%j)', Path.trim(path))
+  Log.debug('- Process.createPID(%j)', Path.trim(path))
 
   if (this.existsPID(path))
     throw new ArgumentError(`The path ${Path.trim(path)} exists.`)
   else {
 
-    Log.debug('- FileSystem.writeFileSync(%j, %d, ...)', Path.trim(path), process.pid)
+    // Log.debug('- FileSystem.writeFileSync(%j, %d, ...)', Path.trim(path), process.pid)
     FileSystem.writeFileSync(path, process.pid, {
       encoding: 'utf-8'
     })
 
-    process.on('exit', () => {
-      console.log('> Process.on(\'exit\', function() { ... }')
+    Process.on('exit', () => {
+      // console.log('> Process.on(\'exit\', function() { ... }')
+      console.log('- Process.on(\'exit\', function() { ... }')
       try {
         FileSystem.accessSync(path, FileSystem.F_OK)
         FileSystem.unlinkSync(path)
-        console.log('< Process.on(\'exit\', function() { ... }')
+        // console.log('< Process.on(\'exit\', function() { ... }')
       }
       catch (error) {
-        console.log('< Process.on(\'exit\', function() { ... }')
-        console.log('    error.message=%j\n\n%s\n\n', error.message, error.stack)
+        // console.log('< Process.on(\'exit\', function() { ... }')
+        // console.log('- Process.on(\'exit\', function() { ... }')
+        // console.log('    error.message=%j\n\n%s\n\n', error.message, error.stack)
       }
     })
 
   }
 
-  Log.debug('< Process.createPID(%j)', Path.trim(path))
+  // Log.debug('< Process.createPID(%j)', Path.trim(path))
 
   return this;
 
@@ -135,7 +140,8 @@ Process.killPID = function(path, signal = 'SIGINT') {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
-  Log.debug('> Process.killPID(%j, %j)', Path.trim(path), signal)
+  // Log.debug('> Process.killPID(%j, %j)', Path.trim(path), signal)
+  Log.debug('- Process.killPID(%j, %j)', Path.trim(path), signal)
 
   if (this.existsPID(path)) {
 
@@ -143,7 +149,7 @@ Process.killPID = function(path, signal = 'SIGINT') {
       encoding: 'utf-8'
     })
 
-    Log.debug('- process.kill(%d, %j)', pid, signal)
+    // Log.debug('- process.kill(%d, %j)', pid, signal)
 
     process.kill(pid, signal)
 
@@ -151,7 +157,7 @@ Process.killPID = function(path, signal = 'SIGINT') {
   else
     throw new ArgumentError(`The path ${Path.trim(path)} does not exist.`)
 
-  Log.debug('< Process.killPID(%j, %j)', Path.trim(path), signal)
+  // Log.debug('< Process.killPID(%j, %j)', Path.trim(path), signal)
 
   return this;
 
@@ -159,9 +165,9 @@ Process.killPID = function(path, signal = 'SIGINT') {
 
 Process.exit = function(code = 0) {
 
-  const Log = require('./log')
+  // const Log = require('./log')
 
-  Log.debug('> Process.exit(%d) ...', code)
+  // Log.debug('> Process.exit(%d) ...', code)
 
   setTimeout(() => process.exit(code), EXIT_TIMEOUT)
 

@@ -9,9 +9,6 @@ const REGEXP_STATIC = /^\/www\/(.*)$/
 
 class Static {
 
-  constructor() {
-  }
-
   static createRoutes(server, staticPath, modulesPath) {
 
     server.head('/favicon.ico', (request, response, next) => {

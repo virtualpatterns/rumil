@@ -42,7 +42,7 @@ describe('Server', () => {
     // vendor/mocha/mocha.js
 
     let methods = ['HEAD', 'GET']
-    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/api/status']
+    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/www/authorize/GitHub', '/www/authorize/GitHub?scopes=user,repo', '/api/status']
 
     for (let method of methods) {
 
@@ -56,6 +56,37 @@ describe('Server', () => {
               'uri': url
             })
               .then((response) => Assert.equal(200, response.statusCode))
+          })
+
+        })
+
+      }
+
+    }
+
+    methods = ['GET']
+    urls = ['/www/authorize/GitHub?code=123']
+
+    for (let method of methods) {
+
+      for (let url of urls) {
+
+        describe(`${method} ${url}`, () => {
+
+          // it('should respond with 500 Internal Server Error', () => {
+          it('should respond with 500 Internal Server Error', () => {
+            return Defaults({
+              'method': method,
+              'uri': url
+            })
+              // .then((response) => {
+              //   Log.debug('- response.statusCode=%j', response.statusCode)
+              //   // Assert.equal(500, response.statusCode)
+              // })
+              .catch((error) => {
+                // Log.inspect(error)
+                Assert.equal(500, error.statusCode)
+              })
           })
 
         })
@@ -119,7 +150,8 @@ describe('Server', () => {
     })
 
     let methods = ['HEAD', 'GET']
-    let urls = ['/favicon.ico', '/', '/www', '/www/index.html', '/api/status']
+    // let urls = ['/favicon.ico', '/', '/www', '/www/index.html', '/www/authorize/GitHub', '/api/status']
+    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/www/authorize/GitHub', '/www/authorize/GitHub?scopes=user,repo', '/www/authorize/GitHub?code=123', '/api/status']
 
     for (let method of methods) {
 

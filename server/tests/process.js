@@ -2,6 +2,7 @@
 
 const Assert = require('assert')
 const ChildProcess = require('child_process')
+// const Sinon = require('sinon')
 
 const FileSystem = require('../library/file-system')
 const Package = require('../../package.json')
@@ -151,6 +152,41 @@ describe('Process', () => {
   })
 
   describe('createPID', () => {
+
+    // describe('(call)', () => {
+    //
+    //   before(() => {
+    //     return Promise.resolve()
+    //       .then(() => {
+    //         Sinon.spy(Process, 'createPID')
+    //         Sinon.spy(Process, 'on')
+    //       })
+    //       .then(() => FileSystem.Promise.accessUnlink(PID_PATH, FileSystem.F_OK))
+    //       .then(() => Process.createPID(PID_PATH))
+    //   })
+    //
+    //   it('should call Process.on', () => {
+    //     Assert.ok(Process.on.calledOnce)
+    //   })
+    //
+    //   it('should call Process.on with arguments', () => {
+    //     Assert.ok(Process.on.calledWith('exit'))
+    //   })
+    //
+    //   it('should return Process', () => {
+    //     Assert.ok(Process.createPID.returned(Process))
+    //   })
+    //
+    //   after(() => {
+    //     return Promise.resolve()
+    //       .then(() => FileSystem.Promise.accessUnlink(PID_PATH, FileSystem.F_OK))
+    //       .then(() => {
+    //         Process.on.restore()
+    //         Process.createPID.restore()
+    //       })
+    //   })
+    //
+    // })
 
     describe('(parent process)', () => {
 
