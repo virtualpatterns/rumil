@@ -49,14 +49,14 @@ ons-list > ons-list-item > div.right > ons-icon {
 
 .rum-invisible {
   opacity: 0.0;
-  transition-duration: .5s;
+  transition-duration: .20s;
   transition-property: opacity;
   transition-timing-function: ease;
 }
 
 .rum-visible {
   opacity: 1.0;
-  transition-duration: .5s;
+  transition-duration: .10s;
   transition-property: opacity;
   transition-timing-function: ease;
 }

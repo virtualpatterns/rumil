@@ -3,11 +3,6 @@
 *.log
 *.out
 *.pid
-cacheTimestamp.json
-index.json
-index.manifest
 node_modules
 sandbox
-www/coverage/*
-www/index.manifest
-www/scripts/bundles/*
+sandbox.*

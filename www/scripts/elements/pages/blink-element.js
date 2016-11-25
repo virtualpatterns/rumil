@@ -32,27 +32,26 @@ class BlinkElement extends Blink {
     return super.renderContent(data)
   }
 
-  // updateContent(data = {
-  //   'status': {
-  //       'index': this.index++
-  //   }
-  // }, options = {
-  //   'off': ['rum-invisible-slow'],
-  //   'on': ['rum-visible-slow']
-  // }) {
   updateContent(data = {
     'status': {
         'index': this.index++
     }
+  }, options = {
+    'off': ['rum-invisible-slow'],
+    'on': ['rum-visible-slow']
   }) {
+  // updateContent(data = {
+  //   'status': {
+  //       'index': this.index++
+  //   }
+  // }) {
 
     // Log.debug('> BlinkElement.updateContent(data)')
     // super.updateContent(data, options)
     // return super.updateContent(data)
     // Log.debug('< BlinkElement.updateContent(data)')
 
-    return Promise.resolve()
-      .then(() => super.updateContent(data))
+    return super.updateContent(data, options)
 
   }
 

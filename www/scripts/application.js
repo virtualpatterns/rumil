@@ -85,7 +85,7 @@ class Application extends Element {
       // UPDATEREADY ... There is a new version of the application cache available. There is a corresponding updateready event, which is fired instead of the cached event when a new update has been downloaded but not yet activated using the swapCache() method.
       // OBSOLETE ... The application cache group is now obsolete.
 
-      this.cacheTimestamp = CACHE_TIMESTAMP
+      // this.cacheTimestamp = CACHE_TIMESTAMP
 
       switch (window.applicationCache.status) {
           case window.applicationCache.UNCACHED:
@@ -102,8 +102,8 @@ class Application extends Element {
               this.isCacheEnabled = false
       }
 
-      Log.debug('-   this.cacheTimestamp=%j', this.cacheTimestamp)
-      Log.debug('-   this.isCacheEnabled=%j', this.isCacheEnabled)
+      // Log.debug('-   this.cacheTimestamp=%j', this.cacheTimestamp)
+      // Log.debug('-   this.isCacheEnabled=%j', this.isCacheEnabled)
 
       document.title = this.name
 
@@ -197,7 +197,7 @@ class Application extends Element {
   showError(error) {
     Log.error('- Application.showError(error)')
     Log.error(error)
-    return this.showAlert(error.message, 'Error')
+    return this.showAlert(error.message || error, 'Error')
   }
 
   showConfirmation(text, title = 'Confirm') {

@@ -16,6 +16,7 @@ const IntervalError = require('../../errors/interval-error')
 const ContentFn = require('./status-element.pug')
 
 class StatusElement extends Blink {
+// class StatusElement extends Element {
 
   constructor(contentFn = ContentFn) {
     // super(true, contentFn)
@@ -37,17 +38,18 @@ class StatusElement extends Blink {
       .then(() => Request.get('/api/status'))
       .then((response) => {
 
-          let status = response.data
+        let status = response.data
 
         status.nowAsDate = Date.parse(status.now)
         status.nowAsDateString = status.nowAsDate.toString('MMM d, yyyy')
         status.nowAsTimeString = status.nowAsDate.toString('h:mm tt')
 
-        Log.debug('- StatusElement.updateContent(data) status.cacheTimestamp=%j', status.cacheTimestamp)
-        Log.debug('- StatusElement.updateContent(data) window.application.cacheTimestamp=%j', window.application.cacheTimestamp)
+        // Log.debug('- StatusElement.updateContent(data) status.cacheTimestamp=%j', status.cacheTimestamp)
+        // Log.debug('- StatusElement.updateContent(data) window.application.cacheTimestamp=%j', window.application.cacheTimestamp)
 
         status.isRefreshRequired = false
-        status.isUpdateRequired = window.application.cacheTimestamp != status.cacheTimestamp
+        // status.isUpdateRequired = window.application.cacheTimestamp != status.cacheTimestamp
+        status.isUpdateRequired = window.application.version != status.version
 
         status.heap.totalAsString = Format(status.heap.total, {
          scale: 'binary',

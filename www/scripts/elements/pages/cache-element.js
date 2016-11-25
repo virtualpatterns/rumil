@@ -41,8 +41,9 @@ class CacheElement extends Blink {
 
   unbindEvents() {
 
-    Interval.stopBySelector(`#${this.id} #onUpdateReady`)
-    // Interval.stopBySelector(`#${this.id} #onNoUpdate`)
+    // this.stopInterval('#onUpdateReady')
+    this.stopInterval('#onUpdateReady')
+    // this.stopInterval('#onNoUpdate')
     // Timeout.stop('CacheElement.onNoUpdate')
 
     super.unbindEvents()
@@ -67,8 +68,8 @@ class CacheElement extends Blink {
           }
         }
 
-        // Interval.stopBySelector(`#${this.id} #onUpdateReady`)
-        // Interval.stopBySelector(`#${this.id} #onNoUpdate`)
+        // this.stopInterval('#onUpdateReady')
+        // this.stopInterval('#onNoUpdate')
         // Timeout.stop('CacheElement.onNoUpdate')
 
         this.updateContent(data)
@@ -105,8 +106,8 @@ class CacheElement extends Blink {
         }
       }
 
-      // Interval.stopBySelector(`#${this.id} #onUpdateReady`)
-      // Interval.stopBySelector(`#${this.id} #onNoUpdate`)
+      // this.stopInterval('#onUpdateReady')
+      // this.stopInterval('#onNoUpdate')
       // Timeout.stop('CacheElement.onNoUpdate')
 
       this.updateContent(data)
@@ -139,14 +140,14 @@ class CacheElement extends Blink {
           }
         }
 
-        // Interval.stopBySelector(`#${this.id} #onUpdateReady`)
-        // Interval.stopBySelector(`#${this.id} #onNoUpdate`)
+        // this.stopInterval('#onUpdateReady')
+        // this.stopInterval('#onNoUpdate')
         // Timeout.stop('CacheElement.onNoUpdate')
 
         return this.updateContent(data)
 
       })
-      .then(() => Interval.startBySelector(`#${this.id} #onUpdateReady`, 3))
+      .then(() => this.startInterval('#onUpdateReady', 3))
       .then(() => window.location.reload(true))
       .catch((error) => {
 
@@ -179,8 +180,8 @@ class CacheElement extends Blink {
           }
         }
 
-        // Interval.stopBySelector(`#${this.id} #onUpdateReady`)
-        // Interval.stopBySelector(`#${this.id} #onNoUpdate`)
+        // this.stopInterval('#onUpdateReady')
+        // this.stopInterval('#onNoUpdate')
         // Timeout.stop('CacheElement.onNoUpdate')
 
         this.updateContent(data)
@@ -194,7 +195,7 @@ class CacheElement extends Blink {
         window.application.showError(error)
       }
       // })
-      // .then(() => Interval.startBySelector(`#${this.id} #onNoUpdate`, 60))
+      // .then(() => this.startInterval('#onNoUpdate', 60))
       // // .then(() => Timeout.start('CacheElement.onNoUpdate', 60000))
       // .then(() => window.applicationCache.update())
       // .catch((error) => {

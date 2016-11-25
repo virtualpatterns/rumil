@@ -2,7 +2,7 @@
 
 const Index = require('../../../index.json')
 const Package = require('../../../package.json')
-const Timestamp = require('../../../cacheTimestamp.json')
+// const Timestamp = require('../../../cacheTimestamp.json')
 const Process = require('../process')
 
 class Status {
@@ -19,7 +19,7 @@ class Status {
       let memory = Process.memoryUsage()
 
       let status = {
-        'cacheTimestamp': Timestamp.value,
+        // 'cacheTimestamp': Timestamp.value,
         'name': Package.name,
         'now': new Date().toISOString(),
         'version': `${Package.version}-${Index.value}`,

@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for library/process.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">library/</a> process.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">89.23% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>58/65</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>10/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">83.33% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/6</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">90.48% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>57/63</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">87×</span>
+<span class="cline-any cline-yes">87×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">75×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+&nbsp;
+const FileSystem = require('./file-system')
+const Path = require('./path')
+&nbsp;
+const ArgumentError = require('./errors/argument-error')
+const ProcessError = require('./errors/process-error')
+&nbsp;
+const EXIT_TIMEOUT = 5000
+&nbsp;
+let Process = Object.create(process)
+&nbsp;
+Process.LOG_PATH = Path.join(Process.cwd(), 'process', 'logs')
+Process.OUTPUT_PATH = Path.join(Process.cwd(), 'process', 'output')
+Process.PID_PATH = Path.join(Process.cwd(), 'process', 'pids')
+&nbsp;
+// FileSystem.mkdirp.sync(Process.LOG_PATH)
+// FileSystem.mkdirp.sync(Process.OUTPUT_PATH)
+// FileSystem.mkdirp.sync(Process.PID_PATH)
+&nbsp;
+// Object.defineProperty(Process, 'exitCode', {
+//   enumerable: true,
+//   get: function() {
+//     return process.exitCode
+//   },
+//   set: function(value) {
+//     process.exitCode = value
+//   }
+// })
+&nbsp;
+Process.when = function(timeout, maximumDuration, testFn) {
+&nbsp;
+  const Log = require('./log')
+&nbsp;
+  Log.debug('&gt; Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
+&nbsp;
+  return new Promise((resolve, reject) =&gt; {
+&nbsp;
+    let waitLoop = function(start) {
+&nbsp;
+      let duration = (new Date()) - start
+&nbsp;
+      testFn((error) =&gt; {
+        if (error &amp;&amp;
+            duration &lt; maximumDuration)
+          setTimeout(() =&gt; waitLoop(start), timeout)
+        else if (duration &gt;= maximumDuration) {
+          Log.error('&lt; Process.when(%d, %d, testFn) { ... } duration=%d', timeout, maximumDuration, duration)
+          reject(new ProcessError('Duration exceeded.'))
+        }
+        else {
+          Log.debug('&lt; Process.when(%d, %d, testFn) { ... }', timeout, maximumDuration)
+          resolve()
+        }
+      })
+&nbsp;
+    }
+&nbsp;
+    waitLoop(new Date())
+&nbsp;
+  })
+&nbsp;
+}
+&nbsp;
+Process.existsPID = function(path) {
+&nbsp;
+  const FileSystem = require('./file-system')
+  const Log = require('./log')
+&nbsp;
+  Log.debug('- Process.existsPID(%j)', Path.trim(path))
+&nbsp;
+  try {
+    FileSystem.accessSync(path, FileSystem.F_OK)
+  }
+  catch (error) {
+    return false
+  }
+&nbsp;
+  let pid = FileSystem.readFileSync(path, {
+    encoding: 'utf-8'
+  })
+&nbsp;
+  try {
+    process.kill(pid, 0)
+  } catch (error) {
+&nbsp;
+    // Log.debug('- FileSystem.unlinkSync(%j)', Path.trim(path))
+    FileSystem.unlinkSync(path)
+&nbsp;
+    return false
+&nbsp;
+  }
+&nbsp;
+  return true
+&nbsp;
+}
+&nbsp;
+Process.createPID = function(path) {
+&nbsp;
+  const FileSystem = require('./file-system')
+  const Log = require('./log')
+&nbsp;
+  // Log.debug('&gt; Process.createPID(%j)', Path.trim(path))
+  Log.debug('- Process.createPID(%j)', Path.trim(path))
+&nbsp;
+  if (this.existsPID(path))
+    throw new ArgumentError(`The path ${Path.trim(path)} exists.`)
+  else {
+&nbsp;
+    // Log.debug('- FileSystem.writeFileSync(%j, %d, ...)', Path.trim(path), process.pid)
+    FileSystem.writeFileSync(path, process.pid, {
+      encoding: 'utf-8'
+    })
+&nbsp;
+    Process.on('exit', () =&gt; {
+      // console.log('&gt; Process.on(\'exit\', function() { ... }')
+<span class="cstat-no" title="statement not covered" >      console.log('- Process.on(\'exit\', function() { ... }')</span>
+<span class="cstat-no" title="statement not covered" >      try {</span>
+<span class="cstat-no" title="statement not covered" >        FileSystem.accessSync(path, FileSystem.F_OK)</span>
+<span class="cstat-no" title="statement not covered" >        FileSystem.unlinkSync(path)</span>
+        // console.log('&lt; Process.on(\'exit\', function() { ... }')
+      }
+      catch (error) {
+        // console.log('&lt; Process.on(\'exit\', function() { ... }')
+        // console.log('- Process.on(\'exit\', function() { ... }')
+        // console.log('    error.message=%j\n\n%s\n\n', error.message, error.stack)
+      }
+    })
+&nbsp;
+  }
+&nbsp;
+  // Log.debug('&lt; Process.createPID(%j)', Path.trim(path))
+&nbsp;
+  return this;
+&nbsp;
+}
+&nbsp;
+Process.killPID = function(path, signal = 'SIGINT') {
+&nbsp;
+  const FileSystem = require('./file-system')
+  const Log = require('./log')
+&nbsp;
+  // Log.debug('&gt; Process.killPID(%j, %j)', Path.trim(path), signal)
+  Log.debug('- Process.killPID(%j, %j)', Path.trim(path), signal)
+&nbsp;
+  if (this.existsPID(path)) {
+&nbsp;
+    let pid = FileSystem.readFileSync(path, {
+      encoding: 'utf-8'
+    })
+&nbsp;
+    // Log.debug('- process.kill(%d, %j)', pid, signal)
+&nbsp;
+    process.kill(pid, signal)
+&nbsp;
+  }
+  else
+    throw new ArgumentError(`The path ${Path.trim(path)} does not exist.`)
+&nbsp;
+  // Log.debug('&lt; Process.killPID(%j, %j)', Path.trim(path), signal)
+&nbsp;
+  return this;
+&nbsp;
+}
+&nbsp;
+Process.exit = <span class="fstat-no" title="function not covered" >function(code = 0) {</span>
+&nbsp;
+  // const Log = require('./log')
+&nbsp;
+  // Log.debug('&gt; Process.exit(%d) ...', code)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  setTimeout(() =&gt; <span class="cstat-no" title="statement not covered" >process.exit(code),</span> EXIT_TIMEOUT)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  return this;</span>
+&nbsp;
+}
+&nbsp;
+module.exports = Process
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Nov 24 2016 16:48:38 GMT-0500 (EST)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

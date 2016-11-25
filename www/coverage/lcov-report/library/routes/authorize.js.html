@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for library/routes/authorize.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">library/routes/</a> authorize.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>22/25</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">75% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>6/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>22/25</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+&nbsp;
+// const _Authorize = require('client-oauth2')
+const Utilities = require('util')
+&nbsp;
+const Log = require('../log')
+const Path = require('../path')
+const Process = require('../process')
+&nbsp;
+class Authorize {
+&nbsp;
+  static createRoutes(server) {
+&nbsp;
+    server.head('/www/authorize/:system', (request, response, next) =&gt; {
+      // Log.debug('- server.head(\'/www/authorize/:system\', (request, response, next) =&gt; { ... }')
+      response.send(200)
+      next()
+    })
+&nbsp;
+    server.get('/www/authorize/:system', (request, response, next) =&gt; {
+      Log.debug('- server.get(\'/www/authorize/:system\', (request, response, next) =&gt; { ... }\n\n%s\n', Utilities.inspect(request.params))
+&nbsp;
+      let authorizeModuleName = `${request.params.system.toLowerCase()}-authorize`
+      let authorizeModulePath = Path.join(__dirname, 'systems', authorizeModuleName)
+&nbsp;
+      Log.debug('- authorizeModulePath=%j', authorizeModulePath)
+&nbsp;
+      let authorizeModule = require(authorizeModulePath)
+&nbsp;
+      let scopes = request.params.scopes ? request.params.scopes.split(',') : null
+&nbsp;
+      // Log.debug('&gt; new authorizeModule(%j)', scopes || [])
+      let authorize = new authorizeModule(scopes || [])
+&nbsp;
+      if (!request.params.code) {
+&nbsp;
+        let authorizeUri = authorize.getUri()
+&nbsp;
+        // Log.debug('&gt; response.redirect(%j, next)', authorizeUri)
+        response.redirect(authorizeUri, next)
+&nbsp;
+      }
+      else {
+        // Log.debug('&gt; request.params.code=%j', request.params.code)
+&nbsp;
+        authorize.getToken(request.url)
+          .then(<span class="fstat-no" title="function not covered" >function (token) {</span>
+&nbsp;
+            // Log.debug('&gt; token.accessToken=%j', token.accessToken)
+            // Log.debug('&gt; token.tokenType=%j', token.tokenType)
+&nbsp;
+            // let authorizedUri = `/www/index.html?application=${encodeURI('./authorized-application.js')}&amp;token=${encodeURI(token.accessToken)}&amp;type=${encodeURI(token.tokenType)}`
+            // let authorizedUri = scopes ? `/www/index.html?application=${encodeURI('./authorized-application')}&amp;system=${encodeURI(request.params.system)}&amp;scopes=${encodeURI(scopes.join(','))}&amp;token=${encodeURI(token.accessToken)}` : `/www/index.html?application=${encodeURI('./authorized-application.js')}&amp;system=${encodeURI(request.params.system)}&amp;token=${encodeURI(token.accessToken)}`
+<span class="cstat-no" title="statement not covered" >            let authorizedUri = `/www/index.html?application=${encodeURI('./authorized-application.js')}&amp;system=${encodeURI(request.params.system)}${scopes ? `&amp;scopes=${encodeURI(scopes.join(','))}` : ``}&amp;token=${encodeURI(token.accessToken)}`</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            Log.debug('&gt; response.redirect(%j, next)', authorizedUri)</span>
+<span class="cstat-no" title="statement not covered" >            response.redirect(authorizedUri, next)</span>
+&nbsp;
+          })
+          .catch((error) =&gt; {
+            response.send(error)
+            next()
+          })
+&nbsp;
+      }
+&nbsp;
+    })
+&nbsp;
+  }
+&nbsp;
+}
+&nbsp;
+module.exports = Authorize
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Nov 24 2016 16:48:38 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

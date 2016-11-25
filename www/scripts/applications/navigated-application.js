@@ -33,10 +33,10 @@ class NavigatedApplication extends Application {
   bindEvents() {
     super.bindEvents()
 
-    this.getContent().addEventListener('init', this._onInit = this.onInit.bind(this))
+    // this.getContent().addEventListener('init', this._onInit = this.onInit.bind(this))
     // this.getContent().addEventListener('show', this._onPageShown = this.onPageShown.bind(this))
     // this.getContent().addEventListener('hide', this._onPageHidden = this.onPageHidden.bind(this))
-    this.getContent().addEventListener('destroy', this._onDestroy = this.onDestroy.bind(this))
+    // this.getContent().addEventListener('destroy', this._onDestroy = this.onDestroy.bind(this))
 
     this.onEvent('pageShown', this._onPageShown = this.onPageShown.bind(this))
     this.onEvent('pageHidden', this._onPageHidden = this.onPageHidden.bind(this))
@@ -48,10 +48,10 @@ class NavigatedApplication extends Application {
     this.offEvent('pageHidden', this._onPageHidden)
     this.offEvent('pageShown', this._onPageShown)
 
-    this.getContent().removeEventListener('destroy', this._onDestroy)
+    // this.getContent().removeEventListener('destroy', this._onDestroy)
     // this.getContent().removeEventListener('hide', this._onPageHidden)
     // this.getContent().removeEventListener('show', this._onPageShown)
-    this.getContent().removeEventListener('init', this._onPageAdded)
+    // this.getContent().removeEventListener('init', this._onPageAdded)
 
     super.unbindEvents()
   }
@@ -90,24 +90,34 @@ class NavigatedApplication extends Application {
 
   onInit(event) {
     // Log.debug('- NavigatedApplication.onInit() event.target.id=%j', event.target.id)
-    this.pages.last().addContentElement()
-    this.pages.last().bindEvents()
+    // this.pages.last().addContentElement()
+    // this.pages.last().bindEvents()
   }
 
   onDestroy(event) {
     // Log.debug('- NavigatedApplication.onDestroy() event.target.id=%j', event.target.id)
-    this.pages.last().unbindEvents()
-    this.pages.last().removeContentElement()
+    // this.pages.last().unbindEvents()
+    // this.pages.last().removeContentElement()
   }
 
   onPageShown(page, isInitial) {
     // Log.debug('- NavigatedApplication.onPageShown(page, %s) page.id=%j', isInitial, page.id)
+
+    page.addContentElement()
+    page.bindEvents()
+
     page.emitShown(isInitial)
+
   }
 
   onPageHidden(page, isFinal) {
     // Log.debug('- NavigatedApplication.onPageHidden(page, %s) page.id=%j', isFinal, page.id)
+
     page.emitHidden(isFinal)
+
+    page.unbindEvents()
+    page.removeContentElement()
+
   }
 
   pushPage(page, options = {
@@ -123,23 +133,22 @@ class NavigatedApplication extends Application {
 
         this.pages.push(shownPage)
 
+        if (hiddenPage)
+          this.emitPageHidden(hiddenPage, false)
+
         return this.getContent().pushPage(null, {
           'pageHTML': shownPage.renderContent(),
           'animation': options.animation,
           'animationOptions': options.animationOptions,
           'data': options.data
         })
-          .then(() => Promise.resolve(shownPage, hiddenPage))
+          .then(() => {
 
-      })
-      .then((shownPage, hiddenPage) => {
+            this.emitPageShown(shownPage, true)
 
-        if (hiddenPage)
-          this.emitPageHidden(hiddenPage, false)
+            return Promise.resolve(shownPage, hiddenPage)
 
-        this.emitPageShown(shownPage, true)
-
-        return Promise.resolve(shownPage, hiddenPage)
+          })
 
       })
   }
@@ -156,21 +165,24 @@ class NavigatedApplication extends Application {
         Log.debug('- NavigatedApplication.popPage(options)')
 
         if (this.canPopPage()) {
+
+          let hiddenPage = this.pages.pop()
+          let shownPage = this.pages.last()
+
+          this.emitPageHidden(hiddenPage, true)
+
           return this.getContent().popPage({
             'animation': options.animation,
             'animationOptions': options.animationOptions
           })
             .then(() => {
 
-              let hiddenPage = this.pages.pop()
-              let shownPage = this.pages.last()
-
-              this.emitPageHidden(hiddenPage, true)
               this.emitPageShown(shownPage, false)
 
               return Promise.resolve(hiddenPage, shownPage)
 
             })
+
         }
         else
           return Promise.reject(new RangeError('The last page on the stack cannot be removed.'))
