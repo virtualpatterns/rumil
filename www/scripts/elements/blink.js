@@ -1,11 +1,13 @@
 'use strict'
 
 const Is = require('@pwn/is')
-const Queue = require('../update-content-queue')
+// const Queue = require('../blink-queue')
 const Utilities = require('util')
 
 const Element = require('../element')
 const Log = require('../log')
+
+const QueueError = require('../errors/queue-error')
 
 class Blink extends Element {
 
@@ -76,6 +78,93 @@ class Blink extends Element {
     })
 
   }
+
+}
+
+class Queue {
+
+  constructor(maximumNumberOfFns = 1) {
+    this.maximumNumberOfFns = maximumNumberOfFns
+    this.queuedFns = []
+    this.dequeuedFn = null
+    // this.emitter = Emitter(this)
+  }
+
+  push(fn) {
+
+      return new Promise((resolve, reject) => {
+        Log.debug('- Queue.push(fn)')
+
+        while (this.queuedFns.length >= this.maximumNumberOfFns) {
+          Log.debug('- DEQUEUE Queue.push(fn)')
+          let dequeuedFn = this.queuedFns.pop()
+          dequeuedFn.reject(new QueueError('The function is being de-queued.'))
+        }
+
+        let queuedFn = {
+          'fn': fn,
+          'resolve': resolve,
+          'reject': reject
+        }
+
+        Log.debug('- ENQUEUE Queue.push(fn)')
+        this.queuedFns.push(queuedFn)
+
+        this.run()
+
+      })
+
+  }
+
+  run() {
+
+    if (!this.dequeuedFn &&
+        this.queuedFns.length > 0) {
+    // if (this.queuedFns.length > 0) {
+
+      Log.debug('- DEQUEUE Queue.run()')
+      this.dequeuedFn = this.queuedFns.pop()
+
+      this.dequeuedFn.fn()
+        .then(() => {
+
+          this.dequeuedFn.resolve()
+          this.dequeuedFn = null
+
+          this.run()
+
+        })
+        .catch((error) => {
+
+          Log.error('< Queue.run()')
+          Log.error(error)
+
+          this.dequeuedFn.reject(error)
+          this.dequeuedFn = null
+
+          this.run()
+
+        })
+
+    }
+
+  }
+
+  // onEvent(type, eventFn) {
+  //   this.emitter.on(type, eventFn)
+  // }
+  //
+  // onceEvent(type, eventFn) {
+  //   this.emitter.once(type, eventFn)
+  // }
+  //
+  // offEvent(type, eventFn) {
+  //   this.emitter.off(type, eventFn)
+  // }
+  //
+  // emitEvent(...parameters) {
+  //   this.emitter.emit.apply(this.emitter, parameters)
+  // }
 
 }
 
