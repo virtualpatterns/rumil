@@ -5,7 +5,7 @@ const Is = require('@pwn/is')
 
 const Blink = require('../blink')
 // const Element = require('../../element')
-const Interval = require('../../interval')
+// const Interval = require('../../interval')
 const Log = require('../../log')
 
 const IntervalError = require('../../errors/interval-error')

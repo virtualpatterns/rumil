@@ -126,7 +126,7 @@ class Element {
       .then(() => {
         Log.debug('- Element.startInterval(%j, %j, %j, %j)', selector, from, every, decrement)
 
-        return Interval.start(`${this.id} ${selector}`, from, every, decrement, (index) => {
+        return Interval.start(`#${this.id} ${selector}`, from, every, decrement, (index) => {
           Log.debug('- Element.startInterval(%j, %j, %j, %j) index=%j', selector, from, every, decrement, index)
 
           let element = this.getContent().querySelector(selector)
@@ -144,7 +144,7 @@ class Element {
 
   stopInterval(selector) {
     Log.debug('- Element.stopInterval(%j)', selector)
-    Interval.stop(`${this.id} ${selector}`)
+    Interval.stop(`#${this.id} ${selector}`)
   }
 
   toString() {

@@ -8,7 +8,7 @@ const Utilities = require('util')
 const BlinkPage = require('./blink-page')
 const CachePage = require('./cache-page')
 const GitHubPage = require('./github-page')
-const Interval = require('../../interval')
+// const Interval = require('../../interval')
 const Log = require('../../log')
 const NavigatedPage = require('./navigated-page')
 const StatusPage = require('./status-page')
@@ -22,7 +22,7 @@ class DefaultPage extends NavigatedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)
-    this.selector = `#${this.id} #goIntervalInterval`
+    this.selector = '#goIntervalInterval'
   }
 
   bindEvents() {
@@ -89,7 +89,7 @@ class DefaultPage extends NavigatedPage {
 
   onHidden() {
     Log.debug('- DefaultPage.onHidden()')
-    Interval.stopBySelector(this.selector)
+    this.stopInterval(this.selector)
     super.onHidden()
   }
 
@@ -135,9 +135,9 @@ class DefaultPage extends NavigatedPage {
   onGoInterval() {
     Log.debug('- DefaultPage.onGoInterval()')
 
-    Interval.stopBySelector(this.selector)
+    this.stopInterval(this.selector)
 
-    Interval.startBySelector(this.selector)
+    this.startInterval(this.selector, 10)
       .then(() => {
         document.querySelector(this.selector).innerHTML = '<span style=\'font-style: italic;\'>n</span>'
       })

@@ -8,7 +8,7 @@ const Request = require('axios')
 
 // const Element = require('../../element')
 const Blink = require('../blink')
-const Interval = require('../../interval')
+// const Interval = require('../../interval')
 const Log = require('../../log')
 
 const IntervalError = require('../../errors/interval-error')
@@ -109,7 +109,8 @@ class StatusElement extends Blink {
 
   unbindEvents() {
     // Timeout.stop('StatusElement.updateContent')
-    Interval.stopBySelector(`#${this.id} #onRefreshInterval`)
+    // Interval.stopBySelector(`#${this.id} #onRefreshInterval`)
+    this.stopInterval(`#onRefreshInterval`)
     super.unbindEvents()
   }
 
