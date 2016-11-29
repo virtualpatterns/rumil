@@ -55,8 +55,8 @@ class Log {
       // levelFn(Utilities.format('-   error.message=%j', error.message))
       // levelFn(Utilities.format('-   error.stack ...\n\n%s\n\n', error.stack))
 
-      Log.error('-   error.message=%j', error.message)
-      Log.error('-   error.stack ...\n\n%s\n\n', error.stack)
+      Log.log(level, '-   error.message=%j', error.message)
+      Log.log(level, '-   error.stack ...\n\n%s\n\n', error.stack)
 
     }
     else {

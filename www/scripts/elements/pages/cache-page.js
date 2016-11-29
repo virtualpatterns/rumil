@@ -13,15 +13,10 @@ class CachePage extends NavigatedPage {
     this.cacheElement = new CacheElement()
   }
 
-  // renderContent(data = {}) {
-  //   data.applicationCache = window.applicationCache
-  //   return super.renderContent(data)
-  // }
+  bind() {
+    super.bind()
 
-  bindEvents() {
-    super.bindEvents()
-
-    this.cacheElement.bindEvents()
+    this.cacheElement.bind()
 
     this.getContent().querySelector('#goRefresh').addEventListener('click', this._onGoRefresh = this.onGoRefresh.bind(this))
 
@@ -36,7 +31,7 @@ class CachePage extends NavigatedPage {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     window.applicationCache.removeEventListener('error', this._onError);
     // window.applicationCache.removeEventListener('obsolete', this._onObsolete);
@@ -49,9 +44,9 @@ class CachePage extends NavigatedPage {
 
     this.getContent().querySelector('#goRefresh').removeEventListener('click', this._onGoRefresh)
 
-    this.cacheElement.unbindEvents()
+    this.cacheElement.unbind()
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onGoRefresh() {

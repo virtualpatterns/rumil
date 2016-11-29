@@ -13,22 +13,22 @@ class BlinkPage extends NavigatedPage {
     this.blinkElement = new BlinkElement()
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     this.getContent().querySelector('#goRefresh').addEventListener('click', this._onGoRefresh = this.onGoRefresh.bind(this))
 
-    this.blinkElement.bindEvents()
+    this.blinkElement.bind()
 
   }
 
-  unbindEvents() {
+  unbind() {
 
-    this.blinkElement.unbindEvents()
+    this.blinkElement.unbind()
 
     this.getContent().querySelector('#goRefresh').removeEventListener('click', this._onGoRefresh)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onGoRefresh() {

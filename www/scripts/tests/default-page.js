@@ -2,14 +2,14 @@
 
 const Assert = require('assert')
 
-const DefaultAutomate = require('../applications/default-automate')
+const DefaultAutomation = require('../applications/default-automation')
 const DefaultPage = require('../elements/pages/default-page')
 const DefaultSelect = require('../applications/default-select')
 
 describe('DefaultPage', () => {
 
   before(() => {
-    return DefaultAutomate.whenPageShown(() => {
+    return DefaultAutomation.whenPageShown(() => {
       window.application.pushPage(new DefaultPage())
     })
   })
@@ -37,8 +37,8 @@ describe('DefaultPage', () => {
   describe('(when the item for Status is clicked)', () => {
 
     before(() => {
-      return DefaultAutomate.whenPageShown(() => {
-        DefaultAutomate.clickListItem('Status')
+      return DefaultAutomation.whenPageShown(() => {
+        DefaultAutomation.clickListItem('Status')
       })
     })
 
@@ -47,7 +47,7 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomate.whenPageShown(() => {
+      return DefaultAutomation.whenPageShown(() => {
         window.application.popPage()
       })
     })
@@ -58,12 +58,12 @@ describe('DefaultPage', () => {
 
     before(() => {
       return Promise.resolve()
-        .then(() => DefaultAutomate.whenPageShown(() => {
-          DefaultAutomate.clickListItem('Status')
+        .then(() => DefaultAutomation.whenPageShown(() => {
+          DefaultAutomation.clickListItem('Status')
           }
         ))
-        .then(() => DefaultAutomate.whenPageShown(() => {
-          DefaultAutomate.clickToolbarButton('Features')
+        .then(() => DefaultAutomation.whenPageShown(() => {
+          DefaultAutomation.clickToolbarButton('Features')
           }
         ))
     })
@@ -79,8 +79,8 @@ describe('DefaultPage', () => {
     let dialog = null
 
     before(() => {
-      return DefaultAutomate.whenDialogShown(() => {
-        DefaultAutomate.clickListItem('Alert')
+      return DefaultAutomation.whenDialogShown(() => {
+        DefaultAutomation.clickListItem('Alert')
       })
         .then((_dialog) => {
           dialog = _dialog
@@ -92,7 +92,7 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomate.whenDialogHidden(() => {
+      return DefaultAutomation.whenDialogHidden(() => {
         window.application.hideDialog(dialog)
       })
     })
@@ -103,11 +103,11 @@ describe('DefaultPage', () => {
 
     before(() => {
       return Promise.resolve()
-        .then(() => DefaultAutomate.whenDialogShown(() => {
-          DefaultAutomate.clickListItem('Alert')
+        .then(() => DefaultAutomation.whenDialogShown(() => {
+          DefaultAutomation.clickListItem('Alert')
         }))
-        .then(() => DefaultAutomate.whenDialogHidden(() => {
-          DefaultAutomate.clickAlertButton('Ok')
+        .then(() => DefaultAutomation.whenDialogHidden(() => {
+          DefaultAutomation.clickAlertButton('Ok')
         }))
     })
 
@@ -122,8 +122,8 @@ describe('DefaultPage', () => {
     let dialog = null
 
     before(() => {
-      return DefaultAutomate.whenDialogShown(() => {
-        DefaultAutomate.clickListItem('Confirmation')
+      return DefaultAutomation.whenDialogShown(() => {
+        DefaultAutomation.clickListItem('Confirmation')
       })
         .then((_dialog) => {
           dialog = _dialog
@@ -136,13 +136,13 @@ describe('DefaultPage', () => {
 
     after(() => {
       return Promise.resolve()
-        .then(() => DefaultAutomate.whenDialogShown(() => {
+        .then(() => DefaultAutomation.whenDialogShown(() => {
           window.application.hideDialog(dialog)
         }))
         .then((_dialog) => {
           dialog = _dialog
         })
-        .then(() => DefaultAutomate.whenDialogHidden(() => {
+        .then(() => DefaultAutomation.whenDialogHidden(() => {
           window.application.hideDialog(dialog)
         }))
     })
@@ -155,11 +155,11 @@ describe('DefaultPage', () => {
 
     before(() => {
       return Promise.resolve()
-        .then(() => DefaultAutomate.whenDialogShown(() => {
-          DefaultAutomate.clickListItem('Confirmation')
+        .then(() => DefaultAutomation.whenDialogShown(() => {
+          DefaultAutomation.clickListItem('Confirmation')
         }))
-        .then(() => DefaultAutomate.whenDialogShown(() => {
-          DefaultAutomate.clickConfirmationButton('Yes')
+        .then(() => DefaultAutomation.whenDialogShown(() => {
+          DefaultAutomation.clickConfirmationButton('Yes')
         }))
         .then((_dialog) => {
           dialog = _dialog
@@ -171,7 +171,7 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomate.whenDialogHidden(() => {
+      return DefaultAutomation.whenDialogHidden(() => {
         window.application.hideDialog(dialog)
       })
     })
@@ -184,11 +184,11 @@ describe('DefaultPage', () => {
 
     before(() => {
       return Promise.resolve()
-        .then(() => DefaultAutomate.whenDialogShown(() => {
-          DefaultAutomate.clickListItem('Confirmation')
+        .then(() => DefaultAutomation.whenDialogShown(() => {
+          DefaultAutomation.clickListItem('Confirmation')
         }))
-        .then(() => DefaultAutomate.whenDialogShown(() => {
-          DefaultAutomate.clickConfirmationButton('No')
+        .then(() => DefaultAutomation.whenDialogShown(() => {
+          DefaultAutomation.clickConfirmationButton('No')
         }))
         .then((_dialog) => {
           dialog = _dialog
@@ -200,7 +200,7 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomate.whenDialogHidden(() => {
+      return DefaultAutomation.whenDialogHidden(() => {
         window.application.hideDialog(dialog)
       })
     })
@@ -208,7 +208,7 @@ describe('DefaultPage', () => {
   })
 
   after(() => {
-    return DefaultAutomate.whenPageShown(() => {
+    return DefaultAutomation.whenPageShown(() => {
       window.application.popPage()
     })
   })

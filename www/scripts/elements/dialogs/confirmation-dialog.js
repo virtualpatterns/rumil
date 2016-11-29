@@ -13,20 +13,20 @@ class ConfirmationDialog extends SimpleAlertDialog {
     this.title = title
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     this.getContent().querySelector('#yes').addEventListener('click', this._onYes = this.onYes.bind(this))
     this.getContent().querySelector('#no').addEventListener('click', this._onNo = this.onNo.bind(this))
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.getContent().querySelector('#no').removeEventListener('click', this._onNo)
     this.getContent().querySelector('#yes').removeEventListener('click', this._onYes)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onYes() {

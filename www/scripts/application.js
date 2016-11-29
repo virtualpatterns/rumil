@@ -5,7 +5,7 @@ const Timeout = require('timer-promise')
 const Utilities = require('util')
 
 const AlertDialog = require('./elements/dialogs/alert-dialog')
-const Automate = require('./automate')
+const Automation = require('./automation')
 const ConfirmationDialog = require('./elements/dialogs/confirmation-dialog')
 const Element = require('./element')
 const Index = require('../../index.json')
@@ -45,8 +45,8 @@ class Application extends Element {
     this.emitEvent('authorized', token)
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     this.onEvent('ready', this._onReady = this.onReady.bind(this))
     this.onEvent('dialogShown', this._onDialogShown = this.onDialogShown.bind(this))
@@ -55,14 +55,14 @@ class Application extends Element {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.offEvent('authorized', this._onAuthorized)
     this.offEvent('dialogHidden', this._onDialogHidden)
     this.offEvent('dialogShown', this._onDialogShown)
     this.offEvent('ready', this._onReady)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onReady() {
@@ -320,7 +320,7 @@ class Application extends Element {
 
 }
 
-Application.Automate = Automate
+Application.Automation = Automation
 Application.Select = Select
 
 module.exports = Application

@@ -1,6 +1,6 @@
 'use strict'
 
-const DefaultAutomate = require('./default-automate')
+const DefaultAutomation = require('./default-automation')
 const DefaultPage = require('../elements/pages/default-page')
 const DefaultSelect = require('./default-select')
 const NavigatedApplication = require('./navigated-application')
@@ -21,7 +21,7 @@ class DefaultApplication extends NavigatedApplication {
 
 }
 
-DefaultApplication.Automate = DefaultAutomate
+DefaultApplication.Automation = DefaultAutomation
 DefaultApplication.Select = DefaultSelect
 
 module.exports = DefaultApplication

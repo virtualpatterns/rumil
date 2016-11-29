@@ -12,6 +12,8 @@
   "dependencies": {
     "@pwn/is": "^1.0.2",
     "axios": "^0.15.2",
+    "babel-plugin-transform-regenerator": "^6.16.1",
+    "babel-polyfill": "^6.16.0",
     "client-oauth2": "^3.2.0",
     "commander": "^2.9.0",
     "daemon": "^1.1.0",
@@ -34,6 +36,7 @@
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.7",
     "babel-preset-es2015": "^6.18.0",
+    "co": "^4.6.0",
     "istanbul": "^0.4.5",
     "jake": "^8.0.14",
     "json-loader": "^0.5.4",

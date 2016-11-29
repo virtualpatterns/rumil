@@ -20,8 +20,8 @@ class TestPage extends NavigatedPage {
     this.testElement = new TestElement()
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     // if (this.getContent().querySelector('#goBack'))
     //   this.getContent().querySelector('#goBack').addEventListener('click', this._onGoBack = this.onGoBack.bind(this))
@@ -30,14 +30,14 @@ class TestPage extends NavigatedPage {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     // this.offEvent('shown', this._onShown)
 
     // if (this.getContent().querySelector('#goBack'))
     //   this.getContent().querySelector('#goBack').removeEventListener('click', this._onGoBack)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   // onGoBack() {

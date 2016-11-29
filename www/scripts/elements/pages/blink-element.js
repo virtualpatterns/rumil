@@ -55,13 +55,13 @@ class BlinkElement extends Blink {
 
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
   }
 
-  unbindEvents() {
-    // Interval.stopBySelector(`#${this.id} #onRefreshInterval`)
-    super.unbindEvents()
+  unbind() {
+    // CountDown.stop(`#${this.id} #onRefreshInterval`)
+    super.unbind()
   }
 
 }

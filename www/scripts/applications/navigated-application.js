@@ -4,7 +4,7 @@ const Search = require('query-string')
 
 const Application = require('../application')
 const Log = require('../log')
-const NavigatedAutomate = require('./navigated-automate')
+const NavigatedAutomation = require('./navigated-automation')
 const NavigatedSelect = require('./navigated-select')
 const PageContext = require.context('../elements/pages', true, /-page\.js/)
 
@@ -30,8 +30,8 @@ class NavigatedApplication extends Application {
     this.emitEvent('pageHidden', page, isFinal)
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     // this.getContent().addEventListener('init', this._onInit = this.onInit.bind(this))
     // this.getContent().addEventListener('show', this._onPageShown = this.onPageShown.bind(this))
@@ -43,7 +43,7 @@ class NavigatedApplication extends Application {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.offEvent('pageHidden', this._onPageHidden)
     this.offEvent('pageShown', this._onPageShown)
@@ -53,7 +53,7 @@ class NavigatedApplication extends Application {
     // this.getContent().removeEventListener('show', this._onPageShown)
     // this.getContent().removeEventListener('init', this._onPageAdded)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onReady(Page) {
@@ -91,12 +91,12 @@ class NavigatedApplication extends Application {
   onInit(event) {
     // Log.debug('- NavigatedApplication.onInit() event.target.id=%j', event.target.id)
     // this.pages.last().addContentElement()
-    // this.pages.last().bindEvents()
+    // this.pages.last().bind()
   }
 
   onDestroy(event) {
     // Log.debug('- NavigatedApplication.onDestroy() event.target.id=%j', event.target.id)
-    // this.pages.last().unbindEvents()
+    // this.pages.last().unbind()
     // this.pages.last().removeContentElement()
   }
 
@@ -104,7 +104,7 @@ class NavigatedApplication extends Application {
     // Log.debug('- NavigatedApplication.onPageShown(page, %s) page.id=%j', isInitial, page.id)
 
     page.addContentElement()
-    page.bindEvents()
+    page.bind()
 
     page.emitShown(isInitial)
 
@@ -115,7 +115,7 @@ class NavigatedApplication extends Application {
 
     page.emitHidden(isFinal)
 
-    page.unbindEvents()
+    page.unbind()
     page.removeContentElement()
 
   }
@@ -192,7 +192,7 @@ class NavigatedApplication extends Application {
 
 }
 
-NavigatedApplication.Automate = NavigatedAutomate
+NavigatedApplication.Automation = NavigatedAutomation
 NavigatedApplication.Select = NavigatedSelect
 
 module.exports = NavigatedApplication

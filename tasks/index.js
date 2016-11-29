@@ -3,6 +3,7 @@
 require('datejs')
 
 const Bundler = require('webpack')
+const Co = require('co')
 const Promisify = require("es6-promisify")
 const _Shell = require('pshell')
 
@@ -16,7 +17,74 @@ const INDEX_PATH = Path.join(__dirname, '..', 'index.json')
 const LOG_PATH = Path.join(Process.LOG_PATH, `${Package.name}.jake.log`)
 const RESOURCES_PATH = Path.join(__dirname, 'resources')
 
-Log.addFile(LOG_PATH)
+const INDEX_CONFIGURATION = {
+  'devtool': 'source-map',
+  // 'entry': './www/scripts/index.js',
+  'entry': [
+    'babel-polyfill',
+    './www/scripts/index.js'
+  ],
+  'output': {
+    'filename': 'index.js',
+    'path': './www/scripts/bundles'
+  },
+  'module': {
+    'loaders': [
+      {
+        'test': /\.js$/,
+        'loader': 'babel-loader',
+        'exclude': /node_modules/
+      },
+      {
+        'test': /\.json$/,
+        'loader': 'json-loader'
+      },
+      {
+        'test': /\.pug$/,
+        'loader': 'pug-loader?pretty=true'
+      }
+    ]
+  },
+  'plugins': [
+    new Bundler.ExtendedAPIPlugin()
+  ]
+}
+
+const SANDBOX_CONFIGURATION = {
+  'devtool': 'source-map',
+  'entry': [
+    'babel-polyfill',
+    './www/scripts/sandbox.js'
+  ],
+  'output': {
+    'filename': 'sandbox.js',
+    'path': './www/scripts/bundles'
+  },
+  'module': {
+    'loaders': [
+      {
+        'test': /\.js$/,
+        'loader': 'babel-loader',
+        'exclude': /node_modules/
+      },
+      {
+        'test': /\.json$/,
+        'loader': 'json-loader'
+      },
+      {
+        'test': /\.pug$/,
+        'loader': 'pug-loader?pretty=true'
+      }
+    ]
+  },
+  'plugins': [
+    new Bundler.ExtendedAPIPlugin()
+  ]
+}
+
+Log
+  .addConsole()
+  .addFile(LOG_PATH)
 
 const ShellSilent = _Shell.context({
   'echoCommand': false
@@ -42,131 +110,230 @@ task('unlink', {'async': true}, () => {
 
 namespace('bundle', () => {
 
-  desc('Create the application bundle(s)')
-  task('create', {'async': true}, () => {
+  desc('Create the indexapplication bundle')
+  task('createIndex', {'async': true}, () => {
+    return Co(function* () {
 
-    // let CACHE_TIMESTAMP = null
-    // let INDEX = null
+      Log.debug('> bundle:createIndex')
 
-    return Promise.resolve()
-      .then(() => Log.debug('Started bundle:create ...'))
-      .then(() => {
-        return Promise.resolve()
-          .then(() => FileSystem.Promise.access(INDEX_PATH, FileSystem.F_OK))
-          .then(() => FileSystem.Promise.readFile(INDEX_PATH, {
-            'encoding': 'utf-8'
-          }))
-          .then((data) => {
+      let index = null
 
-            let index = JSON.parse(data)
-            index.value++
+      try {
+        yield FileSystem.Promise.access(INDEX_PATH, FileSystem.F_OK)
+        index = JSON.parse(yield FileSystem.Promise.readFile(INDEX_PATH, {
+          'encoding': 'utf-8'
+        }))
+      }
+      catch (error) {
+        Log.error(error)
+        index = {
+          'value': -1
+        }
+      }
 
-            return Promise.resolve(index)
+      index.value++
 
-          })
-          .catch((error) => Promise.resolve({
-            'value': 0
-          }))
-      })
-      .then((index) => FileSystem.Promise.writeFile(INDEX_PATH, JSON.stringify(index), {
+      yield FileSystem.Promise.writeFile(INDEX_PATH, JSON.stringify(index), {
         'encoding': 'utf-8'
+      })
+
+      let Bundle = Bundler(INDEX_CONFIGURATION)
+
+      Bundle.Promise = {}
+      Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+
+      let status = yield Bundle.Promise.run()
+
+      Log.debug('\n\n%s\n', status.toString({
+        'colors': false,
+        'hash': false, // add the hash of the compilation
+        'version': true, // add webpack version information
+        'timings': true, // add timing information
+        'assets': true, // add assets information
+        'chunks': true, // add chunk information (setting this to false allows for a less verbose output)
+        'chunkModules': false, // add built modules information to chunk information
+        'modules': false, // add built modules information
+        'children': false, // add children information
+        'cached': false, // add also information about cached (not built) modules
+        'reasons': false, // add information about the reasons why modules are included
+        'source': false, // add the source code of modules
+        'errorDetails': false, // add details to errors (like resolving log)
+        'chunkOrigins': false // add the origins of chunks and chunk merging info
       }))
-      .then(() => {
 
-        // CACHE_TIMESTAMP = new Date().toISOString()
+      Log.debug('< bundle:createIndex')
 
-        // INDEX = index
-        // INDEX.value++
-
-        let Bundle = Bundler({
-          'devtool': 'source-map',
-          'entry': './www/scripts/index.js',
-          // 'externals': [
-          //   /datejs\/src/
-          // ],
-          'output': {
-            'filename': 'index.js',
-            'path': './www/scripts/bundles'
-          },
-          'module': {
-            'loaders': [
-              {
-                'test': /\.js$/,
-                'loader': 'babel-loader',
-                'exclude': /node_modules/
-              },
-              {
-                'test': /\.json$/,
-                'loader': 'json-loader'
-              },
-              {
-                'test': /\.pug$/,
-                'loader': 'pug-loader?pretty=true'
-              }
-            ]
-          },
-          'plugins': [
-            // new Bundler.DefinePlugin({
-            //   'CACHE_TIMESTAMP': JSON.stringify(CACHE_TIMESTAMP)
-            //   // ,
-            //   // 'INDEX': JSON.stringify(INDEX)
-            // }),
-            new Bundler.ExtendedAPIPlugin()
-          ]
-        })
-
-        Bundle.Promise = {}
-        Bundle.Promise.run = Promisify(Bundle.run, Bundle)
-
-        return Bundle.Promise.run()
-
-      })
-      .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
-      // .then(() => FileSystem.Promise.writeFile('./cacheTimestamp.json', `{ "value": "${CACHE_TIMESTAMP}" }\n`, {
-      //   'encoding': 'utf-8'
-      // }))
-      .then(() => {
-
-        let Bundle = Bundler({
-          'devtool': 'source-map',
-          'entry': './www/scripts/sandbox.js',
-          'output': {
-            'filename': 'sandbox.js',
-            'path': './www/scripts/bundles'
-          },
-          'module': {
-            'loaders': [
-              {
-                'test': /\.js$/,
-                'loader': 'babel-loader',
-                'exclude': /node_modules/
-              },
-              {
-                'test': /\.json$/,
-                'loader': 'json-loader'
-              },
-              {
-                'test': /\.pug$/,
-                'loader': 'pug-loader?pretty=true'
-              }
-            ]
-          },
-          'plugins': [
-            new Bundler.ExtendedAPIPlugin()
-          ]
-        })
-
-        Bundle.Promise = {}
-        Bundle.Promise.run = Promisify(Bundle.run, Bundle)
-
-        return Bundle.Promise.run()
-
-      })
-      .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
-      .then(() => Log.debug('... bundle:create finished'))
-
+    })
   })
 
+  desc('Create the sandbox application bundle')
+  task('createSandbox', {'async': true}, () => {
+    return Co(function* () {
+
+      Log.debug('> bundle:createSandbox')
+
+      let Bundle = Bundler(SANDBOX_CONFIGURATION)
+
+      Bundle.Promise = {}
+      Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+
+      let status = yield Bundle.Promise.run()
+
+      Log.debug('\n\n%s\n', status.toString({
+        'colors': false,
+        'hash': false, // add the hash of the compilation
+        'version': true, // add webpack version information
+        'timings': false, // add timing information
+        'assets': false, // add assets information
+        'chunks': false, // add chunk information (setting this to false allows for a less verbose output)
+        'chunkModules': false, // add built modules information to chunk information
+        'modules': false, // add built modules information
+        'children': false, // add children information
+        'cached': false, // add also information about cached (not built) modules
+        'reasons': false, // add information about the reasons why modules are included
+        'source': false, // add the source code of modules
+        'errorDetails': true, // add details to errors (like resolving log)
+        'chunkOrigins': false // add the origins of chunks and chunk merging info
+      }))
+
+      Log.debug('< bundle:createSandbox')
+
+    })
+  })
+
+  // desc('Create the application bundle(s)')
+  // task('create', {'async': true}, () => {
+  //
+  //   // let CACHE_TIMESTAMP = null
+  //   // let INDEX = null
+  //
+  //   return Promise.resolve()
+  //     .then(() => Log.debug('Started bundle:create ...'))
+  //     .then(() => {
+  //       return Promise.resolve()
+  //         .then(() => FileSystem.Promise.access(INDEX_PATH, FileSystem.F_OK))
+  //         .then(() => FileSystem.Promise.readFile(INDEX_PATH, {
+  //           'encoding': 'utf-8'
+  //         }))
+  //         .then((data) => {
+  //
+  //           let index = JSON.parse(data)
+  //           index.value++
+  //
+  //           return Promise.resolve(index)
+  //
+  //         })
+  //         .catch((error) => Promise.resolve({
+  //           'value': 0
+  //         }))
+  //     })
+  //     .then((index) => FileSystem.Promise.writeFile(INDEX_PATH, JSON.stringify(index), {
+  //       'encoding': 'utf-8'
+  //     }))
+  //     .then(() => {
+  //
+  //       // CACHE_TIMESTAMP = new Date().toISOString()
+  //
+  //       // INDEX = index
+  //       // INDEX.value++
+  //
+  //       let Bundle = Bundler({
+  //         'devtool': 'source-map',
+  //         'entry': './www/scripts/index.js',
+  //         // 'externals': [
+  //         //   /datejs\/src/
+  //         // ],
+  //         'output': {
+  //           'filename': 'index.js',
+  //           'path': './www/scripts/bundles'
+  //         },
+  //         'module': {
+  //           'loaders': [
+  //             {
+  //               'test': /\.js$/,
+  //               'loader': 'babel-loader',
+  //               'exclude': /node_modules/
+  //             },
+  //             {
+  //               'test': /\.json$/,
+  //               'loader': 'json-loader'
+  //             },
+  //             {
+  //               'test': /\.pug$/,
+  //               'loader': 'pug-loader?pretty=true'
+  //             }
+  //           ]
+  //         },
+  //         'plugins': [
+  //           // new Bundler.DefinePlugin({
+  //           //   'CACHE_TIMESTAMP': JSON.stringify(CACHE_TIMESTAMP)
+  //           //   // ,
+  //           //   // 'INDEX': JSON.stringify(INDEX)
+  //           // }),
+  //           new Bundler.ExtendedAPIPlugin()
+  //         ]
+  //       })
+  //
+  //       Bundle.Promise = {}
+  //       Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+  //
+  //       return Bundle.Promise.run()
+  //
+  //     })
+  //     .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
+  //     // .then(() => FileSystem.Promise.writeFile('./cacheTimestamp.json', `{ "value": "${CACHE_TIMESTAMP}" }\n`, {
+  //     //   'encoding': 'utf-8'
+  //     // }))
+  //     .then(() => {
+  //
+  //       let Bundle = Bundler({
+  //         'devtool': 'source-map',
+  //         'entry': [
+  //           'babel-polyfill',
+  //           './www/scripts/sandbox.js'
+  //         ],
+  //         'output': {
+  //           'filename': 'sandbox.js',
+  //           'path': './www/scripts/bundles'
+  //         },
+  //         'module': {
+  //           'loaders': [
+  //             {
+  //               'test': /\.js$/,
+  //               'loader': 'babel-loader',
+  //               'exclude': /node_modules/
+  //             },
+  //             {
+  //               'test': /\.json$/,
+  //               'loader': 'json-loader'
+  //             },
+  //             {
+  //               'test': /\.pug$/,
+  //               'loader': 'pug-loader?pretty=true'
+  //             }
+  //           ]
+  //         },
+  //         'plugins': [
+  //           new Bundler.ExtendedAPIPlugin()
+  //         ]
+  //       })
+  //
+  //       Bundle.Promise = {}
+  //       Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+  //
+  //       return Bundle.Promise.run()
+  //
+  //     })
+  //     .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
+  //     .then(() => Log.debug('... bundle:create finished'))
+  //
+  // })
+
+  desc('Create the application bundle(s)')
+  task('create', ['bundle:createIndex', 'bundle:createSandbox'], () => {
+  })
+
+  // watchTask('watch', ['bundle:create'], function () {
   watchTask('watch', ['bundle:create'], function () {
     this.watchFiles
       // Default includes/excludes
@@ -194,30 +361,36 @@ namespace('manifest', () => {
 
   desc('Create the application cache manifest')
   task('create', {'async': true}, () => {
+    return Co(function* () {
 
-    let CACHE_TIMESTAMP = new Date().toISOString()
+      Log.debug('> manifest:create')
 
-    return Promise.resolve()
-      .then(() => Log.debug('Started manifest:create ...'))
-      .then(() => ShellEcho('appcache-manifest  --network-star \
-                                                --output ./www/index.manifest \
-                                                --prefix /www \
-                                                  "./www/coverage/**/*.*" \
-                                                  "./www/scripts/bundles/index.js" \
-                                                  "./www/styles/index.css" \
-                                                  "./www/resources/**/*.ico" \
-                                                  "./www/vendor/mocha/mocha.css" \
-                                                  "./www/vendor/mocha/mocha.js" \
-                                                  "./www/vendor/**/*.{css,min.js,eot,otf,svg,ttf,woff,woff2}"'))
-      .then(() => ShellSilent(`echo "# Created at ${new Date().toISOString()}" >> ./www/index.manifest`))
-      .then(() => ShellEcho('appcache-manifest  --network-star \
-                                                --output ./www/sandbox.manifest \
-                                                --prefix /www \
-                                                  "./www/scripts/bundles/sandbox.js" \
-                                                  "./www/styles/sandbox.css" \
-                                                  "./www/vendor/**/*.{css,min.js,eot,otf,svg,ttf,woff,woff2}"'))
-      .then(() => ShellSilent(`echo "# Created at ${new Date().toISOString()}" >> ./www/sandbox.manifest`))
-      .then(() => Log.debug('... manifest:create finished'))
+      yield ShellSilent('appcache-manifest  --network-star \
+                                            --output ./www/index.manifest \
+                                            --prefix /www \
+                                              "./www/coverage/**/*.*" \
+                                              "./www/scripts/bundles/index.js" \
+                                              "./www/styles/index.css" \
+                                              "./www/resources/**/*.ico" \
+                                              "./www/vendor/mocha/mocha.css" \
+                                              "./www/vendor/mocha/mocha.js" \
+                                              "./www/vendor/**/*.{css,min.js,eot,otf,svg,ttf,woff,woff2}"')
+
+      yield ShellSilent(`echo "# Created at ${new Date().toISOString()}" >> ./www/index.manifest`)
+
+      yield ShellSilent('appcache-manifest  --network-star \
+                                            --output ./www/sandbox.manifest \
+                                            --prefix /www \
+                                              "./www/scripts/bundles/sandbox.js" \
+                                              "./www/styles/sandbox.css" \
+                                              "./www/styles/reset.css" \
+                                              "./www/vendor/**/*.{css,min.js,eot,otf,svg,ttf,woff,woff2}"')
+
+      yield ShellSilent(`echo "# Created at ${new Date().toISOString()}" >> ./www/sandbox.manifest`)
+
+      Log.debug('< manifest:create')
+
+    })
   })
 
   watchTask('watch', ['manifest:create'], function () {
@@ -255,9 +428,16 @@ namespace('server', () => {
 
   desc('Recycle (SIGHUP) the server')
   task('recycle', {'async': true}, () => {
-    return Promise.resolve()
-      .then(() => ShellSilent(`mv process/logs/rumil.log process/logs/rumil.${(new Date()).toString('yyyyMMddhhmmss')}.log`))
-      .then(() => ShellSilent('kill -s HUP $(cat process/pids/rumil.pid)'))
+    return Co(function* () {
+
+      Log.debug('> server:recycle')
+
+      yield ShellSilent(`mv process/logs/rumil.log process/logs/rumil.${(new Date()).toString('yyyyMMddhhmmss')}.log`)
+      yield ShellSilent('kill -s HUP $(cat process/pids/rumil.pid)')
+
+      Log.debug('< server:recycle')
+
+    })
   })
 
   desc('Stop the server using defaults')
@@ -267,11 +447,16 @@ namespace('server', () => {
 
   desc('Restart the server using defaults')
   task('restart', {'async': true}, () => {
-    return Promise.resolve()
-      .then(() => Log.debug('Started server:restart ...'))
-      .then(() => ShellSilent('jake server:stop'))
-      .then(() => ShellSilent('jake server:start'))
-      .then(() => Log.debug('... server:restart finished'))
+    return Co(function* () {
+
+      Log.debug('> server:restart')
+
+      yield ShellSilent('jake server:stop')
+      yield ShellSilent('jake server:start')
+
+      Log.debug('< server:restart')
+
+    })
   })
 
   watchTask('watch', ['server:restart'], function () {
@@ -324,36 +509,56 @@ namespace('watch', () => {
 
   desc('Start watch tasks')
   task('start', ['bundle:create', 'manifest:create', 'server:restart'], {'async': true}, () => {
-    return Promise.resolve()
-      .then(() => ShellSilent('jake bundle:watch &'))
-      .then(() => ShellSilent('jake manifest:watch &'))
-      .then(() => ShellSilent('jake server:watch &'))
+    return Co(function* () {
+
+      Log.debug('> watch:start')
+
+      yield ShellSilent('jake bundle:watch &')
+      yield ShellSilent('jake manifest:watch &')
+      yield ShellSilent('jake server:watch &')
+
+      Log.debug('< watch:start')
+
+    })
   })
 
   desc('Stop watch tasks')
   task('stop', {'async': true}, () => {
-    return Promise.resolve()
-      .then(() => ShellSilent('tmux kill-session -t rumil-watch', {
+    return Co(function* () {
+
+      Log.debug('> watch:stop')
+
+      // yield ShellSilent('tmux kill-session -t rumil-watch', {
+      //   'ignoreError': true
+      // })
+
+      yield ShellSilent('pkill -f "jake bundle:watch"', {
         'ignoreError': true
-      }))
-      .then(() => ShellSilent('pkill -f "jake bundle:watch"', {
+      })
+      yield ShellSilent('pkill -f "jake manifest:watch"', {
         'ignoreError': true
-      }))
-      .then(() => ShellSilent('pkill -f "jake manifest:watch"', {
+      })
+      yield ShellSilent('pkill -f "jake server:watch"', {
         'ignoreError': true
-      }))
-      .then(() => ShellSilent('pkill -f "jake server:watch"', {
-        'ignoreError': true
-      }))
+      })
+
+      Log.debug('< watch:stop')
+
+    })
   })
 
   desc('Restart the watch tasks')
   task('restart', {'async': true}, () => {
-    return Promise.resolve()
-      .then(() => Log.debug('Started watch:restart ...'))
-      .then(() => ShellSilent('jake watch:stop'))
-      .then(() => ShellSilent('jake watch:start'))
-      .then(() => Log.debug('... watch:restart finished'))
+    return Co(function* () {
+
+      Log.debug('> watch:restart')
+
+      yield ShellSilent('jake watch:stop')
+      yield ShellSilent('jake watch:start')
+
+      Log.debug('< watch:restart')
+
+    })
   })
 
   watchTask('watch', ['watch:restart'], function () {
@@ -369,7 +574,6 @@ namespace('watch', () => {
       .exclude('./process/**/*.*')
       .exclude('./sandbox/**/*.*')
       .exclude('./server/**/*.*')
-      // .exclude('./tasks/**/*.js')
       .exclude('./www/**/*.*')
   })
 

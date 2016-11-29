@@ -2,7 +2,7 @@ extends ../../element.pug
 block body
   ons-list(modifier='inset')
     ons-list-item(modifier='longdivider')
-      if status.isRefreshRequired
+      if Is.undefined(status.isUpdateRequired)
         div.left
           ons-icon( icon='fa-ellipsis-h',
                     size='20px')
@@ -31,11 +31,6 @@ block body
             | Your version of the application is the latest version.  No updates are available.
 
   ons-list(modifier='inset')
-    //- ons-list-item(modifier='longdivider')
-    //-   div.left
-    //-     | Name
-    //-   div.right
-    //-     = status.name || '(unknown)'
     ons-list-item(modifier='longdivider')
       div.left
         | Server Version

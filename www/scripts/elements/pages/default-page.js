@@ -25,8 +25,8 @@ class DefaultPage extends NavigatedPage {
     this.selector = '#goIntervalInterval'
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     // this.onEvent('shown', this._onShown = this.onShown.bind(this))
     // this.onEvent('hidden', this._onHidden = this.onHidden.bind(this))
@@ -53,7 +53,7 @@ class DefaultPage extends NavigatedPage {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.getContent().querySelector('#goGitHub').removeEventListener('click', this._onGoGitHub)
     this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner)
@@ -78,7 +78,7 @@ class DefaultPage extends NavigatedPage {
     // this.offEvent('hidden', this._onHidden)
     // this.offEvent('shown', this._onShown)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   // onGoBack() {
@@ -89,7 +89,7 @@ class DefaultPage extends NavigatedPage {
 
   onHidden() {
     Log.debug('- DefaultPage.onHidden()')
-    this.stopInterval(this.selector)
+    // this.stopCountdown(this.selector)
     super.onHidden()
   }
 
@@ -135,21 +135,21 @@ class DefaultPage extends NavigatedPage {
   onGoInterval() {
     Log.debug('- DefaultPage.onGoInterval()')
 
-    this.stopInterval(this.selector)
-
-    this.startInterval(this.selector, 10)
-      .then(() => {
-        document.querySelector(this.selector).innerHTML = '<span style=\'font-style: italic;\'>n</span>'
-      })
-      .catch((error) => {
-
-        if (Is.error(error))
-          document.querySelector(this.selector).innerHTML = '<span style=\'font-style: italic;\'>x</span>'
-
-        Log.error('- DefaultPage.onGoInterval()')
-        Log.error(error)
-
-      })
+    // this.stopCountdown(this.selector)
+    //
+    // this.startCountdown(this.selector, 10)
+    //   .then(() => {
+    //     document.querySelector(this.selector).innerHTML = '<span style=\'font-style: italic;\'>n</span>'
+    //   })
+    //   .catch((error) => {
+    //
+    //     if (Is.error(error))
+    //       document.querySelector(this.selector).innerHTML = '<span style=\'font-style: italic;\'>x</span>'
+    //
+    //     Log.error('- DefaultPage.onGoInterval()')
+    //     Log.error(error)
+    //
+    //   })
 
   }
 

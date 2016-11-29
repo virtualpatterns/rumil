@@ -1,52 +1,45 @@
 'use strict'
 
+const Co = require('co')
 const Is = require('@pwn/is')
-// const Timeout = require('timer-promise')
 
-const Blink = require('../blink')
-// const Element = require('../../element')
-// const Interval = require('../../interval')
+const CountDown = require('../../count-down')
+const Element = require('../../element')
 const Log = require('../../log')
 
 const IntervalError = require('../../errors/interval-error')
 
 const ContentFn = require('./cache-element.pug')
 
-// class CacheElement extends Element {
-class CacheElement extends Blink {
+class CacheElement extends Element {
 
   constructor(contentFn = ContentFn) {
-    // super(true, contentFn)
-    super(contentFn)
+    super(true, contentFn)
     this.onUpdatingIndex = 0
   }
 
   renderContent(data = {}) {
     // Log.debug('- CacheElement.renderContent(data)')
+
     data.status = data.status || {
-      // 'isEventUndefined': true
-      // 'isEventUndefined': false,
       'isUpdating': true,
       'isDownloading': false,
       'isUpdateRequired': false
-      // ,
-      // 'isError': false
     }
+
     return super.renderContent(data)
+
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
   }
 
-  unbindEvents() {
+  unbind() {
 
-    // this.stopInterval('#onUpdateReady')
-    this.stopInterval('#onUpdateReady')
-    // this.stopInterval('#onNoUpdate')
-    // Timeout.stop('CacheElement.onNoUpdate')
+    CountDown.stop(this, '#onUpdateReady')
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onUpdating() {
@@ -59,24 +52,23 @@ class CacheElement extends Blink {
 
         let data = {
           'status': {
-            // 'isEventUndefined': false,
             'isUpdating': true,
-            'isDownloading': true,
+            'isDownloading': false,
             'isUpdateRequired': false
-            // ,
-            // 'isError': false
           }
         }
 
-        // this.stopInterval('#onUpdateReady')
-        // this.stopInterval('#onNoUpdate')
-        // Timeout.stop('CacheElement.onNoUpdate')
-
-        this.updateContent(data)
-          .catch((error) => {
-            Log.error('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex)
-            Log.error(error)
-          })
+        try {
+          this.updateContent(data)
+        }
+        catch (error) {
+          if (error instanceof IntervalError) {
+            Log.warn('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex)
+            Log.warn(error)
+          }
+          else
+            throw error
+        }
 
       }
 
@@ -97,24 +89,23 @@ class CacheElement extends Blink {
 
       let data = {
         'status': {
-          // 'isEventUndefined': false,
           'isUpdating': false,
           'isDownloading': true,
           'isUpdateRequired': false
-          // ,
-          // 'isError': false
         }
       }
 
-      // this.stopInterval('#onUpdateReady')
-      // this.stopInterval('#onNoUpdate')
-      // Timeout.stop('CacheElement.onNoUpdate')
-
-      this.updateContent(data)
-          .catch((error) => {
-            Log.debug('- CacheElement.onDownloading()')
-            Log.error(error)
-          })
+      try {
+        this.updateContent(data)
+      }
+      catch (error) {
+        if (error instanceof IntervalError) {
+          Log.warn('- CacheElement.onDownloading()')
+          Log.warn(error)
+        }
+        else
+          throw error
+      }
 
     }
     catch (error) {
@@ -124,102 +115,91 @@ class CacheElement extends Blink {
   }
 
   onUpdateReady() {
-    Promise.resolve()
-      .then(() => {
+
+    let self = this
+
+    Co(function* () {
+
+      try {
 
         Log.debug('- CacheElement.onUpdateReady()')
 
         let data = {
           'status': {
-            // 'isEventUndefined': false,
             'isUpdating': false,
             'isDownloading': false,
             'isUpdateRequired': true
-            // ,
-            // 'isError': false
           }
         }
 
-        // this.stopInterval('#onUpdateReady')
-        // this.stopInterval('#onNoUpdate')
-        // Timeout.stop('CacheElement.onNoUpdate')
+        try {
 
-        return this.updateContent(data)
+          self.updateContent(data)
 
-      })
-      .then(() => this.startInterval('#onUpdateReady', 3))
-      .then(() => window.location.reload(true))
-      .catch((error) => {
+          yield CountDown.start(self, '#onUpdateReady', 5)
 
-        if (Is.error(error)) {
-          Log.error('- CacheElement.onUpdateReady()')
-          Log.error(error)
         }
-        else
-          window.application.showError(error)
-
-      })
-  }
-
-  onNoUpdate() {
-    // Promise.resolve()
-    //   .then(() => {
-
-      try {
-
-        Log.debug('- CacheElement.onNoUpdate()')
-
-        let data = {
-          'status': {
-            // 'isEventUndefined': false,
-            'isUpdating': false,
-            'isDownloading': false,
-            'isUpdateRequired': false
-            // ,
-            // 'isError': false
+        catch (error) {
+          if (error instanceof IntervalError) {
+            Log.warn('- CacheElement.onUpdateReady()')
+            Log.warn(error)
           }
+          else
+            throw error
         }
 
-        // this.stopInterval('#onUpdateReady')
-        // this.stopInterval('#onNoUpdate')
-        // Timeout.stop('CacheElement.onNoUpdate')
-
-        this.updateContent(data)
-          .catch((error) => {
-            Log.error('- CacheElement.onNoUpdate()')
-            Log.error(error)
-          })
+        window.location.reload(true)
 
       }
       catch (error) {
         window.application.showError(error)
       }
-      // })
-      // .then(() => this.startInterval('#onNoUpdate', 60))
-      // // .then(() => Timeout.start('CacheElement.onNoUpdate', 60000))
-      // .then(() => window.applicationCache.update())
-      // .catch((error) => {
-      //
-      //   if (Is.error(error)) {
-      //     Log.error('- CacheElement.onUpdateReady()')
-      //     Log.error(error)
-      //   }
-      //   else
-      //     window.application.showError(error)
-      //
-      // })
+
+    })
+
+  }
+
+  onNoUpdate() {
+
+    try {
+
+      Log.debug('- CacheElement.onNoUpdate()')
+
+      let data = {
+        'status': {
+          'isUpdating': false,
+          'isDownloading': false,
+          'isUpdateRequired': false
+        }
+      }
+
+      try {
+        this.updateContent(data)
+      }
+      catch (error) {
+        if (error instanceof IntervalError) {
+          Log.warn('- CacheElement.onNoUpdate()')
+          Log.warn(error)
+        }
+        else
+          throw error
+      }
+
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
+
   }
 
   onError(event) {
 
-    // Promise.resolve()
-    //   .then(() => Log.debug('- CacheElement.onError(event)'))
-    //   .then(() => window.application.showError(event))
-    //   .catch((error) => window.application.showError(error))
-
     try {
+
       Log.debug('- CacheElement.onError(event)')
+
       window.application.showError(event)
+
     }
     catch (error) {
       window.application.showError(error)

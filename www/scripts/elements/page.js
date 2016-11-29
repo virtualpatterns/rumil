@@ -23,8 +23,8 @@ class Page extends Element {
     this.emitEvent('hidden', isFinal)
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     // this.getContent().addEventListener('init', this._onAdded = this.onAdded.bind(this))
     // this.getContent().addEventListener('show', this._onShown = this.onShown.bind(this))
@@ -36,7 +36,7 @@ class Page extends Element {
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.offEvent('hidden', this._onHidden)
     this.offEvent('shown', this._onShown)
@@ -46,7 +46,7 @@ class Page extends Element {
     // this.getContent().removeEventListener('show', this._onShown)
     // this.getContent().removeEventListener('init', this._onAdded)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   // onAdded() {

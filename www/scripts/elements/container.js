@@ -11,11 +11,32 @@ class Container extends Element {
     super(false, contentFn)
   }
 
-  renderContent(element) {
-    return super.renderContent({
-      'content': element
-    })
-  }
+  // addContent(parentOrSelector = 'html > body', location = 'beforeend', data = {}, element) {
+  //   Log.debug('- Container.addContent(%j, %j, data, element)', parentOrSelector, location)
+  //   return super.addContent(parentOrSelector, location, {
+  //     'contentElement': element,
+  //     'contentData': data
+  //   })
+  // }
+
+  // renderContent(element, data) {
+  //   Log.debug('- Container.renderContent(element, data)')
+  //   return super.renderContent({
+  //     'contentElement': element,
+  //     'contentData': data
+  //   })
+  // }
+
+  // updateContent(element) {
+  //   Log.debug('- Container.updateContent(element)')
+  //   return super.updateContent({
+  //     'content': element
+  //   })
+  // }
+
+  bind() {}
+
+  unbind() {}
 
 }
 

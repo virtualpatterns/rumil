@@ -11,20 +11,20 @@ class NavigatedPage extends Page {
     super(contentFn)
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     if (this.getContent().querySelector('#goBack'))
       this.getContent().querySelector('#goBack').addEventListener('click', this._onGoBack = this.onGoBack.bind(this))
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     if (this.getContent().querySelector('#goBack'))
       this.getContent().querySelector('#goBack').removeEventListener('click', this._onGoBack)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onGoBack() {

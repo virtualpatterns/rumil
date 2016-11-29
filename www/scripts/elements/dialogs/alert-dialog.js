@@ -13,18 +13,18 @@ class AlertDialog extends SimpleAlertDialog {
     this.title = title
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     this.getContent().querySelector('#ok').addEventListener('click', this._onOk = this.onOk.bind(this))
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.getContent().querySelector('#ok').removeEventListener('click', this._onOk)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onOk() {

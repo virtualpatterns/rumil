@@ -1,16 +1,19 @@
 'use strict'
 
-const Automate = require('../automate')
+const Automation = require('../automation')
 const Log = require('../log')
 
-class NavigatedAutomate extends Automate {
+class NavigatedAutomation extends Automation {
 
-  constructor() {
-    super()
+  static getTopPage() {
+    return document
+            .querySelector('ons-page:last-child')
   }
 
   static whenPageShown(whenFn) {
-    Log.debug('- Automate.whenPageShown(whenFn)')
+
+    Log.debug('- Automation.whenPageShown(whenFn)')
+
     return new Promise((resolve, reject) => {
 
       // Log.debug('> window.application.on(\'pageShown\', (page, isInitial) => { ... })')
@@ -22,6 +25,7 @@ class NavigatedAutomate extends Automate {
       whenFn()
 
     })
+    
   }
 
   // static clickToolbarButton(text) {
@@ -38,4 +42,4 @@ class NavigatedAutomate extends Automate {
 
 }
 
-module.exports = NavigatedAutomate
+module.exports = NavigatedAutomation

@@ -24,20 +24,20 @@ class Dialog extends Element {
     this.emitEvent('hidden', response)
   }
 
-  bindEvents() {
-    super.bindEvents()
+  bind() {
+    super.bind()
 
     this.onEvent('shown', this._onShown = this.onShown.bind(this))
     this.onEvent('hidden', this._onHidden = this.onHidden.bind(this))
 
   }
 
-  unbindEvents() {
+  unbind() {
 
     this.offEvent('hidden', this._onHidden)
     this.offEvent('shown', this._onShown)
 
-    super.unbindEvents()
+    super.unbind()
   }
 
   onShown() {
