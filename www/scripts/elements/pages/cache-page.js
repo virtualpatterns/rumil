@@ -2,11 +2,11 @@
 
 const CacheElement = require('./cache-element')
 const Log = require('../../log')
-const NavigatedPage = require('./navigated-page')
+const StackedPage = require('./stacked-page')
 
 const ContentFn = require('./cache-page.pug')
 
-class CachePage extends NavigatedPage {
+class CachePage extends StackedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)

@@ -4,7 +4,6 @@ const Assert = require('assert')
 
 const DefaultAutomation = require('../applications/default-automation')
 const DefaultPage = require('../elements/pages/default-page')
-const DefaultSelect = require('../applications/default-select')
 
 describe('DefaultPage', () => {
 
@@ -15,23 +14,23 @@ describe('DefaultPage', () => {
   })
 
   it('should contain the title Features', () => {
-    Assert.equal(DefaultSelect.getToolbarText(), 'Features')
+    Assert.equal(DefaultAutomation.getToolbarText(), 'Features')
   })
 
   it('should contain an item for Status', () => {
-    Assert.equal(DefaultSelect.existsListItem('Status'), true)
+    Assert.equal(DefaultAutomation.existsListItem('Status'), true)
   })
 
   it('should contain an item for Tests', () => {
-    Assert.equal(DefaultSelect.existsListItem('Tests'), true)
+    Assert.equal(DefaultAutomation.existsListItem('Tests'), true)
   })
 
   it('should contain an item for Alert', () => {
-    Assert.equal(DefaultSelect.existsListItem('Alert'), true)
+    Assert.equal(DefaultAutomation.existsListItem('Alert'), true)
   })
 
   it('should contain an item for Confirmation', () => {
-    Assert.equal(DefaultSelect.existsListItem('Confirmation'), true)
+    Assert.equal(DefaultAutomation.existsListItem('Confirmation'), true)
   })
 
   describe('(when the item for Status is clicked)', () => {
@@ -43,7 +42,7 @@ describe('DefaultPage', () => {
     })
 
     it('should contain the title Status', () => {
-      Assert.equal(DefaultSelect.getToolbarText(), 'Status')
+      Assert.equal(DefaultAutomation.getToolbarText(), 'Status')
     })
 
     after(() => {
@@ -69,7 +68,7 @@ describe('DefaultPage', () => {
     })
 
     it('should contain the title Features', () => {
-      Assert.equal(DefaultSelect.getToolbarText(), 'Features')
+      Assert.equal(DefaultAutomation.getToolbarText(), 'Features')
     })
 
   })
@@ -88,7 +87,7 @@ describe('DefaultPage', () => {
     })
 
     it('should show an alert dialog with the text Danger!', () => {
-      Assert.equal(DefaultSelect.getAlertText(), 'Danger!')
+      Assert.equal(DefaultAutomation.getAlertText(), 'Danger!')
     })
 
     after(() => {
@@ -112,7 +111,7 @@ describe('DefaultPage', () => {
     })
 
     it('should hide the alert dialog with the text Danger!', () => {
-      Assert.equal(DefaultSelect.existsAlertText('Danger!'), false)
+      Assert.equal(DefaultAutomation.existsAlertText('Danger!'), false)
     })
 
   })
@@ -131,7 +130,7 @@ describe('DefaultPage', () => {
     })
 
     it('should show a confirmation dialog with the text Are you sure?', () => {
-      Assert.equal(DefaultSelect.getConfirmationText(), 'Are you sure?')
+      Assert.equal(DefaultAutomation.getConfirmationText(), 'Are you sure?')
     })
 
     after(() => {
@@ -167,7 +166,7 @@ describe('DefaultPage', () => {
     })
 
     it('should show an alert dialog with the text You said ... Yes.', () => {
-      Assert.equal(DefaultSelect.getAlertText(), 'You said ... Yes.')
+      Assert.equal(DefaultAutomation.getAlertText(), 'You said ... Yes.')
     })
 
     after(() => {
@@ -196,7 +195,7 @@ describe('DefaultPage', () => {
     })
 
     it('should show an alert dialog with the text You said ... No.', () => {
-      Assert.equal(DefaultSelect.getAlertText(), 'You said ... No.')
+      Assert.equal(DefaultAutomation.getAlertText(), 'You said ... No.')
     })
 
     after(() => {

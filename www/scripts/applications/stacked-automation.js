@@ -3,7 +3,7 @@
 const Automation = require('../automation')
 const Log = require('../log')
 
-class NavigatedAutomation extends Automation {
+class StackedAutomation extends Automation {
 
   static getTopPage() {
     return document
@@ -25,7 +25,7 @@ class NavigatedAutomation extends Automation {
       whenFn()
 
     })
-    
+
   }
 
   // static clickToolbarButton(text) {
@@ -42,4 +42,4 @@ class NavigatedAutomation extends Automation {
 
 }
 
-module.exports = NavigatedAutomation
+module.exports = StackedAutomation

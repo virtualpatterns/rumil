@@ -1,12 +1,12 @@
 'use strict'
 
 const Log = require('../../log')
-const NavigatedPage = require('./navigated-page')
+const StackedPage = require('./stacked-page')
 const BlinkElement = require('./blink-element')
 
 const ContentFn = require('./blink-page.pug')
 
-class BlinkPage extends NavigatedPage {
+class BlinkPage extends StackedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)

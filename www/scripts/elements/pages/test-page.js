@@ -3,17 +3,15 @@
 const Mocha = mocha
 
 const Is = require('@pwn/is')
-// const Mocha = require('mocha')
 const Utilities = require('util')
 
-// const Page = require('../page')
 const Log = require('../../log')
-const NavigatedPage = require('./navigated-page')
+const StackedPage = require('./stacked-page')
 const TestElement = require('./test-element')
 
 const ContentFn = require('./test-page.pug')
 
-class TestPage extends NavigatedPage {
+class TestPage extends StackedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)
@@ -23,28 +21,16 @@ class TestPage extends NavigatedPage {
   bind() {
     super.bind()
 
-    // if (this.getContent().querySelector('#goBack'))
-    //   this.getContent().querySelector('#goBack').addEventListener('click', this._onGoBack = this.onGoBack.bind(this))
-
-    // this.onEvent('shown', this._onShown = this.onShown.bind(this))
+    this.testElement.bind()
 
   }
 
   unbind() {
 
-    // this.offEvent('shown', this._onShown)
-
-    // if (this.getContent().querySelector('#goBack'))
-    //   this.getContent().querySelector('#goBack').removeEventListener('click', this._onGoBack)
+    this.testElement.unbind()
 
     super.unbind()
   }
-
-  // onGoBack() {
-  //   Log.debug('- TestPage.onGoBack()')
-  //   window.application.popPage()
-  //     .catch((error) => window.application.showError(error))
-  // }
 
   onShown(isInitial) {
     super.onShown(isInitial)
@@ -56,12 +42,6 @@ class TestPage extends NavigatedPage {
       if (Is.function(window.initMochaPhantomJS))
         window.initMochaPhantomJS()
 
-      // let tests = new Mocha({
-      //   'bail': true,
-      //   'timeout': 0,
-      //   'ui': 'bdd'
-      // })
-
       Mocha.setup({
         'bail': true,
         'timeout': 0,
@@ -70,18 +50,16 @@ class TestPage extends NavigatedPage {
 
       require('../../tests/default-page')
 
-      // let testRunner = tests.run()
-      let testRunner = Mocha.run()
-      testRunner.on('end', this.onFinished.bind(this, testRunner.stats))
+      let tests = Mocha.run()
+      tests.on('end', this._onFinished = this.onFinished.bind(this, tests))
 
     }
 
   }
 
-  onFinished(statistics) {
-    Log.debug('- TestPage.onFinished(statistics)\n\n%s\n\n', Utilities.inspect(statistics))
-    this.testElement.updateContent(statistics)
-      .catch((error) => window.application.showError(error))
+  onFinished(tests) {
+    Log.debug('- TestPage.onFinished(statistics)\n\n%s\n\n', Utilities.inspect(tests.stats))
+    this.testElement.updateContent(tests.stats)
   }
 
  // *   - `start`  execution started

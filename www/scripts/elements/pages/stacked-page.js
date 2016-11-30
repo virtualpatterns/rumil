@@ -1,11 +1,13 @@
 'use strict'
 
+const Co = require('co')
+
 const Page = require('../page')
 const Log = require('../../log')
 
-const ContentFn = require('./navigated-page.pug')
+const ContentFn = require('./stacked-page.pug')
 
-class NavigatedPage extends Page {
+class StackedPage extends Page {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)
@@ -28,11 +30,21 @@ class NavigatedPage extends Page {
   }
 
   onGoBack() {
-    Log.debug('- NavigatedPage.onGoBack()')
-    window.application.popPage()
-      .catch((error) => window.application.showError(error))
+
+    Co(function* () {
+
+      try {
+        Log.debug('- StackedPage.onGoBack()')
+        window.application.popPage()
+      }
+      catch (error) {
+        window.application.showError(error)
+      }
+
+    })
+
   }
 
 }
 
-module.exports = NavigatedPage
+module.exports = StackedPage

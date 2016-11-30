@@ -84,7 +84,7 @@ const SANDBOX_CONFIGURATION = {
 
 Log
   .addConsole()
-  .addFile(LOG_PATH)
+  // .addFile(LOG_PATH)
 
 const ShellSilent = _Shell.context({
   'echoCommand': false
@@ -145,7 +145,7 @@ namespace('bundle', () => {
       let status = yield Bundle.Promise.run()
 
       Log.debug('\n\n%s\n', status.toString({
-        'colors': false,
+        'colors': true,
         'hash': false, // add the hash of the compilation
         'version': true, // add webpack version information
         'timings': true, // add timing information
@@ -180,19 +180,19 @@ namespace('bundle', () => {
       let status = yield Bundle.Promise.run()
 
       Log.debug('\n\n%s\n', status.toString({
-        'colors': false,
+        'colors': true,
         'hash': false, // add the hash of the compilation
         'version': true, // add webpack version information
-        'timings': false, // add timing information
-        'assets': false, // add assets information
-        'chunks': false, // add chunk information (setting this to false allows for a less verbose output)
+        'timings': true, // add timing information
+        'assets': true, // add assets information
+        'chunks': true, // add chunk information (setting this to false allows for a less verbose output)
         'chunkModules': false, // add built modules information to chunk information
         'modules': false, // add built modules information
         'children': false, // add children information
         'cached': false, // add also information about cached (not built) modules
         'reasons': false, // add information about the reasons why modules are included
         'source': false, // add the source code of modules
-        'errorDetails': true, // add details to errors (like resolving log)
+        'errorDetails': false, // add details to errors (like resolving log)
         'chunkOrigins': false // add the origins of chunks and chunk merging info
       }))
 

@@ -1,24 +1,17 @@
-extends ./navigated-page.pug
-//- block body
-//-   ons-toolbar
-//-     if application.canPopPage()
-//-       div.left
-//-         ons-toolbar-button(id='goBack')
-//-           ons-icon( icon='ion-chevron-left',
-//-                     size='18px')
-//-           |  Back
-//-     div.center
-//-       | Features
+extends ./stacked-page.pug
 block back
   | Back
 block center
   | Features
 block contents
   ons-list(modifier='inset')
+    ons-list-item(  id='goPop',
+                    modifier='longdivider',
+                    tappable)
+      | Pop
     ons-list-item(  id='goStatus',
                     modifier='chevron longdivider',
                     tappable)
-      //- | Server Status
       | Status
     if application.isCacheEnabled
       ons-list-item(  id='goCache',
@@ -33,18 +26,18 @@ block contents
                     modifier='chevron longdivider',
                     tappable)
       | Coverage
-    ons-list-item(  id='goInterval',
+    ons-list-item(  id='goCountDown',
                     modifier='longdivider',
                     tappable)
       | Countdown&nbsp;
-      span(id='goIntervalInterval')
+      span(id='countDown')
         span(style='font-style: italic;')
           | n
       | &nbsp;seconds
-    ons-list-item(  id='goBlink',
-                    modifier='chevron longdivider',
-                    tappable)
-      | Blink
+    //- ons-list-item(  id='goBlink',
+    //-                 modifier='chevron longdivider',
+    //-                 tappable)
+    //-   | Blink
 
   ons-list(modifier='inset')
     ons-list-header

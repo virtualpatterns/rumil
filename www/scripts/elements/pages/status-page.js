@@ -3,12 +3,12 @@
 const Co = require('co')
 
 const Log = require('../../log')
-const NavigatedPage = require('./navigated-page')
+const StackedPage = require('./stacked-page')
 const StatusElement = require('./status-element')
 
 const ContentFn = require('./status-page.pug')
 
-class StatusPage extends NavigatedPage {
+class StatusPage extends StackedPage {
 
   constructor(contentFn = ContentFn) {
     super(contentFn)

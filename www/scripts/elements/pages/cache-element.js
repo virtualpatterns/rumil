@@ -58,17 +58,7 @@ class CacheElement extends Element {
           }
         }
 
-        try {
-          this.updateContent(data)
-        }
-        catch (error) {
-          if (error instanceof IntervalError) {
-            Log.warn('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex)
-            Log.warn(error)
-          }
-          else
-            throw error
-        }
+        this.updateContent(data)
 
       }
 
@@ -95,17 +85,7 @@ class CacheElement extends Element {
         }
       }
 
-      try {
-        this.updateContent(data)
-      }
-      catch (error) {
-        if (error instanceof IntervalError) {
-          Log.warn('- CacheElement.onDownloading()')
-          Log.warn(error)
-        }
-        else
-          throw error
-      }
+      this.updateContent(data)
 
     }
     catch (error) {
@@ -132,12 +112,10 @@ class CacheElement extends Element {
           }
         }
 
+        self.updateContent(data)
+
         try {
-
-          self.updateContent(data)
-
           yield CountDown.start(self, '#onUpdateReady', 5)
-
         }
         catch (error) {
           if (error instanceof IntervalError) {
@@ -173,17 +151,7 @@ class CacheElement extends Element {
         }
       }
 
-      try {
-        this.updateContent(data)
-      }
-      catch (error) {
-        if (error instanceof IntervalError) {
-          Log.warn('- CacheElement.onNoUpdate()')
-          Log.warn(error)
-        }
-        else
-          throw error
-      }
+      this.updateContent(data)
 
     }
     catch (error) {
@@ -192,19 +160,9 @@ class CacheElement extends Element {
 
   }
 
-  onError(event) {
-
-    try {
-
-      Log.debug('- CacheElement.onError(event)')
-
-      window.application.showError(event)
-
-    }
-    catch (error) {
-      window.application.showError(error)
-    }
-
+  onError(error) {
+    Log.debug('- CacheElement.onError(error)')
+    window.application.showError(error)
   }
 
 }

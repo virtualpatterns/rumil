@@ -1,11 +1,8 @@
 'use strict'
 
-const Utilities = require('util')
+const StackedAutomation = require('./stacked-automation')
 
-const DefaultSelect = require('./default-select')
-const NavigatedAutomation = require('./navigated-automation')
-
-class DefaultAutomation extends NavigatedAutomation {
+class DefaultAutomation extends StackedAutomation {
 
   static getToolbarText() {
     return this
@@ -51,13 +48,13 @@ class DefaultAutomation extends NavigatedAutomation {
   }
 
   static clickToolbarButton(text) {
-    DefaultSelect
+    this
       .getToolbarButton(text)
       .click()
   }
 
   static clickListItem(text) {
-    DefaultSelect
+    this
       .getListItem(text)
       .click()
   }

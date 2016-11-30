@@ -12,7 +12,6 @@ class TestElement extends Element {
 
   constructor(contentFn = ContentFn) {
     super(true, contentFn)
-    // this.statistics = {}
   }
 
   renderContent(data = {}) {

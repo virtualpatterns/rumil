@@ -3,7 +3,6 @@
 const Utilities = require('util')
 
 const Log = require('./log')
-const Select = require('./select')
 
 class Automation {
 
@@ -103,7 +102,7 @@ class Automation {
   }
 
   static clickAlertButton(text) {
-    Select
+    this
       .getAlertButton(text)
       .click()
   }
