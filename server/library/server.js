@@ -13,6 +13,7 @@ Server.createServer = function(staticPath, modulesPath) {
 
   const Authorize = require('./routes/authorize')
   const _Log = require('./handlers/log')
+  // const Sandbox = require('./routes/sandbox')
   const Static = require('./routes/static')
   const Status = require('./routes/status')
 
@@ -32,6 +33,7 @@ Server.createServer = function(staticPath, modulesPath) {
   _Log.createHandlers(server)
 
   Authorize.createRoutes(server)
+  // Sandbox.createRoutes(server)
   Static.createRoutes(server, staticPath, modulesPath)
   Status.createRoutes(server)
 

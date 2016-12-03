@@ -71,6 +71,12 @@ class Automation {
     return this.existsAlertText(text)
   }
 
+  static existsSpinner() {
+    return document
+            .querySelector('ons-dialog.rum-spinner-dialog:last-child')
+            ? true : false
+  }
+
   static whenDialogShown(whenFn) {
     Log.debug('- Automation.whenDialogShown(whenFn)')
     return new Promise((resolve, reject) => {

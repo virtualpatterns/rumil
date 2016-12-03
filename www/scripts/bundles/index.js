@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "717eb9bfd2469ec314e0";
+/******/ 	__webpack_require__.h = "ec9d702a0d0915c0e529";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -9004,8 +9004,8 @@
 	var map = {
 		"./authorized-application.js": 317,
 		"./default-application.js": 361,
-		"./stacked-application.js": 626,
-		"./tabbed-application.js": 636
+		"./stacked-application.js": 628,
+		"./tabbed-application.js": 638
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -9066,12 +9066,12 @@
 	        var search = Search.parse(window.location.search);
 	
 	        Log.debug('- AuthorizedApplication.onReady()');
-	        Log.debug('-   search.scopes=%j', search.scopes);
+	        // Log.debug('-   search.scopes=%j', search.scopes);
 	        Log.debug('-   search.system=%j', search.system);
 	        Log.debug('-   search.token=%j', search.token);
 	
 	        window.opener.application.emitAuthorized({
-	          'scopes': search.scopes ? search.scopes.split(',') : [],
+	          // 'scopes': search.scopes ? search.scopes.split(',') : [],
 	          'system': search.system,
 	          'value': search.token
 	        });
@@ -9398,15 +9398,19 @@
 	    value: function showSpinner() {
 	      var Dialog = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : SpinnerDialog;
 	
-	      Log.debug('- Application.showSpinner()');
+	      Log.debug('- Application.showSpinner(Dialog)');
 	      return this.showDialog(new Dialog());
 	    }
 	  }, {
 	    key: 'hideSpinner',
-	    value: function hideSpinner() {
-	      Log.debug('- Application.hideSpinner()');
-	      var element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child');
-	      if (element) return this.hideDialog(element.getElement(), false);else Log.warn('- Application.hideSpinner() element=%j', element);
+	    value: function hideSpinner(dialog) {
+	      Log.debug('- Application.hideSpinner(dialog)');
+	      // let element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child')
+	      // if (element)
+	      //   return this.hideDialog(element.getElement(), false)
+	      // else
+	      //   Log.warn('- Application.hideSpinner() element=%j', element)
+	      return this.hideDialog(dialog);
 	    }
 	  }, {
 	    key: 'authorize',
@@ -9415,12 +9419,19 @@
 	
 	      var scopes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 	
-	      Log.debug('- Application.authorize(%j, %j)', system, scopes);
+	      Log.debug('> Application.authorize(%j, %j)', system, scopes);
 	
-	      window.open('./authorize/' + system + (scopes.length ? '' : '?scopes=' + scopes.join(',')));
+	      var url = './authorize/' + system + (scopes.length > 0 ? '?scopes=' + scopes.join(',') : '');
+	
+	      Log.debug('-   url=%j', url);
+	      window.open(url);
 	
 	      return new Promise(function (resolve, reject) {
 	        _this2.on('authorized', function (token) {
+	
+	          token.scopes = scopes;
+	
+	          Log.debug('< Application.authorize(%j, %j)\n\n%s\n\n', system, scopes, Utilities.inspect(token));
 	          resolve(token);
 	        });
 	      });
@@ -12733,7 +12744,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"value": 348
+		"value": 441
 	};
 
 /***/ },
@@ -12747,7 +12758,8 @@
 		"main": "index.js",
 		"scripts": {
 			"start": "jake server:run",
-			"test": "jake test:server"
+			"test": "jake test:server",
+			"watch": "jake watch:watch"
 		},
 		"author": "code@virtualpatterns.com",
 		"license": "ISC",
@@ -12873,11 +12885,11 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var DefaultPage = __webpack_require__(362);
-	var StackedApplication = __webpack_require__(626);
+	var StackedApplication = __webpack_require__(628);
 	var Log = __webpack_require__(343);
 	// const TestPage = require('../elements/pages/test-page')
 	
-	var ContentFn = __webpack_require__(635);
+	var ContentFn = __webpack_require__(637);
 	
 	var DefaultApplication = function (_StackedApplication) {
 	  _inherits(DefaultApplication, _StackedApplication);
@@ -12927,14 +12939,16 @@
 	var CachePage = __webpack_require__(363);
 	var CountDown = __webpack_require__(365);
 	var GitHubPage = __webpack_require__(374);
+	var GooglePage = __webpack_require__(416);
 	var Log = __webpack_require__(343);
+	var Spinner = __webpack_require__(357);
 	var StackedPage = __webpack_require__(369);
-	var StatusPage = __webpack_require__(416);
-	var TestPage = __webpack_require__(616);
+	var StatusPage = __webpack_require__(418);
+	var TestPage = __webpack_require__(618);
 	
 	var IntervalError = __webpack_require__(367);
 	
-	var ContentFn = __webpack_require__(625);
+	var ContentFn = __webpack_require__(627);
 	
 	var SELECTOR = '#countDown';
 	
@@ -12954,7 +12968,7 @@
 	    value: function bind() {
 	      _get(DefaultPage.prototype.__proto__ || Object.getPrototypeOf(DefaultPage.prototype), 'bind', this).call(this);
 	
-	      this.getContent().querySelector('#goPop').addEventListener('click', this._onGoPop = this.onGoPop.bind(this));
+	      // this.getContent().querySelector('#goPop').addEventListener('click', this._onGoPop = this.onGoPop.bind(this))
 	      this.getContent().querySelector('#goStatus').addEventListener('click', this._onGoStatus = this.onGoStatus.bind(this));
 	
 	      if (this.getContent().querySelector('#goCache')) this.getContent().querySelector('#goCache').addEventListener('click', this._onGoCache = this.onGoCache.bind(this));
@@ -12967,11 +12981,13 @@
 	      this.getContent().querySelector('#goConfirmation').addEventListener('click', this._onGoConfirmation = this.onGoConfirmation.bind(this));
 	      this.getContent().querySelector('#goSpinner').addEventListener('click', this._onGoSpinner = this.onGoSpinner.bind(this));
 	      this.getContent().querySelector('#goGitHub').addEventListener('click', this._onGoGitHub = this.onGoGitHub.bind(this));
+	      this.getContent().querySelector('#goGoogle').addEventListener('click', this._onGoGoogle = this.onGoGoogle.bind(this));
 	    }
 	  }, {
 	    key: 'unbind',
 	    value: function unbind() {
 	
+	      this.getContent().querySelector('#goGoogle').removeEventListener('click', this._onGoGoogle);
 	      this.getContent().querySelector('#goGitHub').removeEventListener('click', this._onGoGitHub);
 	      this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner);
 	      this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation);
@@ -12984,7 +13000,7 @@
 	      if (this.getContent().querySelector('#goCache')) this.getContent().querySelector('#goCache').removeEventListener('click', this._onGoCache);
 	
 	      this.getContent().querySelector('#goStatus').removeEventListener('click', this._onGoStatus);
-	      this.getContent().querySelector('#goPop').removeEventListener('click', this._onGoPop);
+	      // this.getContent().querySelector('#goPop').removeEventListener('click', this._onGoPop)
 	
 	      _get(DefaultPage.prototype.__proto__ || Object.getPrototypeOf(DefaultPage.prototype), 'unbind', this).call(this);
 	    }
@@ -12995,9 +13011,26 @@
 	      CountDown.stop(this, '#countDown');
 	      _get(DefaultPage.prototype.__proto__ || Object.getPrototypeOf(DefaultPage.prototype), 'onHidden', this).call(this);
 	    }
+	
+	    // onGoPop() {
+	    //
+	    //   Co(function* () {
+	    //
+	    //     try {
+	    //       Log.debug('- DefaultPage.onGoPop()')
+	    //       yield window.application.popPage()
+	    //     }
+	    //     catch (error) {
+	    //       window.application.showError(error)
+	    //     }
+	    //
+	    //   })
+	    //
+	    // }
+	
 	  }, {
-	    key: 'onGoPop',
-	    value: function onGoPop() {
+	    key: 'onGoStatus',
+	    value: function onGoStatus() {
 	
 	      Co(regeneratorRuntime.mark(function _callee() {
 	        return regeneratorRuntime.wrap(function _callee$(_context) {
@@ -13006,9 +13039,9 @@
 	              case 0:
 	                _context.prev = 0;
 	
-	                Log.debug('- DefaultPage.onGoPop()');
+	                Log.debug('- DefaultPage.onGoStatus()');
 	                _context.next = 4;
-	                return window.application.popPage();
+	                return window.application.pushPage(new StatusPage());
 	
 	              case 4:
 	                _context.next = 9;
@@ -13029,46 +13062,13 @@
 	      }));
 	    }
 	  }, {
-	    key: 'onGoStatus',
-	    value: function onGoStatus() {
+	    key: 'onGoCache',
+	    value: function onGoCache() {
 	
 	      Co(regeneratorRuntime.mark(function _callee2() {
 	        return regeneratorRuntime.wrap(function _callee2$(_context2) {
 	          while (1) {
 	            switch (_context2.prev = _context2.next) {
-	              case 0:
-	                _context2.prev = 0;
-	
-	                Log.debug('- DefaultPage.onGoStatus()');
-	                _context2.next = 4;
-	                return window.application.pushPage(new StatusPage());
-	
-	              case 4:
-	                _context2.next = 9;
-	                break;
-	
-	              case 6:
-	                _context2.prev = 6;
-	                _context2.t0 = _context2['catch'](0);
-	
-	                window.application.showError(_context2.t0);
-	
-	              case 9:
-	              case 'end':
-	                return _context2.stop();
-	            }
-	          }
-	        }, _callee2, this, [[0, 6]]);
-	      }));
-	    }
-	  }, {
-	    key: 'onGoCache',
-	    value: function onGoCache() {
-	
-	      Co(regeneratorRuntime.mark(function _callee3() {
-	        return regeneratorRuntime.wrap(function _callee3$(_context3) {
-	          while (1) {
-	            switch (_context3.prev = _context3.next) {
 	              case 0:
 	
 	                try {
@@ -13080,10 +13080,10 @@
 	
 	              case 1:
 	              case 'end':
-	                return _context3.stop();
+	                return _context2.stop();
 	            }
 	          }
-	        }, _callee3, this);
+	        }, _callee2, this);
 	      }));
 	    }
 	  }, {
@@ -13114,42 +13114,42 @@
 	
 	      var self = this;
 	
-	      Co(regeneratorRuntime.mark(function _callee4() {
-	        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+	      Co(regeneratorRuntime.mark(function _callee3() {
+	        return regeneratorRuntime.wrap(function _callee3$(_context3) {
 	          while (1) {
-	            switch (_context4.prev = _context4.next) {
+	            switch (_context3.prev = _context3.next) {
 	              case 0:
-	                _context4.prev = 0;
+	                _context3.prev = 0;
 	
 	
 	                Log.debug('- DefaultPage.onGoCountDown()');
 	
-	                _context4.next = 4;
+	                _context3.next = 4;
 	                return CountDown.start(self, SELECTOR, 10);
 	
 	              case 4:
 	
 	                document.querySelector(SELECTOR).innerHTML = '<span style=\'font-style: italic;\'>n</span>';
 	
-	                _context4.next = 10;
+	                _context3.next = 10;
 	                break;
 	
 	              case 7:
-	                _context4.prev = 7;
-	                _context4.t0 = _context4['catch'](0);
+	                _context3.prev = 7;
+	                _context3.t0 = _context3['catch'](0);
 	
-	                if (_context4.t0 instanceof IntervalError) {
+	                if (_context3.t0 instanceof IntervalError) {
 	                  Log.warn('- DefaultPage.onGoCountDown()');
-	                  Log.warn(_context4.t0);
+	                  Log.warn(_context3.t0);
 	                  document.querySelector(SELECTOR).innerHTML = '<span style=\'font-style: italic;\'>x</span>';
-	                } else window.application.showError(_context4.t0);
+	                } else window.application.showError(_context3.t0);
 	
 	              case 10:
 	              case 'end':
-	                return _context4.stop();
+	                return _context3.stop();
 	            }
 	          }
-	        }, _callee4, this, [[0, 7]]);
+	        }, _callee3, this, [[0, 7]]);
 	      }));
 	    }
 	
@@ -13163,77 +13163,121 @@
 	    key: 'onGoAlert',
 	    value: function onGoAlert() {
 	
-	      Co(regeneratorRuntime.mark(function _callee5() {
-	        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+	      Co(regeneratorRuntime.mark(function _callee4() {
+	        return regeneratorRuntime.wrap(function _callee4$(_context4) {
 	          while (1) {
-	            switch (_context5.prev = _context5.next) {
+	            switch (_context4.prev = _context4.next) {
 	              case 0:
-	                _context5.prev = 0;
+	                _context4.prev = 0;
 	
 	                Log.debug('- DefaultPage.onGoAlert()');
-	                _context5.next = 4;
+	                _context4.next = 4;
 	                return window.application.showAlert('Danger!');
 	
 	              case 4:
-	                _context5.next = 9;
+	                _context4.next = 9;
 	                break;
 	
 	              case 6:
-	                _context5.prev = 6;
-	                _context5.t0 = _context5['catch'](0);
+	                _context4.prev = 6;
+	                _context4.t0 = _context4['catch'](0);
 	
-	                window.application.showError(_context5.t0);
+	                window.application.showError(_context4.t0);
 	
 	              case 9:
 	              case 'end':
-	                return _context5.stop();
+	                return _context4.stop();
 	            }
 	          }
-	        }, _callee5, this, [[0, 6]]);
+	        }, _callee4, this, [[0, 6]]);
 	      }));
 	    }
 	  }, {
 	    key: 'onGoConfirmation',
 	    value: function onGoConfirmation() {
 	
-	      Co(regeneratorRuntime.mark(function _callee6() {
+	      Co(regeneratorRuntime.mark(function _callee5() {
 	        var response;
+	        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+	          while (1) {
+	            switch (_context5.prev = _context5.next) {
+	              case 0:
+	                _context5.prev = 0;
+	
+	                Log.debug('- DefaultPage.onGoConfirmation()');
+	                _context5.next = 4;
+	                return window.application.showConfirmation('Are you sure?');
+	
+	              case 4:
+	                response = _context5.sent;
+	                _context5.next = 7;
+	                return window.application.showAlert('You said ... <span style="font-weight: bold;">' + (response ? 'Yes' : 'No') + '</span>.');
+	
+	              case 7:
+	                _context5.next = 12;
+	                break;
+	
+	              case 9:
+	                _context5.prev = 9;
+	                _context5.t0 = _context5['catch'](0);
+	
+	                window.application.showError(_context5.t0);
+	
+	              case 12:
+	              case 'end':
+	                return _context5.stop();
+	            }
+	          }
+	        }, _callee5, this, [[0, 9]]);
+	      }));
+	    }
+	  }, {
+	    key: 'onGoSpinner',
+	    value: function onGoSpinner() {
+	
+	      Co(regeneratorRuntime.mark(function _callee6() {
+	        var dialog;
 	        return regeneratorRuntime.wrap(function _callee6$(_context6) {
 	          while (1) {
 	            switch (_context6.prev = _context6.next) {
 	              case 0:
 	                _context6.prev = 0;
 	
-	                Log.debug('- DefaultPage.onGoConfirmation()');
+	                Log.debug('- DefaultPage.onGoSpinner()');
+	
 	                _context6.next = 4;
-	                return window.application.showConfirmation('Are you sure?');
+	                return window.application.showSpinner();
 	
 	              case 4:
-	                response = _context6.sent;
+	                dialog = _context6.sent;
 	                _context6.next = 7;
-	                return window.application.showAlert('You said ... <span style="font-weight: bold;">' + (response ? 'Yes' : 'No') + '</span>.');
+	                return Timeout.start('DefaultPage.onGoSpinner', 3000);
 	
 	              case 7:
-	                _context6.next = 12;
-	                break;
+	                _context6.next = 9;
+	                return window.application.hideSpinner(dialog);
 	
 	              case 9:
-	                _context6.prev = 9;
+	                _context6.next = 14;
+	                break;
+	
+	              case 11:
+	                _context6.prev = 11;
 	                _context6.t0 = _context6['catch'](0);
 	
 	                window.application.showError(_context6.t0);
 	
-	              case 12:
+	              case 14:
 	              case 'end':
 	                return _context6.stop();
 	            }
 	          }
-	        }, _callee6, this, [[0, 9]]);
+	        }, _callee6, this, [[0, 11]]);
 	      }));
 	    }
 	  }, {
-	    key: 'onGoSpinner',
-	    value: function onGoSpinner() {
+	    key: 'onGoGitHub',
+	    value: function onGoGitHub() {
 	
 	      Co(regeneratorRuntime.mark(function _callee7() {
 	        return regeneratorRuntime.wrap(function _callee7$(_context7) {
@@ -13242,40 +13286,39 @@
 	              case 0:
 	                _context7.prev = 0;
 	
-	                Log.debug('- DefaultPage.onGoSpinner()');
-	
-	                _context7.next = 4;
-	                return window.application.showSpinner();
-	
-	              case 4:
+	                Log.debug('- DefaultPage.onGoGitHub()');
+	                _context7.t0 = window.application;
+	                _context7.t1 = GitHubPage;
 	                _context7.next = 6;
-	                return Timeout.start('DefaultPage.onGoSpinner', 5000);
+	                return window.application.authorize('GitHub');
 	
 	              case 6:
-	                _context7.next = 8;
-	                return window.application.hideSpinner();
-	
-	              case 8:
-	                _context7.next = 13;
-	                break;
+	                _context7.t2 = _context7.sent;
+	                _context7.t3 = new _context7.t1(_context7.t2);
+	                _context7.next = 10;
+	                return _context7.t0.pushPage.call(_context7.t0, _context7.t3);
 	
 	              case 10:
-	                _context7.prev = 10;
-	                _context7.t0 = _context7['catch'](0);
+	                _context7.next = 15;
+	                break;
 	
-	                window.application.showError(_context7.t0);
+	              case 12:
+	                _context7.prev = 12;
+	                _context7.t4 = _context7['catch'](0);
 	
-	              case 13:
+	                window.application.showError(_context7.t4);
+	
+	              case 15:
 	              case 'end':
 	                return _context7.stop();
 	            }
 	          }
-	        }, _callee7, this, [[0, 10]]);
+	        }, _callee7, this, [[0, 12]]);
 	      }));
 	    }
 	  }, {
-	    key: 'onGoGitHub',
-	    value: function onGoGitHub() {
+	    key: 'onGoGoogle',
+	    value: function onGoGoogle() {
 	
 	      Co(regeneratorRuntime.mark(function _callee8() {
 	        return regeneratorRuntime.wrap(function _callee8$(_context8) {
@@ -13284,11 +13327,11 @@
 	              case 0:
 	                _context8.prev = 0;
 	
-	                Log.debug('- DefaultPage.onGoGitHub()');
+	                Log.debug('- DefaultPage.onGoGoogle()');
 	                _context8.t0 = window.application;
-	                _context8.t1 = GitHubPage;
+	                _context8.t1 = GooglePage;
 	                _context8.next = 6;
-	                return window.application.authorize('GitHub');
+	                return window.application.authorize('Google', ['profile']);
 	
 	              case 6:
 	                _context8.t2 = _context8.sent;
@@ -13571,7 +13614,7 @@
 	
 	                _context.prev = 4;
 	                _context.next = 7;
-	                return CountDown.start(self, '#onUpdateReady', 5);
+	                return CountDown.start(self, '#onUpdateReady', 3);
 	
 	              case 7:
 	                _context.next = 17;
@@ -13866,7 +13909,7 @@
 	}
 	else
 	if (status.isUpdateRequired) {
-	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-cloud-download\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003EUpdates Downloaded\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003EApplication updates have been downloaded and will be applied in&nbsp;\u003Cspan id=\"onUpdateReady\" style=\"font-weight: bold\"\u003E5\u003C\u002Fspan\u003E&nbsp;seconds.\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
+	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-cloud-download\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003EUpdates Downloaded\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003EApplication updates have been downloaded and will be applied in&nbsp;\u003Cspan id=\"onUpdateReady\" style=\"font-weight: bold\"\u003E3\u003C\u002Fspan\u003E&nbsp;seconds.\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 	}
 	else {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-cloud\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003ENo Updates Available\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003E\n          Your version of the application is the latest version.  No updates\n          are available.\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
@@ -14120,7 +14163,12 @@
 	
 	    _classCallCheck(this, GitHubPage);
 	
-	    return _possibleConstructorReturn(this, (GitHubPage.__proto__ || Object.getPrototypeOf(GitHubPage)).call(this, contentFn));
+	    var _this = _possibleConstructorReturn(this, (GitHubPage.__proto__ || Object.getPrototypeOf(GitHubPage)).call(this, contentFn));
+	
+	    _this.token = token;
+	    _this.token.scopesAsString = _this.token.scopes.join(', ');
+	
+	    return _this;
 	  }
 	
 	  return GitHubPage;
@@ -21766,11 +21814,63 @@
 	if (application.canPopPage()) {
 	pug_html = pug_html + "\n      \u003Cons-toolbar-button id=\"goBack\"\u003E\n        \u003Cons-icon icon=\"fa-chevron-left\" size=\"18px\"\u003E\u003C\u002Fons-icon\u003EFeatures\n      \u003C\u002Fons-toolbar-button\u003E";
 	}
-	pug_html = pug_html + "\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"center\"\u003EGitHub\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"right\"\u003E\n    \u003C\u002Fdiv\u003E\n  \u003C\u002Fons-toolbar\u003E\n\u003C\u002Fons-page\u003E";}.call(this,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
+	pug_html = pug_html + "\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"center\"\u003EGitHub\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"right\"\u003E\n    \u003C\u002Fdiv\u003E\n  \u003C\u002Fons-toolbar\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EScopes\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = element.token.scopesAsString) ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EToken\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E\u003Ccode\u003E" + (pug.escape(null == (pug_interp = element.token.value) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fons-page\u003E";}.call(this,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
 	module.exports = template;
 
 /***/ },
 /* 416 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Log = __webpack_require__(343);
+	var StackedPage = __webpack_require__(369);
+	
+	var ContentFn = __webpack_require__(417);
+	
+	var GooglePage = function (_StackedPage) {
+	  _inherits(GooglePage, _StackedPage);
+	
+	  function GooglePage(token) {
+	    var contentFn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : ContentFn;
+	
+	    _classCallCheck(this, GooglePage);
+	
+	    var _this = _possibleConstructorReturn(this, (GooglePage.__proto__ || Object.getPrototypeOf(GooglePage)).call(this, contentFn));
+	
+	    _this.token = token;
+	    _this.token.scopesAsString = _this.token.scopes.join(', ');
+	
+	    return _this;
+	  }
+	
+	  return GooglePage;
+	}(StackedPage);
+	
+	module.exports = GooglePage;
+
+/***/ },
+/* 417 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var pug = __webpack_require__(347);
+	
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (application, element) {var pug_indent = [];
+	pug_html = pug_html + "\n\u003Cons-page" + (" class=\"rum-page rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n  \u003Cons-toolbar\u003E\n    \u003Cdiv class=\"left\"\u003E";
+	if (application.canPopPage()) {
+	pug_html = pug_html + "\n      \u003Cons-toolbar-button id=\"goBack\"\u003E\n        \u003Cons-icon icon=\"fa-chevron-left\" size=\"18px\"\u003E\u003C\u002Fons-icon\u003EFeatures\n      \u003C\u002Fons-toolbar-button\u003E";
+	}
+	pug_html = pug_html + "\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"center\"\u003EGoogle\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"right\"\u003E\n    \u003C\u002Fdiv\u003E\n  \u003C\u002Fons-toolbar\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EScopes\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = element.token.scopesAsString) ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EToken\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E\u003Ccode\u003E" + (pug.escape(null == (pug_interp = element.token.value) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fons-page\u003E";}.call(this,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
+	module.exports = template;
+
+/***/ },
+/* 418 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21789,9 +21889,9 @@
 	
 	var Log = __webpack_require__(343);
 	var StackedPage = __webpack_require__(369);
-	var StatusElement = __webpack_require__(417);
+	var StatusElement = __webpack_require__(419);
 	
-	var ContentFn = __webpack_require__(615);
+	var ContentFn = __webpack_require__(617);
 	
 	var StatusPage = function (_StackedPage) {
 	  _inherits(StatusPage, _StackedPage);
@@ -21905,7 +22005,7 @@
 	module.exports = StatusPage;
 
 /***/ },
-/* 417 */
+/* 419 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21921,14 +22021,14 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var Co = __webpack_require__(319);
-	var _Date = __webpack_require__(418);
-	var Format = __webpack_require__(588);
-	var Request = __webpack_require__(589);
+	var _Date = __webpack_require__(420);
+	var Format = __webpack_require__(590);
+	var Request = __webpack_require__(591);
 	
 	var Element = __webpack_require__(341);
 	var Log = __webpack_require__(343);
 	
-	var ContentFn = __webpack_require__(614);
+	var ContentFn = __webpack_require__(616);
 	
 	var StatusElement = function (_Element) {
 	  _inherits(StatusElement, _Element);
@@ -22019,16 +22119,14 @@
 	module.exports = StatusElement;
 
 /***/ },
-/* 418 */
+/* 420 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * @overview NPM Module index: include all the core modules, I18n files will be loaded on the fly.
 	 * @author Gregory Wild-Smith <gregory@wild-smith.com>
 	 */
-	__webpack_require__(419);
-	__webpack_require__(577);
-	__webpack_require__(578);
+	__webpack_require__(421);
 	__webpack_require__(579);
 	__webpack_require__(580);
 	__webpack_require__(581);
@@ -22038,12 +22136,14 @@
 	__webpack_require__(585);
 	__webpack_require__(586);
 	__webpack_require__(587);
+	__webpack_require__(588);
+	__webpack_require__(589);
 	/*
 	 * Notice that there is no model.export or exports. This is not required as it modifies the Date object and it's prototypes.
 	 */
 
 /***/ },
-/* 419 */
+/* 421 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function () {
@@ -22415,7 +22515,7 @@
 						if (typeof exports !== "undefined" && this.exports !== exports) {
 							// we're in a Node enviroment, load it using require
 							try {
-								__webpack_require__(420)("./" + code + ".js");
+								__webpack_require__(422)("./" + code + ".js");
 								lang = code;
 								Date.CultureStrings.lang = code;
 								Date.CultureInfo = new CultureInfo();
@@ -22464,166 +22564,166 @@
 	}());
 
 /***/ },
-/* 420 */
+/* 422 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./af-ZA.js": 421,
-		"./ar-AE.js": 422,
-		"./ar-BH.js": 423,
-		"./ar-DZ.js": 424,
-		"./ar-EG.js": 425,
-		"./ar-IQ.js": 426,
-		"./ar-JO.js": 427,
-		"./ar-KW.js": 428,
-		"./ar-LB.js": 429,
-		"./ar-LY.js": 430,
-		"./ar-MA.js": 431,
-		"./ar-OM.js": 432,
-		"./ar-QA.js": 433,
-		"./ar-SA.js": 434,
-		"./ar-SY.js": 435,
-		"./ar-TN.js": 436,
-		"./ar-YE.js": 437,
-		"./az-Cyrl-AZ.js": 438,
-		"./az-Latn-AZ.js": 439,
-		"./be-BY.js": 440,
-		"./bg-BG.js": 441,
-		"./bs-Latn-BA.js": 442,
-		"./ca-ES.js": 443,
-		"./cs-CZ.js": 444,
-		"./cy-GB.js": 445,
-		"./da-DK.js": 446,
-		"./de-AT.js": 447,
-		"./de-CH.js": 448,
-		"./de-DE.js": 449,
-		"./de-LI.js": 450,
-		"./de-LU.js": 451,
-		"./dv-MV.js": 452,
-		"./el-GR.js": 453,
-		"./en-029.js": 454,
-		"./en-AU.js": 455,
-		"./en-BZ.js": 456,
-		"./en-CA.js": 457,
-		"./en-GB.js": 458,
-		"./en-IE.js": 459,
-		"./en-JM.js": 460,
-		"./en-NZ.js": 461,
-		"./en-PH.js": 462,
-		"./en-TT.js": 463,
-		"./en-ZA.js": 464,
-		"./en-ZW.js": 465,
-		"./es-AR.js": 466,
-		"./es-BO.js": 467,
-		"./es-CL.js": 468,
-		"./es-CO.js": 469,
-		"./es-CR.js": 470,
-		"./es-DO.js": 471,
-		"./es-EC.js": 472,
-		"./es-ES.js": 473,
-		"./es-GT.js": 474,
-		"./es-HN.js": 475,
-		"./es-MX.js": 476,
-		"./es-NI.js": 477,
-		"./es-PA.js": 478,
-		"./es-PE.js": 479,
-		"./es-PR.js": 480,
-		"./es-PY.js": 481,
-		"./es-SV.js": 482,
-		"./es-UY.js": 483,
-		"./es-VE.js": 484,
-		"./et-EE.js": 485,
-		"./eu-ES.js": 486,
-		"./fa-IR.js": 487,
-		"./fi-FI.js": 488,
-		"./fo-FO.js": 489,
-		"./fr-BE.js": 490,
-		"./fr-CA.js": 491,
-		"./fr-CH.js": 492,
-		"./fr-FR.js": 493,
-		"./fr-LU.js": 494,
-		"./fr-MC.js": 495,
-		"./gl-ES.js": 496,
-		"./gu-IN.js": 497,
-		"./he-IL.js": 498,
-		"./hi-IN.js": 499,
-		"./hr-BA.js": 500,
-		"./hr-HR.js": 501,
-		"./hu-HU.js": 502,
-		"./hy-AM.js": 503,
-		"./id-ID.js": 504,
-		"./is-IS.js": 505,
-		"./it-CH.js": 506,
-		"./it-IT.js": 507,
-		"./ja-JP.js": 508,
-		"./ka-GE.js": 509,
-		"./kk-KZ.js": 510,
-		"./kn-IN.js": 511,
-		"./ko-KR.js": 512,
-		"./kok-IN.js": 513,
-		"./ky-KG.js": 514,
-		"./lt-LT.js": 515,
-		"./lv-LV.js": 516,
-		"./mi-NZ.js": 517,
-		"./mk-MK.js": 518,
-		"./mn-MN.js": 519,
-		"./mr-IN.js": 520,
-		"./ms-BN.js": 521,
-		"./ms-MY.js": 522,
-		"./mt-MT.js": 523,
-		"./nb-NO.js": 524,
-		"./nl-BE.js": 525,
-		"./nl-NL.js": 526,
-		"./nn-NO.js": 527,
-		"./ns-ZA.js": 528,
-		"./pa-IN.js": 529,
-		"./pl-PL.js": 530,
-		"./pt-BR.js": 531,
-		"./pt-PT.js": 532,
-		"./quz-BO.js": 533,
-		"./quz-EC.js": 534,
-		"./quz-PE.js": 535,
-		"./ro-RO.js": 536,
-		"./ru-RU.js": 537,
-		"./sa-IN.js": 538,
-		"./se-FI.js": 539,
-		"./se-NO.js": 540,
-		"./se-SE.js": 541,
-		"./sk-SK.js": 542,
-		"./sl-SI.js": 543,
-		"./sma-NO.js": 544,
-		"./sma-SE.js": 545,
-		"./smj-NO.js": 546,
-		"./smj-SE.js": 547,
-		"./smn-FI.js": 548,
-		"./sms-FI.js": 549,
-		"./sq-AL.js": 550,
-		"./sr-Cyrl-BA.js": 551,
-		"./sr-Cyrl-CS.js": 552,
-		"./sr-Latn-BA.js": 553,
-		"./sr-Latn-CS.js": 554,
-		"./sv-FI.js": 555,
-		"./sv-SE.js": 556,
-		"./sw-KE.js": 557,
-		"./syr-SY.js": 558,
-		"./ta-IN.js": 559,
-		"./te-IN.js": 560,
-		"./th-TH.js": 561,
-		"./tn-ZA.js": 562,
-		"./tr-TR.js": 563,
-		"./tt-RU.js": 564,
-		"./uk-UA.js": 565,
-		"./ur-PK.js": 566,
-		"./uz-Cyrl-UZ.js": 567,
-		"./uz-Latn-UZ.js": 568,
-		"./vi-VN.js": 569,
-		"./xh-ZA.js": 570,
-		"./zh-CN.js": 571,
-		"./zh-HK.js": 572,
-		"./zh-MO.js": 573,
-		"./zh-SG.js": 574,
-		"./zh-TW.js": 575,
-		"./zu-ZA.js": 576
+		"./af-ZA.js": 423,
+		"./ar-AE.js": 424,
+		"./ar-BH.js": 425,
+		"./ar-DZ.js": 426,
+		"./ar-EG.js": 427,
+		"./ar-IQ.js": 428,
+		"./ar-JO.js": 429,
+		"./ar-KW.js": 430,
+		"./ar-LB.js": 431,
+		"./ar-LY.js": 432,
+		"./ar-MA.js": 433,
+		"./ar-OM.js": 434,
+		"./ar-QA.js": 435,
+		"./ar-SA.js": 436,
+		"./ar-SY.js": 437,
+		"./ar-TN.js": 438,
+		"./ar-YE.js": 439,
+		"./az-Cyrl-AZ.js": 440,
+		"./az-Latn-AZ.js": 441,
+		"./be-BY.js": 442,
+		"./bg-BG.js": 443,
+		"./bs-Latn-BA.js": 444,
+		"./ca-ES.js": 445,
+		"./cs-CZ.js": 446,
+		"./cy-GB.js": 447,
+		"./da-DK.js": 448,
+		"./de-AT.js": 449,
+		"./de-CH.js": 450,
+		"./de-DE.js": 451,
+		"./de-LI.js": 452,
+		"./de-LU.js": 453,
+		"./dv-MV.js": 454,
+		"./el-GR.js": 455,
+		"./en-029.js": 456,
+		"./en-AU.js": 457,
+		"./en-BZ.js": 458,
+		"./en-CA.js": 459,
+		"./en-GB.js": 460,
+		"./en-IE.js": 461,
+		"./en-JM.js": 462,
+		"./en-NZ.js": 463,
+		"./en-PH.js": 464,
+		"./en-TT.js": 465,
+		"./en-ZA.js": 466,
+		"./en-ZW.js": 467,
+		"./es-AR.js": 468,
+		"./es-BO.js": 469,
+		"./es-CL.js": 470,
+		"./es-CO.js": 471,
+		"./es-CR.js": 472,
+		"./es-DO.js": 473,
+		"./es-EC.js": 474,
+		"./es-ES.js": 475,
+		"./es-GT.js": 476,
+		"./es-HN.js": 477,
+		"./es-MX.js": 478,
+		"./es-NI.js": 479,
+		"./es-PA.js": 480,
+		"./es-PE.js": 481,
+		"./es-PR.js": 482,
+		"./es-PY.js": 483,
+		"./es-SV.js": 484,
+		"./es-UY.js": 485,
+		"./es-VE.js": 486,
+		"./et-EE.js": 487,
+		"./eu-ES.js": 488,
+		"./fa-IR.js": 489,
+		"./fi-FI.js": 490,
+		"./fo-FO.js": 491,
+		"./fr-BE.js": 492,
+		"./fr-CA.js": 493,
+		"./fr-CH.js": 494,
+		"./fr-FR.js": 495,
+		"./fr-LU.js": 496,
+		"./fr-MC.js": 497,
+		"./gl-ES.js": 498,
+		"./gu-IN.js": 499,
+		"./he-IL.js": 500,
+		"./hi-IN.js": 501,
+		"./hr-BA.js": 502,
+		"./hr-HR.js": 503,
+		"./hu-HU.js": 504,
+		"./hy-AM.js": 505,
+		"./id-ID.js": 506,
+		"./is-IS.js": 507,
+		"./it-CH.js": 508,
+		"./it-IT.js": 509,
+		"./ja-JP.js": 510,
+		"./ka-GE.js": 511,
+		"./kk-KZ.js": 512,
+		"./kn-IN.js": 513,
+		"./ko-KR.js": 514,
+		"./kok-IN.js": 515,
+		"./ky-KG.js": 516,
+		"./lt-LT.js": 517,
+		"./lv-LV.js": 518,
+		"./mi-NZ.js": 519,
+		"./mk-MK.js": 520,
+		"./mn-MN.js": 521,
+		"./mr-IN.js": 522,
+		"./ms-BN.js": 523,
+		"./ms-MY.js": 524,
+		"./mt-MT.js": 525,
+		"./nb-NO.js": 526,
+		"./nl-BE.js": 527,
+		"./nl-NL.js": 528,
+		"./nn-NO.js": 529,
+		"./ns-ZA.js": 530,
+		"./pa-IN.js": 531,
+		"./pl-PL.js": 532,
+		"./pt-BR.js": 533,
+		"./pt-PT.js": 534,
+		"./quz-BO.js": 535,
+		"./quz-EC.js": 536,
+		"./quz-PE.js": 537,
+		"./ro-RO.js": 538,
+		"./ru-RU.js": 539,
+		"./sa-IN.js": 540,
+		"./se-FI.js": 541,
+		"./se-NO.js": 542,
+		"./se-SE.js": 543,
+		"./sk-SK.js": 544,
+		"./sl-SI.js": 545,
+		"./sma-NO.js": 546,
+		"./sma-SE.js": 547,
+		"./smj-NO.js": 548,
+		"./smj-SE.js": 549,
+		"./smn-FI.js": 550,
+		"./sms-FI.js": 551,
+		"./sq-AL.js": 552,
+		"./sr-Cyrl-BA.js": 553,
+		"./sr-Cyrl-CS.js": 554,
+		"./sr-Latn-BA.js": 555,
+		"./sr-Latn-CS.js": 556,
+		"./sv-FI.js": 557,
+		"./sv-SE.js": 558,
+		"./sw-KE.js": 559,
+		"./syr-SY.js": 560,
+		"./ta-IN.js": 561,
+		"./te-IN.js": 562,
+		"./th-TH.js": 563,
+		"./tn-ZA.js": 564,
+		"./tr-TR.js": 565,
+		"./tt-RU.js": 566,
+		"./uk-UA.js": 567,
+		"./ur-PK.js": 568,
+		"./uz-Cyrl-UZ.js": 569,
+		"./uz-Latn-UZ.js": 570,
+		"./vi-VN.js": 571,
+		"./xh-ZA.js": 572,
+		"./zh-CN.js": 573,
+		"./zh-HK.js": 574,
+		"./zh-MO.js": 575,
+		"./zh-SG.js": 576,
+		"./zh-TW.js": 577,
+		"./zu-ZA.js": 578
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -22636,11 +22736,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 420;
+	webpackContext.id = 422;
 
 
 /***/ },
-/* 421 */
+/* 423 */
 /***/ function(module, exports) {
 
 	/* 
@@ -22824,7 +22924,7 @@
 
 
 /***/ },
-/* 422 */
+/* 424 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23008,7 +23108,7 @@
 
 
 /***/ },
-/* 423 */
+/* 425 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23192,7 +23292,7 @@
 
 
 /***/ },
-/* 424 */
+/* 426 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23376,7 +23476,7 @@
 
 
 /***/ },
-/* 425 */
+/* 427 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23560,7 +23660,7 @@
 
 
 /***/ },
-/* 426 */
+/* 428 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23744,7 +23844,7 @@
 
 
 /***/ },
-/* 427 */
+/* 429 */
 /***/ function(module, exports) {
 
 	/* 
@@ -23928,7 +24028,7 @@
 
 
 /***/ },
-/* 428 */
+/* 430 */
 /***/ function(module, exports) {
 
 	/* 
@@ -24112,7 +24212,7 @@
 
 
 /***/ },
-/* 429 */
+/* 431 */
 /***/ function(module, exports) {
 
 	/* 
@@ -24296,7 +24396,7 @@
 
 
 /***/ },
-/* 430 */
+/* 432 */
 /***/ function(module, exports) {
 
 	/* 
@@ -24480,7 +24580,7 @@
 
 
 /***/ },
-/* 431 */
+/* 433 */
 /***/ function(module, exports) {
 
 	/* 
@@ -24664,7 +24764,7 @@
 
 
 /***/ },
-/* 432 */
+/* 434 */
 /***/ function(module, exports) {
 
 	/* 
@@ -24848,7 +24948,7 @@
 
 
 /***/ },
-/* 433 */
+/* 435 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25032,7 +25132,7 @@
 
 
 /***/ },
-/* 434 */
+/* 436 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25216,7 +25316,7 @@
 
 
 /***/ },
-/* 435 */
+/* 437 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25400,7 +25500,7 @@
 
 
 /***/ },
-/* 436 */
+/* 438 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25584,7 +25684,7 @@
 
 
 /***/ },
-/* 437 */
+/* 439 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25768,7 +25868,7 @@
 
 
 /***/ },
-/* 438 */
+/* 440 */
 /***/ function(module, exports) {
 
 	/* 
@@ -25952,7 +26052,7 @@
 
 
 /***/ },
-/* 439 */
+/* 441 */
 /***/ function(module, exports) {
 
 	/* 
@@ -26136,7 +26236,7 @@
 
 
 /***/ },
-/* 440 */
+/* 442 */
 /***/ function(module, exports) {
 
 	/* 
@@ -26320,7 +26420,7 @@
 
 
 /***/ },
-/* 441 */
+/* 443 */
 /***/ function(module, exports) {
 
 	/* 
@@ -26504,7 +26604,7 @@
 
 
 /***/ },
-/* 442 */
+/* 444 */
 /***/ function(module, exports) {
 
 	/* 
@@ -26688,7 +26788,7 @@
 
 
 /***/ },
-/* 443 */
+/* 445 */
 /***/ function(module, exports) {
 
 	/* 
@@ -26872,7 +26972,7 @@
 
 
 /***/ },
-/* 444 */
+/* 446 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27056,7 +27156,7 @@
 
 
 /***/ },
-/* 445 */
+/* 447 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27240,7 +27340,7 @@
 
 
 /***/ },
-/* 446 */
+/* 448 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27424,7 +27524,7 @@
 
 
 /***/ },
-/* 447 */
+/* 449 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27608,7 +27708,7 @@
 
 
 /***/ },
-/* 448 */
+/* 450 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27792,7 +27892,7 @@
 
 
 /***/ },
-/* 449 */
+/* 451 */
 /***/ function(module, exports) {
 
 	/* 
@@ -27976,7 +28076,7 @@
 
 
 /***/ },
-/* 450 */
+/* 452 */
 /***/ function(module, exports) {
 
 	/* 
@@ -28160,7 +28260,7 @@
 
 
 /***/ },
-/* 451 */
+/* 453 */
 /***/ function(module, exports) {
 
 	/* 
@@ -28344,7 +28444,7 @@
 
 
 /***/ },
-/* 452 */
+/* 454 */
 /***/ function(module, exports) {
 
 	/* 
@@ -28528,7 +28628,7 @@
 
 
 /***/ },
-/* 453 */
+/* 455 */
 /***/ function(module, exports) {
 
 	/* 
@@ -28712,7 +28812,7 @@
 
 
 /***/ },
-/* 454 */
+/* 456 */
 /***/ function(module, exports) {
 
 	/* 
@@ -28896,7 +28996,7 @@
 
 
 /***/ },
-/* 455 */
+/* 457 */
 /***/ function(module, exports) {
 
 	/* 
@@ -29080,7 +29180,7 @@
 
 
 /***/ },
-/* 456 */
+/* 458 */
 /***/ function(module, exports) {
 
 	/* 
@@ -29264,7 +29364,7 @@
 
 
 /***/ },
-/* 457 */
+/* 459 */
 /***/ function(module, exports) {
 
 	/* 
@@ -29448,7 +29548,7 @@
 
 
 /***/ },
-/* 458 */
+/* 460 */
 /***/ function(module, exports) {
 
 	/* 
@@ -29632,7 +29732,7 @@
 
 
 /***/ },
-/* 459 */
+/* 461 */
 /***/ function(module, exports) {
 
 	/* 
@@ -29816,7 +29916,7 @@
 
 
 /***/ },
-/* 460 */
+/* 462 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30000,7 +30100,7 @@
 
 
 /***/ },
-/* 461 */
+/* 463 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30184,7 +30284,7 @@
 
 
 /***/ },
-/* 462 */
+/* 464 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30368,7 +30468,7 @@
 
 
 /***/ },
-/* 463 */
+/* 465 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30552,7 +30652,7 @@
 
 
 /***/ },
-/* 464 */
+/* 466 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30736,7 +30836,7 @@
 
 
 /***/ },
-/* 465 */
+/* 467 */
 /***/ function(module, exports) {
 
 	/* 
@@ -30920,7 +31020,7 @@
 
 
 /***/ },
-/* 466 */
+/* 468 */
 /***/ function(module, exports) {
 
 	/* 
@@ -31104,7 +31204,7 @@
 
 
 /***/ },
-/* 467 */
+/* 469 */
 /***/ function(module, exports) {
 
 	/* 
@@ -31288,7 +31388,7 @@
 
 
 /***/ },
-/* 468 */
+/* 470 */
 /***/ function(module, exports) {
 
 	/* 
@@ -31472,7 +31572,7 @@
 
 
 /***/ },
-/* 469 */
+/* 471 */
 /***/ function(module, exports) {
 
 	/* 
@@ -31656,7 +31756,7 @@
 
 
 /***/ },
-/* 470 */
+/* 472 */
 /***/ function(module, exports) {
 
 	/* 
@@ -31840,7 +31940,7 @@
 
 
 /***/ },
-/* 471 */
+/* 473 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32024,7 +32124,7 @@
 
 
 /***/ },
-/* 472 */
+/* 474 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32208,7 +32308,7 @@
 
 
 /***/ },
-/* 473 */
+/* 475 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32392,7 +32492,7 @@
 
 
 /***/ },
-/* 474 */
+/* 476 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32576,7 +32676,7 @@
 
 
 /***/ },
-/* 475 */
+/* 477 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32760,7 +32860,7 @@
 
 
 /***/ },
-/* 476 */
+/* 478 */
 /***/ function(module, exports) {
 
 	/* 
@@ -32944,7 +33044,7 @@
 
 
 /***/ },
-/* 477 */
+/* 479 */
 /***/ function(module, exports) {
 
 	/* 
@@ -33128,7 +33228,7 @@
 
 
 /***/ },
-/* 478 */
+/* 480 */
 /***/ function(module, exports) {
 
 	/* 
@@ -33312,7 +33412,7 @@
 
 
 /***/ },
-/* 479 */
+/* 481 */
 /***/ function(module, exports) {
 
 	/* 
@@ -33496,7 +33596,7 @@
 
 
 /***/ },
-/* 480 */
+/* 482 */
 /***/ function(module, exports) {
 
 	/* 
@@ -33680,7 +33780,7 @@
 
 
 /***/ },
-/* 481 */
+/* 483 */
 /***/ function(module, exports) {
 
 	/* 
@@ -33864,7 +33964,7 @@
 
 
 /***/ },
-/* 482 */
+/* 484 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34048,7 +34148,7 @@
 
 
 /***/ },
-/* 483 */
+/* 485 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34232,7 +34332,7 @@
 
 
 /***/ },
-/* 484 */
+/* 486 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34416,7 +34516,7 @@
 
 
 /***/ },
-/* 485 */
+/* 487 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34600,7 +34700,7 @@
 
 
 /***/ },
-/* 486 */
+/* 488 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34784,7 +34884,7 @@
 
 
 /***/ },
-/* 487 */
+/* 489 */
 /***/ function(module, exports) {
 
 	/* 
@@ -34968,7 +35068,7 @@
 
 
 /***/ },
-/* 488 */
+/* 490 */
 /***/ function(module, exports) {
 
 	/* 
@@ -35152,7 +35252,7 @@
 
 
 /***/ },
-/* 489 */
+/* 491 */
 /***/ function(module, exports) {
 
 	/* 
@@ -35336,7 +35436,7 @@
 
 
 /***/ },
-/* 490 */
+/* 492 */
 /***/ function(module, exports) {
 
 	/* 
@@ -35520,7 +35620,7 @@
 
 
 /***/ },
-/* 491 */
+/* 493 */
 /***/ function(module, exports) {
 
 	/* 
@@ -35704,7 +35804,7 @@
 
 
 /***/ },
-/* 492 */
+/* 494 */
 /***/ function(module, exports) {
 
 	/* 
@@ -35888,7 +35988,7 @@
 
 
 /***/ },
-/* 493 */
+/* 495 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36072,7 +36172,7 @@
 
 
 /***/ },
-/* 494 */
+/* 496 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36256,7 +36356,7 @@
 
 
 /***/ },
-/* 495 */
+/* 497 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36440,7 +36540,7 @@
 
 
 /***/ },
-/* 496 */
+/* 498 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36624,7 +36724,7 @@
 
 
 /***/ },
-/* 497 */
+/* 499 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36808,7 +36908,7 @@
 
 
 /***/ },
-/* 498 */
+/* 500 */
 /***/ function(module, exports) {
 
 	/* 
@@ -36992,7 +37092,7 @@
 
 
 /***/ },
-/* 499 */
+/* 501 */
 /***/ function(module, exports) {
 
 	/* 
@@ -37176,7 +37276,7 @@
 
 
 /***/ },
-/* 500 */
+/* 502 */
 /***/ function(module, exports) {
 
 	/* 
@@ -37360,7 +37460,7 @@
 
 
 /***/ },
-/* 501 */
+/* 503 */
 /***/ function(module, exports) {
 
 	/* 
@@ -37544,7 +37644,7 @@
 
 
 /***/ },
-/* 502 */
+/* 504 */
 /***/ function(module, exports) {
 
 	/* 
@@ -37728,7 +37828,7 @@
 
 
 /***/ },
-/* 503 */
+/* 505 */
 /***/ function(module, exports) {
 
 	/* 
@@ -37912,7 +38012,7 @@
 
 
 /***/ },
-/* 504 */
+/* 506 */
 /***/ function(module, exports) {
 
 	/* 
@@ -38096,7 +38196,7 @@
 
 
 /***/ },
-/* 505 */
+/* 507 */
 /***/ function(module, exports) {
 
 	/* 
@@ -38280,7 +38380,7 @@
 
 
 /***/ },
-/* 506 */
+/* 508 */
 /***/ function(module, exports) {
 
 	/* 
@@ -38464,7 +38564,7 @@
 
 
 /***/ },
-/* 507 */
+/* 509 */
 /***/ function(module, exports) {
 
 	/* 
@@ -38648,7 +38748,7 @@
 
 
 /***/ },
-/* 508 */
+/* 510 */
 /***/ function(module, exports) {
 
 	/* 
@@ -38832,7 +38932,7 @@
 
 
 /***/ },
-/* 509 */
+/* 511 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39016,7 +39116,7 @@
 
 
 /***/ },
-/* 510 */
+/* 512 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39200,7 +39300,7 @@
 
 
 /***/ },
-/* 511 */
+/* 513 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39384,7 +39484,7 @@
 
 
 /***/ },
-/* 512 */
+/* 514 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39568,7 +39668,7 @@
 
 
 /***/ },
-/* 513 */
+/* 515 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39752,7 +39852,7 @@
 
 
 /***/ },
-/* 514 */
+/* 516 */
 /***/ function(module, exports) {
 
 	/* 
@@ -39936,7 +40036,7 @@
 
 
 /***/ },
-/* 515 */
+/* 517 */
 /***/ function(module, exports) {
 
 	/* 
@@ -40120,7 +40220,7 @@
 
 
 /***/ },
-/* 516 */
+/* 518 */
 /***/ function(module, exports) {
 
 	/* 
@@ -40304,7 +40404,7 @@
 
 
 /***/ },
-/* 517 */
+/* 519 */
 /***/ function(module, exports) {
 
 	/* 
@@ -40488,7 +40588,7 @@
 
 
 /***/ },
-/* 518 */
+/* 520 */
 /***/ function(module, exports) {
 
 	/* 
@@ -40672,7 +40772,7 @@
 
 
 /***/ },
-/* 519 */
+/* 521 */
 /***/ function(module, exports) {
 
 	/* 
@@ -40856,7 +40956,7 @@
 
 
 /***/ },
-/* 520 */
+/* 522 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41040,7 +41140,7 @@
 
 
 /***/ },
-/* 521 */
+/* 523 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41224,7 +41324,7 @@
 
 
 /***/ },
-/* 522 */
+/* 524 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41408,7 +41508,7 @@
 
 
 /***/ },
-/* 523 */
+/* 525 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41592,7 +41692,7 @@
 
 
 /***/ },
-/* 524 */
+/* 526 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41776,7 +41876,7 @@
 
 
 /***/ },
-/* 525 */
+/* 527 */
 /***/ function(module, exports) {
 
 	/* 
@@ -41960,7 +42060,7 @@
 
 
 /***/ },
-/* 526 */
+/* 528 */
 /***/ function(module, exports) {
 
 	/* 
@@ -42144,7 +42244,7 @@
 
 
 /***/ },
-/* 527 */
+/* 529 */
 /***/ function(module, exports) {
 
 	/* 
@@ -42328,7 +42428,7 @@
 
 
 /***/ },
-/* 528 */
+/* 530 */
 /***/ function(module, exports) {
 
 	/* 
@@ -42512,7 +42612,7 @@
 
 
 /***/ },
-/* 529 */
+/* 531 */
 /***/ function(module, exports) {
 
 	/* 
@@ -42696,7 +42796,7 @@
 
 
 /***/ },
-/* 530 */
+/* 532 */
 /***/ function(module, exports) {
 
 	/* 
@@ -42880,7 +42980,7 @@
 
 
 /***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43064,7 +43164,7 @@
 
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43248,7 +43348,7 @@
 
 
 /***/ },
-/* 533 */
+/* 535 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43432,7 +43532,7 @@
 
 
 /***/ },
-/* 534 */
+/* 536 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43616,7 +43716,7 @@
 
 
 /***/ },
-/* 535 */
+/* 537 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43800,7 +43900,7 @@
 
 
 /***/ },
-/* 536 */
+/* 538 */
 /***/ function(module, exports) {
 
 	/* 
@@ -43984,7 +44084,7 @@
 
 
 /***/ },
-/* 537 */
+/* 539 */
 /***/ function(module, exports) {
 
 	/* 
@@ -44168,7 +44268,7 @@
 
 
 /***/ },
-/* 538 */
+/* 540 */
 /***/ function(module, exports) {
 
 	/* 
@@ -44352,7 +44452,7 @@
 
 
 /***/ },
-/* 539 */
+/* 541 */
 /***/ function(module, exports) {
 
 	/* 
@@ -44536,7 +44636,7 @@
 
 
 /***/ },
-/* 540 */
+/* 542 */
 /***/ function(module, exports) {
 
 	/* 
@@ -44720,7 +44820,7 @@
 
 
 /***/ },
-/* 541 */
+/* 543 */
 /***/ function(module, exports) {
 
 	/* 
@@ -44904,7 +45004,7 @@
 
 
 /***/ },
-/* 542 */
+/* 544 */
 /***/ function(module, exports) {
 
 	/* 
@@ -45088,7 +45188,7 @@
 
 
 /***/ },
-/* 543 */
+/* 545 */
 /***/ function(module, exports) {
 
 	/* 
@@ -45272,7 +45372,7 @@
 
 
 /***/ },
-/* 544 */
+/* 546 */
 /***/ function(module, exports) {
 
 	/* 
@@ -45456,7 +45556,7 @@
 
 
 /***/ },
-/* 545 */
+/* 547 */
 /***/ function(module, exports) {
 
 	/* 
@@ -45640,7 +45740,7 @@
 
 
 /***/ },
-/* 546 */
+/* 548 */
 /***/ function(module, exports) {
 
 	/* 
@@ -45824,7 +45924,7 @@
 
 
 /***/ },
-/* 547 */
+/* 549 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46008,7 +46108,7 @@
 
 
 /***/ },
-/* 548 */
+/* 550 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46192,7 +46292,7 @@
 
 
 /***/ },
-/* 549 */
+/* 551 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46376,7 +46476,7 @@
 
 
 /***/ },
-/* 550 */
+/* 552 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46560,7 +46660,7 @@
 
 
 /***/ },
-/* 551 */
+/* 553 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46744,7 +46844,7 @@
 
 
 /***/ },
-/* 552 */
+/* 554 */
 /***/ function(module, exports) {
 
 	/* 
@@ -46928,7 +47028,7 @@
 
 
 /***/ },
-/* 553 */
+/* 555 */
 /***/ function(module, exports) {
 
 	/* 
@@ -47112,7 +47212,7 @@
 
 
 /***/ },
-/* 554 */
+/* 556 */
 /***/ function(module, exports) {
 
 	/* 
@@ -47296,7 +47396,7 @@
 
 
 /***/ },
-/* 555 */
+/* 557 */
 /***/ function(module, exports) {
 
 	/* 
@@ -47480,7 +47580,7 @@
 
 
 /***/ },
-/* 556 */
+/* 558 */
 /***/ function(module, exports) {
 
 	/* 
@@ -47664,7 +47764,7 @@
 
 
 /***/ },
-/* 557 */
+/* 559 */
 /***/ function(module, exports) {
 
 	/* 
@@ -47848,7 +47948,7 @@
 
 
 /***/ },
-/* 558 */
+/* 560 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48032,7 +48132,7 @@
 
 
 /***/ },
-/* 559 */
+/* 561 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48216,7 +48316,7 @@
 
 
 /***/ },
-/* 560 */
+/* 562 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48400,7 +48500,7 @@
 
 
 /***/ },
-/* 561 */
+/* 563 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48584,7 +48684,7 @@
 
 
 /***/ },
-/* 562 */
+/* 564 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48768,7 +48868,7 @@
 
 
 /***/ },
-/* 563 */
+/* 565 */
 /***/ function(module, exports) {
 
 	/* 
@@ -48952,7 +49052,7 @@
 
 
 /***/ },
-/* 564 */
+/* 566 */
 /***/ function(module, exports) {
 
 	/* 
@@ -49136,7 +49236,7 @@
 
 
 /***/ },
-/* 565 */
+/* 567 */
 /***/ function(module, exports) {
 
 	/* 
@@ -49320,7 +49420,7 @@
 
 
 /***/ },
-/* 566 */
+/* 568 */
 /***/ function(module, exports) {
 
 	/* 
@@ -49504,7 +49604,7 @@
 
 
 /***/ },
-/* 567 */
+/* 569 */
 /***/ function(module, exports) {
 
 	/* 
@@ -49688,7 +49788,7 @@
 
 
 /***/ },
-/* 568 */
+/* 570 */
 /***/ function(module, exports) {
 
 	/* 
@@ -49872,7 +49972,7 @@
 
 
 /***/ },
-/* 569 */
+/* 571 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50056,7 +50156,7 @@
 
 
 /***/ },
-/* 570 */
+/* 572 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50240,7 +50340,7 @@
 
 
 /***/ },
-/* 571 */
+/* 573 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50424,7 +50524,7 @@
 
 
 /***/ },
-/* 572 */
+/* 574 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50608,7 +50708,7 @@
 
 
 /***/ },
-/* 573 */
+/* 575 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50792,7 +50892,7 @@
 
 
 /***/ },
-/* 574 */
+/* 576 */
 /***/ function(module, exports) {
 
 	/* 
@@ -50976,7 +51076,7 @@
 
 
 /***/ },
-/* 575 */
+/* 577 */
 /***/ function(module, exports) {
 
 	/* 
@@ -51160,7 +51260,7 @@
 
 
 /***/ },
-/* 576 */
+/* 578 */
 /***/ function(module, exports) {
 
 	/* 
@@ -51344,7 +51444,7 @@
 
 
 /***/ },
-/* 577 */
+/* 579 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -51693,7 +51793,7 @@
 
 
 /***/ },
-/* 578 */
+/* 580 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -52467,7 +52567,7 @@
 	}());
 
 /***/ },
-/* 579 */
+/* 581 */
 /***/ function(module, exports) {
 
 	/*************************************************************
@@ -52966,7 +53066,7 @@
 
 
 /***/ },
-/* 580 */
+/* 582 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -53352,7 +53452,7 @@
 	}());
 
 /***/ },
-/* 581 */
+/* 583 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -53815,7 +53915,7 @@
 	}());
 
 /***/ },
-/* 582 */
+/* 584 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -54182,7 +54282,7 @@
 	}());
 
 /***/ },
-/* 583 */
+/* 585 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -54497,7 +54597,7 @@
 	}());
 
 /***/ },
-/* 584 */
+/* 586 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -54709,7 +54809,7 @@
 
 
 /***/ },
-/* 585 */
+/* 587 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -55028,7 +55128,7 @@
 	}());
 
 /***/ },
-/* 586 */
+/* 588 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -55134,7 +55234,7 @@
 	}());
 
 /***/ },
-/* 587 */
+/* 589 */
 /***/ function(module, exports) {
 
 	(function () {
@@ -55315,7 +55415,7 @@
 	}());
 
 /***/ },
-/* 588 */
+/* 590 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// UMD: https://github.com/umdjs/umd/blob/master/returnExports.js
@@ -55665,20 +55765,20 @@
 
 
 /***/ },
-/* 589 */
+/* 591 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(590);
+	module.exports = __webpack_require__(592);
 
 /***/ },
-/* 590 */
+/* 592 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
-	var bind = __webpack_require__(592);
-	var Axios = __webpack_require__(593);
+	var utils = __webpack_require__(593);
+	var bind = __webpack_require__(594);
+	var Axios = __webpack_require__(595);
 	
 	/**
 	 * Create an instance of Axios
@@ -55711,15 +55811,15 @@
 	};
 	
 	// Expose Cancel & CancelToken
-	axios.Cancel = __webpack_require__(611);
-	axios.CancelToken = __webpack_require__(612);
-	axios.isCancel = __webpack_require__(608);
+	axios.Cancel = __webpack_require__(613);
+	axios.CancelToken = __webpack_require__(614);
+	axios.isCancel = __webpack_require__(610);
 	
 	// Expose all/spread
 	axios.all = function all(promises) {
 	  return Promise.all(promises);
 	};
-	axios.spread = __webpack_require__(613);
+	axios.spread = __webpack_require__(615);
 	
 	module.exports = axios;
 	
@@ -55728,12 +55828,12 @@
 
 
 /***/ },
-/* 591 */
+/* 593 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var bind = __webpack_require__(592);
+	var bind = __webpack_require__(594);
 	
 	/*global toString:true*/
 	
@@ -56033,7 +56133,7 @@
 
 
 /***/ },
-/* 592 */
+/* 594 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56050,17 +56150,17 @@
 
 
 /***/ },
-/* 593 */
+/* 595 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var defaults = __webpack_require__(594);
-	var utils = __webpack_require__(591);
-	var InterceptorManager = __webpack_require__(605);
-	var dispatchRequest = __webpack_require__(606);
-	var isAbsoluteURL = __webpack_require__(609);
-	var combineURLs = __webpack_require__(610);
+	var defaults = __webpack_require__(596);
+	var utils = __webpack_require__(593);
+	var InterceptorManager = __webpack_require__(607);
+	var dispatchRequest = __webpack_require__(608);
+	var isAbsoluteURL = __webpack_require__(611);
+	var combineURLs = __webpack_require__(612);
 	
 	/**
 	 * Create a new instance of Axios
@@ -56141,13 +56241,13 @@
 
 
 /***/ },
-/* 594 */
+/* 596 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(591);
-	var normalizeHeaderName = __webpack_require__(595);
+	var utils = __webpack_require__(593);
+	var normalizeHeaderName = __webpack_require__(597);
 	
 	var PROTECTION_PREFIX = /^\)\]\}',?\n/;
 	var DEFAULT_CONTENT_TYPE = {
@@ -56164,10 +56264,10 @@
 	  var adapter;
 	  if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
-	    adapter = __webpack_require__(596);
+	    adapter = __webpack_require__(598);
 	  } else if (typeof process !== 'undefined') {
 	    // For node use HTTP adapter
-	    adapter = __webpack_require__(596);
+	    adapter = __webpack_require__(598);
 	  }
 	  return adapter;
 	}
@@ -56234,12 +56334,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(299)))
 
 /***/ },
-/* 595 */
+/* 597 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	module.exports = function normalizeHeaderName(headers, normalizedName) {
 	  utils.forEach(headers, function processHeader(value, name) {
@@ -56252,18 +56352,18 @@
 
 
 /***/ },
-/* 596 */
+/* 598 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 	
-	var utils = __webpack_require__(591);
-	var settle = __webpack_require__(597);
-	var buildURL = __webpack_require__(600);
-	var parseHeaders = __webpack_require__(601);
-	var isURLSameOrigin = __webpack_require__(602);
-	var createError = __webpack_require__(598);
-	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(603);
+	var utils = __webpack_require__(593);
+	var settle = __webpack_require__(599);
+	var buildURL = __webpack_require__(602);
+	var parseHeaders = __webpack_require__(603);
+	var isURLSameOrigin = __webpack_require__(604);
+	var createError = __webpack_require__(600);
+	var btoa = (typeof window !== 'undefined' && window.btoa) || __webpack_require__(605);
 	
 	module.exports = function xhrAdapter(config) {
 	  return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -56359,7 +56459,7 @@
 	    // This is only done if running in a standard browser environment.
 	    // Specifically not if we're in a web worker, or react-native.
 	    if (utils.isStandardBrowserEnv()) {
-	      var cookies = __webpack_require__(604);
+	      var cookies = __webpack_require__(606);
 	
 	      // Add xsrf header
 	      var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -56436,12 +56536,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(299)))
 
 /***/ },
-/* 597 */
+/* 599 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var createError = __webpack_require__(598);
+	var createError = __webpack_require__(600);
 	
 	/**
 	 * Resolve or reject a Promise based on response status.
@@ -56467,12 +56567,12 @@
 
 
 /***/ },
-/* 598 */
+/* 600 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var enhanceError = __webpack_require__(599);
+	var enhanceError = __webpack_require__(601);
 	
 	/**
 	 * Create an Error with the specified message, config, error code, and response.
@@ -56490,7 +56590,7 @@
 
 
 /***/ },
-/* 599 */
+/* 601 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56515,12 +56615,12 @@
 
 
 /***/ },
-/* 600 */
+/* 602 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	function encode(val) {
 	  return encodeURIComponent(val).
@@ -56589,12 +56689,12 @@
 
 
 /***/ },
-/* 601 */
+/* 603 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	/**
 	 * Parse headers into an object
@@ -56632,12 +56732,12 @@
 
 
 /***/ },
-/* 602 */
+/* 604 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -56706,7 +56806,7 @@
 
 
 /***/ },
-/* 603 */
+/* 605 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56748,12 +56848,12 @@
 
 
 /***/ },
-/* 604 */
+/* 606 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	module.exports = (
 	  utils.isStandardBrowserEnv() ?
@@ -56807,12 +56907,12 @@
 
 
 /***/ },
-/* 605 */
+/* 607 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	function InterceptorManager() {
 	  this.handlers = [];
@@ -56865,15 +56965,15 @@
 
 
 /***/ },
-/* 606 */
+/* 608 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
-	var transformData = __webpack_require__(607);
-	var isCancel = __webpack_require__(608);
-	var defaults = __webpack_require__(594);
+	var utils = __webpack_require__(593);
+	var transformData = __webpack_require__(609);
+	var isCancel = __webpack_require__(610);
+	var defaults = __webpack_require__(596);
 	
 	/**
 	 * Throws a `Cancel` if cancellation has been requested.
@@ -56950,12 +57050,12 @@
 
 
 /***/ },
-/* 607 */
+/* 609 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var utils = __webpack_require__(591);
+	var utils = __webpack_require__(593);
 	
 	/**
 	 * Transform the data for a request or a response
@@ -56976,7 +57076,7 @@
 
 
 /***/ },
-/* 608 */
+/* 610 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -56987,7 +57087,7 @@
 
 
 /***/ },
-/* 609 */
+/* 611 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -57007,7 +57107,7 @@
 
 
 /***/ },
-/* 610 */
+/* 612 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -57025,7 +57125,7 @@
 
 
 /***/ },
-/* 611 */
+/* 613 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -57050,12 +57150,12 @@
 
 
 /***/ },
-/* 612 */
+/* 614 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Cancel = __webpack_require__(611);
+	var Cancel = __webpack_require__(613);
 	
 	/**
 	 * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -57113,7 +57213,7 @@
 
 
 /***/ },
-/* 613 */
+/* 615 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -57146,7 +57246,7 @@
 
 
 /***/ },
-/* 614 */
+/* 616 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -57167,7 +57267,7 @@
 	module.exports = template;
 
 /***/ },
-/* 615 */
+/* 617 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -57181,7 +57281,7 @@
 	module.exports = template;
 
 /***/ },
-/* 616 */
+/* 618 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57203,9 +57303,9 @@
 	
 	var Log = __webpack_require__(343);
 	var StackedPage = __webpack_require__(369);
-	var TestElement = __webpack_require__(617);
+	var TestElement = __webpack_require__(619);
 	
-	var ContentFn = __webpack_require__(619);
+	var ContentFn = __webpack_require__(621);
 	
 	var TestPage = function (_StackedPage) {
 	  _inherits(TestPage, _StackedPage);
@@ -57253,7 +57353,7 @@
 	          'ui': 'bdd'
 	        });
 	
-	        __webpack_require__(620);
+	        __webpack_require__(622);
 	
 	        var tests = Mocha.run();
 	        tests.on('end', this._onFinished = this.onFinished.bind(this, tests));
@@ -57286,7 +57386,7 @@
 	module.exports = TestPage;
 
 /***/ },
-/* 617 */
+/* 619 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57301,13 +57401,13 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var _Date = __webpack_require__(418);
+	var _Date = __webpack_require__(420);
 	var Timeout = __webpack_require__(307);
 	
 	var Element = __webpack_require__(341);
 	var Log = __webpack_require__(343);
 	
-	var ContentFn = __webpack_require__(618);
+	var ContentFn = __webpack_require__(620);
 	
 	var TestElement = function (_Element) {
 	  _inherits(TestElement, _Element);
@@ -57350,7 +57450,7 @@
 	module.exports = TestElement;
 
 /***/ },
-/* 618 */
+/* 620 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -57375,7 +57475,7 @@
 	module.exports = template;
 
 /***/ },
-/* 619 */
+/* 621 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -57389,14 +57489,15 @@
 	module.exports = template;
 
 /***/ },
-/* 620 */
+/* 622 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var Assert = __webpack_require__(621);
+	var Assert = __webpack_require__(623);
+	var Co = __webpack_require__(319);
 	
-	var DefaultAutomation = __webpack_require__(622);
+	var DefaultAutomation = __webpack_require__(624);
 	var DefaultPage = __webpack_require__(362);
 	
 	describe('DefaultPage', function () {
@@ -57411,12 +57512,28 @@
 	    Assert.equal(DefaultAutomation.getToolbarText(), 'Features');
 	  });
 	
+	  // it('should contain an item for Pop', () => {
+	  //   Assert.equal(DefaultAutomation.existsListItem('Pop'), true)
+	  // })
+	
 	  it('should contain an item for Status', function () {
 	    Assert.equal(DefaultAutomation.existsListItem('Status'), true);
 	  });
 	
+	  it('should contain an item for Updates', function () {
+	    Assert.equal(DefaultAutomation.existsListItem('Updates'), true);
+	  });
+	
 	  it('should contain an item for Tests', function () {
 	    Assert.equal(DefaultAutomation.existsListItem('Tests'), true);
+	  });
+	
+	  it('should contain an item for Coverage', function () {
+	    Assert.equal(DefaultAutomation.existsListItem('Coverage'), true);
+	  });
+	
+	  it('should contain an item for Countdown ...', function () {
+	    Assert.equal(DefaultAutomation.existsListItem('Countdown'), true);
 	  });
 	
 	  it('should contain an item for Alert', function () {
@@ -57426,6 +57543,39 @@
 	  it('should contain an item for Confirmation', function () {
 	    Assert.equal(DefaultAutomation.existsListItem('Confirmation'), true);
 	  });
+	
+	  it('should contain an item for Spinner', function () {
+	    Assert.equal(DefaultAutomation.existsListItem('Spinner'), true);
+	  });
+	
+	  it('should contain an item for GitHub', function () {
+	    Assert.equal(DefaultAutomation.existsListItem('GitHub'), true);
+	  });
+	
+	  // describe('(when the item for Pop is clicked)', () => {
+	  //
+	  //   let dialog = null
+	  //
+	  //   before(() => {
+	  //     return DefaultAutomation.whenDialogShown(() => {
+	  //       DefaultAutomation.clickListItem('Pop')
+	  //     })
+	  //       .then((_dialog) => {
+	  //         dialog = _dialog
+	  //       })
+	  //   })
+	  //
+	  //   it('should show an alert dialog with the text The last page on the stack cannot be removed.', () => {
+	  //     Assert.equal(DefaultAutomation.getAlertText(), 'The last page on the stack cannot be removed.')
+	  //   })
+	  //
+	  //   after(() => {
+	  //     return DefaultAutomation.whenDialogHidden(() => {
+	  //       window.application.hideDialog(dialog)
+	  //     })
+	  //   })
+	  //
+	  // })
 	
 	  describe('(when the item for Status is clicked)', function () {
 	
@@ -57448,17 +57598,91 @@
 	
 	  describe('(when the item for Status and the Features button are clicked)', function () {
 	
+	    // before(() => {
+	    //   return Promise.resolve()
+	    //     .then(() => DefaultAutomation.whenPageShown(() => {
+	    //       DefaultAutomation.clickListItem('Status')
+	    //       }
+	    //     ))
+	    //     .then(() => DefaultAutomation.whenPageShown(() => {
+	    //       DefaultAutomation.clickToolbarButton('Features')
+	    //       }
+	    //     ))
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee() {
+	      return regeneratorRuntime.wrap(function _callee$(_context) {
+	        while (1) {
+	          switch (_context.prev = _context.next) {
+	            case 0:
+	              _context.next = 2;
+	              return DefaultAutomation.whenPageShown(function () {
+	                DefaultAutomation.clickListItem('Status');
+	              });
+	
+	            case 2:
+	              _context.next = 4;
+	              return DefaultAutomation.whenPageShown(function () {
+	                DefaultAutomation.clickToolbarButton('Features');
+	              });
+	
+	            case 4:
+	            case 'end':
+	              return _context.stop();
+	          }
+	        }
+	      }, _callee, this);
+	    })));
+	
+	    it('should contain the title Features', function () {
+	      Assert.equal(DefaultAutomation.getToolbarText(), 'Features');
+	    });
+	  });
+	
+	  describe('(when the item for Updates is clicked)', function () {
+	
 	    before(function () {
-	      return Promise.resolve().then(function () {
-	        return DefaultAutomation.whenPageShown(function () {
-	          DefaultAutomation.clickListItem('Status');
-	        });
-	      }).then(function () {
-	        return DefaultAutomation.whenPageShown(function () {
-	          DefaultAutomation.clickToolbarButton('Features');
-	        });
+	      return DefaultAutomation.whenPageShown(function () {
+	        DefaultAutomation.clickListItem('Updates');
 	      });
 	    });
+	
+	    it('should contain the title Updates', function () {
+	      Assert.equal(DefaultAutomation.getToolbarText(), 'Updates');
+	    });
+	
+	    after(function () {
+	      return DefaultAutomation.whenPageShown(function () {
+	        window.application.popPage();
+	      });
+	    });
+	  });
+	
+	  describe('(when the item for Updates and the Features button are clicked)', function () {
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee2() {
+	      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+	        while (1) {
+	          switch (_context2.prev = _context2.next) {
+	            case 0:
+	              _context2.next = 2;
+	              return DefaultAutomation.whenPageShown(function () {
+	                DefaultAutomation.clickListItem('Updates');
+	              });
+	
+	            case 2:
+	              _context2.next = 4;
+	              return DefaultAutomation.whenPageShown(function () {
+	                DefaultAutomation.clickToolbarButton('Features');
+	              });
+	
+	            case 4:
+	            case 'end':
+	              return _context2.stop();
+	          }
+	        }
+	      }, _callee2, this);
+	    })));
 	
 	    it('should contain the title Features', function () {
 	      Assert.equal(DefaultAutomation.getToolbarText(), 'Features');
@@ -57469,13 +57693,35 @@
 	
 	    var dialog = null;
 	
-	    before(function () {
-	      return DefaultAutomation.whenDialogShown(function () {
-	        DefaultAutomation.clickListItem('Alert');
-	      }).then(function (_dialog) {
-	        dialog = _dialog;
-	      });
-	    });
+	    // before(() => {
+	    //   return DefaultAutomation.whenDialogShown(() => {
+	    //     DefaultAutomation.clickListItem('Alert')
+	    //   })
+	    //     .then((_dialog) => {
+	    //       dialog = _dialog
+	    //     })
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee3() {
+	      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+	        while (1) {
+	          switch (_context3.prev = _context3.next) {
+	            case 0:
+	              _context3.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Alert');
+	              });
+	
+	            case 2:
+	              dialog = _context3.sent;
+	
+	            case 3:
+	            case 'end':
+	              return _context3.stop();
+	          }
+	        }
+	      }, _callee3, this);
+	    })));
 	
 	    it('should show an alert dialog with the text Danger!', function () {
 	      Assert.equal(DefaultAutomation.getAlertText(), 'Danger!');
@@ -57490,17 +57736,39 @@
 	
 	  describe('(when the item for Alert and the Ok button are clicked)', function () {
 	
-	    before(function () {
-	      return Promise.resolve().then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          DefaultAutomation.clickListItem('Alert');
-	        });
-	      }).then(function () {
-	        return DefaultAutomation.whenDialogHidden(function () {
-	          DefaultAutomation.clickAlertButton('Ok');
-	        });
-	      });
-	    });
+	    // before(() => {
+	    //   return Promise.resolve()
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       DefaultAutomation.clickListItem('Alert')
+	    //     }))
+	    //     .then(() => DefaultAutomation.whenDialogHidden(() => {
+	    //       DefaultAutomation.clickAlertButton('Ok')
+	    //     }))
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee4() {
+	      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+	        while (1) {
+	          switch (_context4.prev = _context4.next) {
+	            case 0:
+	              _context4.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Alert');
+	              });
+	
+	            case 2:
+	              _context4.next = 4;
+	              return DefaultAutomation.whenDialogHidden(function () {
+	                DefaultAutomation.clickAlertButton('Ok');
+	              });
+	
+	            case 4:
+	            case 'end':
+	              return _context4.stop();
+	          }
+	        }
+	      }, _callee4, this);
+	    })));
 	
 	    it('should hide the alert dialog with the text Danger!', function () {
 	      Assert.equal(DefaultAutomation.existsAlertText('Danger!'), false);
@@ -57511,50 +57779,122 @@
 	
 	    var dialog = null;
 	
-	    before(function () {
-	      return DefaultAutomation.whenDialogShown(function () {
-	        DefaultAutomation.clickListItem('Confirmation');
-	      }).then(function (_dialog) {
-	        dialog = _dialog;
-	      });
-	    });
+	    // before(() => {
+	    //   return DefaultAutomation.whenDialogShown(() => {
+	    //     DefaultAutomation.clickListItem('Confirmation')
+	    //   })
+	    //     .then((_dialog) => {
+	    //       dialog = _dialog
+	    //     })
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee5() {
+	      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+	        while (1) {
+	          switch (_context5.prev = _context5.next) {
+	            case 0:
+	              _context5.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Confirmation');
+	              });
+	
+	            case 2:
+	              dialog = _context5.sent;
+	
+	            case 3:
+	            case 'end':
+	              return _context5.stop();
+	          }
+	        }
+	      }, _callee5, this);
+	    })));
 	
 	    it('should show a confirmation dialog with the text Are you sure?', function () {
 	      Assert.equal(DefaultAutomation.getConfirmationText(), 'Are you sure?');
 	    });
 	
-	    after(function () {
-	      return Promise.resolve().then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          window.application.hideDialog(dialog);
-	        });
-	      }).then(function (_dialog) {
-	        dialog = _dialog;
-	      }).then(function () {
-	        return DefaultAutomation.whenDialogHidden(function () {
-	          window.application.hideDialog(dialog);
-	        });
-	      });
-	    });
+	    // after(() => {
+	    //   return Promise.resolve()
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       window.application.hideDialog(dialog)
+	    //     }))
+	    //     .then((_dialog) => {
+	    //       dialog = _dialog
+	    //     })
+	    //     .then(() => DefaultAutomation.whenDialogHidden(() => {
+	    //       window.application.hideDialog(dialog)
+	    //     }))
+	    // })
+	
+	    after(Co.wrap(regeneratorRuntime.mark(function _callee6() {
+	      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+	        while (1) {
+	          switch (_context6.prev = _context6.next) {
+	            case 0:
+	              _context6.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                window.application.hideDialog(dialog);
+	              });
+	
+	            case 2:
+	              dialog = _context6.sent;
+	              _context6.next = 5;
+	              return DefaultAutomation.whenDialogHidden(function () {
+	                window.application.hideDialog(dialog);
+	              });
+	
+	            case 5:
+	            case 'end':
+	              return _context6.stop();
+	          }
+	        }
+	      }, _callee6, this);
+	    })));
 	  });
 	
 	  describe('(when the item for Confirmation and the Yes button are clicked)', function () {
 	
 	    var dialog = null;
 	
-	    before(function () {
-	      return Promise.resolve().then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          DefaultAutomation.clickListItem('Confirmation');
-	        });
-	      }).then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          DefaultAutomation.clickConfirmationButton('Yes');
-	        });
-	      }).then(function (_dialog) {
-	        dialog = _dialog;
-	      });
-	    });
+	    // before(() => {
+	    //   return Promise.resolve()
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       DefaultAutomation.clickListItem('Confirmation')
+	    //     }))
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       DefaultAutomation.clickConfirmationButton('Yes')
+	    //     }))
+	    //     .then((_dialog) => {
+	    //       dialog = _dialog
+	    //     })
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee7() {
+	      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+	        while (1) {
+	          switch (_context7.prev = _context7.next) {
+	            case 0:
+	              _context7.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Confirmation');
+	              });
+	
+	            case 2:
+	              _context7.next = 4;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickConfirmationButton('Yes');
+	              });
+	
+	            case 4:
+	              dialog = _context7.sent;
+	
+	            case 5:
+	            case 'end':
+	              return _context7.stop();
+	          }
+	        }
+	      }, _callee7, this);
+	    })));
 	
 	    it('should show an alert dialog with the text You said ... Yes.', function () {
 	      Assert.equal(DefaultAutomation.getAlertText(), 'You said ... Yes.');
@@ -57571,19 +57911,45 @@
 	
 	    var dialog = null;
 	
-	    before(function () {
-	      return Promise.resolve().then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          DefaultAutomation.clickListItem('Confirmation');
-	        });
-	      }).then(function () {
-	        return DefaultAutomation.whenDialogShown(function () {
-	          DefaultAutomation.clickConfirmationButton('No');
-	        });
-	      }).then(function (_dialog) {
-	        dialog = _dialog;
-	      });
-	    });
+	    // before(() => {
+	    //   return Promise.resolve()
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       DefaultAutomation.clickListItem('Confirmation')
+	    //     }))
+	    //     .then(() => DefaultAutomation.whenDialogShown(() => {
+	    //       DefaultAutomation.clickConfirmationButton('No')
+	    //     }))
+	    //     .then((_dialog) => {
+	    //       dialog = _dialog
+	    //     })
+	    // })
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee8() {
+	      return regeneratorRuntime.wrap(function _callee8$(_context8) {
+	        while (1) {
+	          switch (_context8.prev = _context8.next) {
+	            case 0:
+	              _context8.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Confirmation');
+	              });
+	
+	            case 2:
+	              _context8.next = 4;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickConfirmationButton('No');
+	              });
+	
+	            case 4:
+	              dialog = _context8.sent;
+	
+	            case 5:
+	            case 'end':
+	              return _context8.stop();
+	          }
+	        }
+	      }, _callee8, this);
+	    })));
 	
 	    it('should show an alert dialog with the text You said ... No.', function () {
 	      Assert.equal(DefaultAutomation.getAlertText(), 'You said ... No.');
@@ -57596,6 +57962,42 @@
 	    });
 	  });
 	
+	  describe('(when the item for Spinner is clicked)', function () {
+	
+	    var dialog = null;
+	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee9() {
+	      return regeneratorRuntime.wrap(function _callee9$(_context9) {
+	        while (1) {
+	          switch (_context9.prev = _context9.next) {
+	            case 0:
+	              _context9.next = 2;
+	              return DefaultAutomation.whenDialogShown(function () {
+	                DefaultAutomation.clickListItem('Spinner');
+	              });
+	
+	            case 2:
+	              dialog = _context9.sent;
+	
+	            case 3:
+	            case 'end':
+	              return _context9.stop();
+	          }
+	        }
+	      }, _callee9, this);
+	    })));
+	
+	    it('should show the spinner dialog', function () {
+	      Assert.equal(DefaultAutomation.existsSpinner(), true);
+	    });
+	
+	    after(function () {
+	      return DefaultAutomation.whenDialogHidden(function () {
+	        // Do nothing ...
+	      });
+	    });
+	  });
+	
 	  after(function () {
 	    return DefaultAutomation.whenPageShown(function () {
 	      window.application.popPage();
@@ -57604,7 +58006,7 @@
 	});
 
 /***/ },
-/* 621 */
+/* 623 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -58101,7 +58503,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 622 */
+/* 624 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58114,7 +58516,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var StackedAutomation = __webpack_require__(623);
+	var StackedAutomation = __webpack_require__(625);
 	
 	var DefaultAutomation = function (_StackedAutomation) {
 	  _inherits(DefaultAutomation, _StackedAutomation);
@@ -58146,8 +58548,10 @@
 	    key: 'getListItem',
 	    value: function getListItem(text) {
 	
+	      var pattern = new RegExp(text, 'i');
+	
 	      var elements = Array.from(this.getTopPage().querySelectorAll('ons-list-item > div.center').values()).filter(function (element) {
-	        return element.innerText == text;
+	        return pattern.test(element.innerText);
 	      });
 	
 	      return elements.length > 0 ? elements[0] : null;
@@ -58175,7 +58579,7 @@
 	module.exports = DefaultAutomation;
 
 /***/ },
-/* 623 */
+/* 625 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58188,7 +58592,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Automation = __webpack_require__(624);
+	var Automation = __webpack_require__(626);
 	var Log = __webpack_require__(343);
 	
 	var StackedAutomation = function (_Automation) {
@@ -58243,7 +58647,7 @@
 	module.exports = StackedAutomation;
 
 /***/ },
-/* 624 */
+/* 626 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58317,6 +58721,11 @@
 	      return this.existsAlertText(text);
 	    }
 	  }, {
+	    key: 'existsSpinner',
+	    value: function existsSpinner() {
+	      return document.querySelector('ons-dialog.rum-spinner-dialog:last-child') ? true : false;
+	    }
+	  }, {
 	    key: 'whenDialogShown',
 	    value: function whenDialogShown(whenFn) {
 	      Log.debug('- Automation.whenDialogShown(whenFn)');
@@ -58364,7 +58773,7 @@
 	module.exports = Automation;
 
 /***/ },
-/* 625 */
+/* 627 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -58374,15 +58783,15 @@
 	if (application.canPopPage()) {
 	pug_html = pug_html + "\n      \u003Cons-toolbar-button id=\"goBack\"\u003E\n        \u003Cons-icon icon=\"fa-chevron-left\" size=\"18px\"\u003E\u003C\u002Fons-icon\u003EBack\n      \u003C\u002Fons-toolbar-button\u003E";
 	}
-	pug_html = pug_html + "\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"center\"\u003EFeatures\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"right\"\u003E\n    \u003C\u002Fdiv\u003E\n  \u003C\u002Fons-toolbar\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item id=\"goPop\" modifier=\"longdivider\" tappable\u003EPop\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goStatus\" modifier=\"chevron longdivider\" tappable\u003EStatus\u003C\u002Fons-list-item\u003E";
+	pug_html = pug_html + "\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"center\"\u003EFeatures\n    \u003C\u002Fdiv\u003E\n    \u003Cdiv class=\"right\"\u003E\n    \u003C\u002Fdiv\u003E\n  \u003C\u002Fons-toolbar\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item id=\"goStatus\" modifier=\"chevron longdivider\" tappable\u003EStatus\u003C\u002Fons-list-item\u003E";
 	if (application.isCacheEnabled) {
 	pug_html = pug_html + "\n    \u003Cons-list-item id=\"goCache\" modifier=\"chevron longdivider\" tappable\u003EUpdates\u003C\u002Fons-list-item\u003E";
 	}
-	pug_html = pug_html + "\n    \u003Cons-list-item id=\"goTests\" modifier=\"chevron longdivider\" tappable\u003ETests\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goCoverage\" modifier=\"chevron longdivider\" tappable\u003ECoverage\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goCountDown\" modifier=\"longdivider\" tappable\u003ECountdown&nbsp;\u003Cspan id=\"countDown\"\u003E\u003Cspan style=\"font-style: italic\"\u003En\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E&nbsp;seconds\u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003EDIALOGS\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item id=\"goAlert\" modifier=\"longdivider\" tappable\u003EAlert\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goConfirmation\" modifier=\"longdivider\" tappable\u003EConfirmation\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goSpinner\" modifier=\"longdivider\" tappable\u003ESpinner\u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003ELOGIN\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item id=\"goGitHub\" modifier=\"chevron longdivider\" tappable\u003E\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-github\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003EGitHub\u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fons-page\u003E";}.call(this,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
+	pug_html = pug_html + "\n    \u003Cons-list-item id=\"goTests\" modifier=\"chevron longdivider\" tappable\u003ETests\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goCoverage\" modifier=\"chevron longdivider\" tappable\u003ECoverage\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goCountDown\" modifier=\"longdivider\" tappable\u003ECountdown&nbsp;\u003Cspan id=\"countDown\"\u003E\u003Cspan style=\"font-style: italic\"\u003En\u003C\u002Fspan\u003E\u003C\u002Fspan\u003E&nbsp;seconds\u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003EDIALOGS\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item id=\"goAlert\" modifier=\"longdivider\" tappable\u003EAlert\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goConfirmation\" modifier=\"longdivider\" tappable\u003EConfirmation\u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goSpinner\" modifier=\"longdivider\" tappable\u003ESpinner\u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003ELOGIN\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item id=\"goGitHub\" modifier=\"chevron longdivider\" tappable\u003E\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-github\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003EGitHub\u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item id=\"goGoogle\" modifier=\"chevron longdivider\" tappable\u003E\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-google\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003EGoogle\u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fons-page\u003E";}.call(this,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
 	module.exports = template;
 
 /***/ },
-/* 626 */
+/* 628 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58402,9 +58811,9 @@
 	
 	var Application = __webpack_require__(318);
 	var Log = __webpack_require__(343);
-	var PageContext = __webpack_require__(627);
+	var PageContext = __webpack_require__(629);
 	
-	var ContentFn = __webpack_require__(634);
+	var ContentFn = __webpack_require__(636);
 	
 	var StackedApplication = function (_Application) {
 	  _inherits(StackedApplication, _Application);
@@ -58686,17 +59095,18 @@
 	module.exports = StackedApplication;
 
 /***/ },
-/* 627 */
+/* 629 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./blink-page.js": 628,
+		"./blink-page.js": 630,
 		"./cache-page.js": 363,
 		"./default-page.js": 362,
 		"./github-page.js": 374,
+		"./google-page.js": 416,
 		"./stacked-page.js": 369,
-		"./status-page.js": 416,
-		"./test-page.js": 616
+		"./status-page.js": 418,
+		"./test-page.js": 618
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -58709,11 +59119,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 627;
+	webpackContext.id = 629;
 
 
 /***/ },
-/* 628 */
+/* 630 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58730,9 +59140,9 @@
 	
 	var Log = __webpack_require__(343);
 	var StackedPage = __webpack_require__(369);
-	var BlinkElement = __webpack_require__(629);
+	var BlinkElement = __webpack_require__(631);
 	
-	var ContentFn = __webpack_require__(633);
+	var ContentFn = __webpack_require__(635);
 	
 	var BlinkPage = function (_StackedPage) {
 	  _inherits(BlinkPage, _StackedPage);
@@ -58818,7 +59228,7 @@
 	module.exports = BlinkPage;
 
 /***/ },
-/* 629 */
+/* 631 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58836,14 +59246,14 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Blink = __webpack_require__(630);
+	var Blink = __webpack_require__(632);
 	// const Element = require('../../element')
 	// const Interval = require('../../interval')
 	var Log = __webpack_require__(343);
 	
 	// const IntervalError = require('../../errors/interval-error')
 	
-	var ContentFn = __webpack_require__(632);
+	var ContentFn = __webpack_require__(634);
 	
 	// class BlinkElement extends Element {
 	
@@ -58921,7 +59331,7 @@
 	module.exports = BlinkElement;
 
 /***/ },
-/* 630 */
+/* 632 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58943,7 +59353,7 @@
 	var Element = __webpack_require__(341);
 	var Log = __webpack_require__(343);
 	
-	var QueueError = __webpack_require__(631);
+	var QueueError = __webpack_require__(633);
 	
 	var Blink = function (_Element) {
 	  _inherits(Blink, _Element);
@@ -59118,7 +59528,7 @@
 	module.exports = Blink;
 
 /***/ },
-/* 631 */
+/* 633 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -59146,7 +59556,7 @@
 	module.exports = QueueError;
 
 /***/ },
-/* 632 */
+/* 634 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -59156,7 +59566,7 @@
 	module.exports = template;
 
 /***/ },
-/* 633 */
+/* 635 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);
@@ -59170,27 +59580,27 @@
 	module.exports = template;
 
 /***/ },
-/* 634 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var pug = __webpack_require__(347);
-	
-	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (element) {var pug_indent = [];
-	pug_html = pug_html + "\n\u003Cons-navigator" + (" class=\"rum-stacked-application rum-application rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n\u003C\u002Fons-navigator\u003E";}.call(this,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
-	module.exports = template;
-
-/***/ },
-/* 635 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var pug = __webpack_require__(347);
-	
-	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (element) {var pug_indent = [];
-	pug_html = pug_html + "\n\u003Cons-navigator" + (" class=\"rum-stacked-application rum-application rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n\u003C\u002Fons-navigator\u003E";}.call(this,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
-	module.exports = template;
-
-/***/ },
 /* 636 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var pug = __webpack_require__(347);
+	
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (element) {var pug_indent = [];
+	pug_html = pug_html + "\n\u003Cons-navigator" + (" class=\"rum-stacked-application rum-application rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n\u003C\u002Fons-navigator\u003E";}.call(this,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
+	module.exports = template;
+
+/***/ },
+/* 637 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var pug = __webpack_require__(347);
+	
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (element) {var pug_indent = [];
+	pug_html = pug_html + "\n\u003Cons-navigator" + (" class=\"rum-stacked-application rum-application rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n\u003C\u002Fons-navigator\u003E";}.call(this,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
+	module.exports = template;
+
+/***/ },
+/* 638 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59203,7 +59613,7 @@
 	
 	var Application = __webpack_require__(318);
 	
-	var ContentFn = __webpack_require__(637);
+	var ContentFn = __webpack_require__(639);
 	
 	var TabbedApplication = function (_Application) {
 	  _inherits(TabbedApplication, _Application);
@@ -59222,7 +59632,7 @@
 	module.exports = TabbedApplication;
 
 /***/ },
-/* 637 */
+/* 639 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var pug = __webpack_require__(347);

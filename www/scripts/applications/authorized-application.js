@@ -22,12 +22,12 @@ class AuthorizedApplication extends Application {
       let search = Search.parse(window.location.search);
 
       Log.debug('- AuthorizedApplication.onReady()');
-      Log.debug('-   search.scopes=%j', search.scopes);
+      // Log.debug('-   search.scopes=%j', search.scopes);
       Log.debug('-   search.system=%j', search.system);
       Log.debug('-   search.token=%j', search.token);
 
       window.opener.application.emitAuthorized({
-        'scopes': search.scopes ? search.scopes.split(',') : [],
+        // 'scopes': search.scopes ? search.scopes.split(',') : [],
         'system': search.system,
         'value': search.token
       })

@@ -30,13 +30,15 @@ class DefaultAutomation extends StackedAutomation {
 
   static getListItem(text) {
 
+    let pattern = new RegExp(text, 'i')
+
     let elements = Array
                     .from(  this
                               .getTopPage()
                               .querySelectorAll('ons-list-item > div.center')
                               .values() )
                     .filter((element) => {
-                      return element.innerText == text
+                      return pattern.test(element.innerText)
                     })
 
     return elements.length > 0 ? elements[0] : null

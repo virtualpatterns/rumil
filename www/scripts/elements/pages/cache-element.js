@@ -115,7 +115,7 @@ class CacheElement extends Element {
         self.updateContent(data)
 
         try {
-          yield CountDown.start(self, '#onUpdateReady', 5)
+          yield CountDown.start(self, '#onUpdateReady', 3)
         }
         catch (error) {
           if (error instanceof IntervalError) {

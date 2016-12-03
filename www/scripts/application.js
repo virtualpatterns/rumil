@@ -219,27 +219,36 @@ class Application extends Element {
   }
 
   showSpinner(Dialog = SpinnerDialog) {
-    Log.debug('- Application.showSpinner()')
+    Log.debug('- Application.showSpinner(Dialog)')
     return this.showDialog(new Dialog())
   }
 
-  hideSpinner() {
-    Log.debug('- Application.hideSpinner()')
-    let element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child')
-    if (element)
-      return this.hideDialog(element.getElement(), false)
-    else
-      Log.warn('- Application.hideSpinner() element=%j', element)
+  hideSpinner(dialog) {
+    Log.debug('- Application.hideSpinner(dialog)')
+    // let element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child')
+    // if (element)
+    //   return this.hideDialog(element.getElement(), false)
+    // else
+    //   Log.warn('- Application.hideSpinner() element=%j', element)
+    return this.hideDialog(dialog)
   }
 
   authorize(system, scopes = []) {
-    Log.debug('- Application.authorize(%j, %j)', system, scopes)
+    Log.debug('> Application.authorize(%j, %j)', system, scopes)
 
-    window.open(`./authorize/${system}${scopes.length ? `` : `?scopes=${scopes.join(',')}`}`)
+    let url = `./authorize/${system}${scopes.length > 0 ? `?scopes=${scopes.join(',')}` : ''}`
+
+    Log.debug('-   url=%j', url)
+    window.open(url)
 
     return new Promise((resolve, reject) => {
       this.on('authorized', (token) => {
+
+        token.scopes = scopes
+
+        Log.debug('< Application.authorize(%j, %j)\n\n%s\n\n', system, scopes, Utilities.inspect(token))
         resolve(token)
+
       })
     })
 

@@ -7,7 +7,9 @@ const Timeout = require('timer-promise')
 const CachePage = require('./cache-page')
 const CountDown = require('../../count-down')
 const GitHubPage = require('./github-page')
+const GooglePage = require('./google-page')
 const Log = require('../../log')
+const Spinner = require('../dialogs/spinner-dialog')
 const StackedPage = require('./stacked-page')
 const StatusPage = require('./status-page')
 const TestPage = require('./test-page')
@@ -27,7 +29,7 @@ class DefaultPage extends StackedPage {
   bind() {
     super.bind()
 
-    this.getContent().querySelector('#goPop').addEventListener('click', this._onGoPop = this.onGoPop.bind(this))
+    // this.getContent().querySelector('#goPop').addEventListener('click', this._onGoPop = this.onGoPop.bind(this))
     this.getContent().querySelector('#goStatus').addEventListener('click', this._onGoStatus = this.onGoStatus.bind(this))
 
     if (this.getContent().querySelector('#goCache'))
@@ -41,11 +43,13 @@ class DefaultPage extends StackedPage {
     this.getContent().querySelector('#goConfirmation').addEventListener('click', this._onGoConfirmation = this.onGoConfirmation.bind(this))
     this.getContent().querySelector('#goSpinner').addEventListener('click', this._onGoSpinner = this.onGoSpinner.bind(this))
     this.getContent().querySelector('#goGitHub').addEventListener('click', this._onGoGitHub = this.onGoGitHub.bind(this))
+    this.getContent().querySelector('#goGoogle').addEventListener('click', this._onGoGoogle = this.onGoGoogle.bind(this))
 
   }
 
   unbind() {
 
+    this.getContent().querySelector('#goGoogle').removeEventListener('click', this._onGoGoogle)
     this.getContent().querySelector('#goGitHub').removeEventListener('click', this._onGoGitHub)
     this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner)
     this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation)
@@ -59,7 +63,7 @@ class DefaultPage extends StackedPage {
       this.getContent().querySelector('#goCache').removeEventListener('click', this._onGoCache)
 
     this.getContent().querySelector('#goStatus').removeEventListener('click', this._onGoStatus)
-    this.getContent().querySelector('#goPop').removeEventListener('click', this._onGoPop)
+    // this.getContent().querySelector('#goPop').removeEventListener('click', this._onGoPop)
 
     super.unbind()
   }
@@ -70,21 +74,21 @@ class DefaultPage extends StackedPage {
     super.onHidden()
   }
 
-  onGoPop() {
-
-    Co(function* () {
-
-      try {
-        Log.debug('- DefaultPage.onGoPop()')
-        yield window.application.popPage()
-      }
-      catch (error) {
-        window.application.showError(error)
-      }
-
-    })
-
-  }
+  // onGoPop() {
+  //
+  //   Co(function* () {
+  //
+  //     try {
+  //       Log.debug('- DefaultPage.onGoPop()')
+  //       yield window.application.popPage()
+  //     }
+  //     catch (error) {
+  //       window.application.showError(error)
+  //     }
+  //
+  //   })
+  //
+  // }
 
   onGoStatus() {
 
@@ -217,9 +221,9 @@ class DefaultPage extends StackedPage {
       try {
         Log.debug('- DefaultPage.onGoSpinner()')
 
-        yield window.application.showSpinner()
-        yield Timeout.start('DefaultPage.onGoSpinner', 5000)
-        yield window.application.hideSpinner()
+        let dialog = yield window.application.showSpinner()
+        yield Timeout.start('DefaultPage.onGoSpinner', 3000)
+        yield window.application.hideSpinner(dialog)
 
       }
       catch (error) {
@@ -237,6 +241,24 @@ class DefaultPage extends StackedPage {
       try {
         Log.debug('- DefaultPage.onGoGitHub()')
         yield window.application.pushPage(new GitHubPage(yield window.application.authorize('GitHub')))
+      }
+      catch (error) {
+        window.application.showError(error)
+      }
+
+    })
+
+  }
+
+  onGoGoogle() {
+
+    Co(function* () {
+
+      try {
+        Log.debug('- DefaultPage.onGoGoogle()')
+        yield window.application.pushPage(new GooglePage(yield window.application.authorize('Google', [
+          'profile'
+        ])))
       }
       catch (error) {
         window.application.showError(error)

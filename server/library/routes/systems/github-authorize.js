@@ -1,11 +1,11 @@
 'use strict'
 
-const _Authorize = require('client-oauth2')
+const Authorize = require('client-oauth2')
 
 const Log = require('../../log')
 const Process = require('../../process')
 
-class GitHubAuthorize extends _Authorize {
+class GitHubAuthorize extends Authorize {
 
   constructor(scopes = []) {
     super({
@@ -14,7 +14,7 @@ class GitHubAuthorize extends _Authorize {
       'accessTokenUri': 'https://github.com/login/oauth/access_token',
       'authorizationUri': 'https://github.com/login/oauth/authorize',
       'authorizationGrants': ['credentials'],
-      'redirectUri': `http://dumbledore.local:8080/www/authorize/GitHub${scopes.length == 0 ? `` : `?scopes=${encodeURI(scopes.join(','))}`}`,
+      'redirectUri': 'http://localhost:8080/www/authorize/GitHub',
       'scopes': scopes
     })
   }

@@ -5,10 +5,10 @@ block center
   | Features
 block contents
   ons-list(modifier='inset')
-    ons-list-item(  id='goPop',
-                    modifier='longdivider',
-                    tappable)
-      | Pop
+    //- ons-list-item(  id='goPop',
+    //-                 modifier='longdivider',
+    //-                 tappable)
+    //-   | Pop
     ons-list-item(  id='goStatus',
                     modifier='chevron longdivider',
                     tappable)
@@ -66,3 +66,11 @@ block contents
                   size='20px')
       div.center
         | GitHub
+    ons-list-item(  id='goGoogle',
+                    modifier='chevron longdivider',
+                    tappable)
+      div.left
+        ons-icon( icon='fa-google',
+                  size='20px')
+      div.center
+        | Google

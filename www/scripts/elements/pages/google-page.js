@@ -1,13 +1,11 @@
 'use strict'
 
-const GitHub = require('github-api')
-
 const Log = require('../../log')
 const StackedPage = require('./stacked-page')
 
-const ContentFn = require('./github-page.pug')
+const ContentFn = require('./google-page.pug')
 
-class GitHubPage extends StackedPage {
+class GooglePage extends StackedPage {
 
   constructor(token, contentFn = ContentFn) {
     super(contentFn)
@@ -19,4 +17,4 @@ class GitHubPage extends StackedPage {
 
 }
 
-module.exports = GitHubPage
+module.exports = GooglePage

@@ -1,6 +1,5 @@
 'use strict'
 
-// const _Authorize = require('client-oauth2')
 const Utilities = require('util')
 
 const Log = require('../log')
@@ -23,37 +22,34 @@ class Authorize {
       let authorizeModuleName = `${request.params.system.toLowerCase()}-authorize`
       let authorizeModulePath = Path.join(__dirname, 'systems', authorizeModuleName)
 
-      Log.debug('- authorizeModulePath=%j', authorizeModulePath)
+      Log.debug('-   authorizeModulePath=%j', Path.trim(authorizeModulePath))
 
       let authorizeModule = require(authorizeModulePath)
 
       let scopes = request.params.scopes ? request.params.scopes.split(',') : null
 
-      // Log.debug('> new authorizeModule(%j)', scopes || [])
+      Log.debug('-   scopes=%j', scopes || [])
       let authorize = new authorizeModule(scopes || [])
 
       if (!request.params.code) {
 
         let authorizeUri = authorize.getUri()
 
-        // Log.debug('> response.redirect(%j, next)', authorizeUri)
+        Log.debug('-   authorizeUri=%j', authorizeUri)
         response.redirect(authorizeUri, next)
 
       }
       else {
-        // Log.debug('> request.params.code=%j', request.params.code)
+        Log.debug('-   request.params.code=%j', request.params.code)
 
         authorize.getToken(request.url)
           .then(function (token) {
 
-            // Log.debug('> token.accessToken=%j', token.accessToken)
-            // Log.debug('> token.tokenType=%j', token.tokenType)
+            Log.debug('-   token.accessToken=%j', token.accessToken)
 
-            // let authorizedUri = `/www/index.html?application=${encodeURI('./authorized-application.js')}&token=${encodeURI(token.accessToken)}&type=${encodeURI(token.tokenType)}`
-            // let authorizedUri = scopes ? `/www/index.html?application=${encodeURI('./authorized-application')}&system=${encodeURI(request.params.system)}&scopes=${encodeURI(scopes.join(','))}&token=${encodeURI(token.accessToken)}` : `/www/index.html?application=${encodeURI('./authorized-application.js')}&system=${encodeURI(request.params.system)}&token=${encodeURI(token.accessToken)}`
-            let authorizedUri = `/www/index.html?application=${encodeURI('./authorized-application.js')}&system=${encodeURI(request.params.system)}${scopes ? `&scopes=${encodeURI(scopes.join(','))}` : ``}&token=${encodeURI(token.accessToken)}`
+            let authorizedUri = `/www/index.html?application=${encodeURI('./authorized-application.js')}&system=${encodeURI(request.params.system)}&token=${encodeURI(token.accessToken)}`
 
-            Log.debug('> response.redirect(%j, next)', authorizedUri)
+            Log.debug('-   authorizedUri=%j', authorizedUri)
             response.redirect(authorizedUri, next)
 
           })
