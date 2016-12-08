@@ -42,15 +42,19 @@ class DefaultPage extends StackedPage {
     this.getContent().querySelector('#goAlert').addEventListener('click', this._onGoAlert = this.onGoAlert.bind(this))
     this.getContent().querySelector('#goConfirmation').addEventListener('click', this._onGoConfirmation = this.onGoConfirmation.bind(this))
     this.getContent().querySelector('#goSpinner').addEventListener('click', this._onGoSpinner = this.onGoSpinner.bind(this))
+    this.getContent().querySelector('#goSimple').addEventListener('click', this._onGoSimple = this.onGoSimple.bind(this))
     this.getContent().querySelector('#goGitHub').addEventListener('click', this._onGoGitHub = this.onGoGitHub.bind(this))
     this.getContent().querySelector('#goGoogle').addEventListener('click', this._onGoGoogle = this.onGoGoogle.bind(this))
+    this.getContent().querySelector('#goTwitter').addEventListener('click', this._onGoTwitter = this.onGoTwitter.bind(this))
 
   }
 
   unbind() {
 
+    this.getContent().querySelector('#goTwitter').removeEventListener('click', this._onGoTwitter)
     this.getContent().querySelector('#goGoogle').removeEventListener('click', this._onGoGoogle)
     this.getContent().querySelector('#goGitHub').removeEventListener('click', this._onGoGitHub)
+    this.getContent().querySelector('#goSimple').removeEventListener('click', this._onGoSimple)
     this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner)
     this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation)
     this.getContent().querySelector('#goAlert').removeEventListener('click', this._onGoAlert)
@@ -234,13 +238,31 @@ class DefaultPage extends StackedPage {
 
   }
 
+  onGoSimple() {
+
+    Co(function* () {
+
+      try {
+        Log.debug('- DefaultPage.onGoSimple()')
+        // yield window.application.authorize('Simple')
+        yield window.application.authorize('OAuth2')
+      }
+      catch (error) {
+        window.application.showError(error)
+      }
+
+    })
+
+  }
+
   onGoGitHub() {
 
     Co(function* () {
 
       try {
         Log.debug('- DefaultPage.onGoGitHub()')
-        yield window.application.pushPage(new GitHubPage(yield window.application.authorize('GitHub')))
+        // yield window.application.pushPage(new GitHubPage(yield window.application.authorize('GitHub')))
+        yield window.application.authorize('GitHub')
       }
       catch (error) {
         window.application.showError(error)
@@ -256,9 +278,26 @@ class DefaultPage extends StackedPage {
 
       try {
         Log.debug('- DefaultPage.onGoGoogle()')
-        yield window.application.pushPage(new GooglePage(yield window.application.authorize('Google', [
-          'profile'
-        ])))
+        // yield window.application.pushPage(new GooglePage(yield window.application.authorize('Google', [
+        //   'profile'
+        // ])))
+        yield window.application.authorize('Google')
+      }
+      catch (error) {
+        window.application.showError(error)
+      }
+
+    })
+
+  }
+
+  onGoTwitter() {
+
+    Co(function* () {
+
+      try {
+        Log.debug('- DefaultPage.onGoTwitter()')
+        yield window.application.authorize('Twitter')
       }
       catch (error) {
         window.application.showError(error)

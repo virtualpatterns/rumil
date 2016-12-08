@@ -67,7 +67,7 @@ Process.existsPID = function(path) {
   const FileSystem = require('./file-system')
   const Log = require('./log')
 
-  Log.debug('- Process.existsPID(%j)', Path.trim(path))
+  // Log.debug('- Process.existsPID(%j)', Path.trim(path))
 
   try {
     FileSystem.accessSync(path, FileSystem.F_OK)
@@ -165,9 +165,9 @@ Process.killPID = function(path, signal = 'SIGINT') {
 
 Process.exit = function(code = 0) {
 
-  // const Log = require('./log')
+  const Log = require('./log')
 
-  // Log.debug('> Process.exit(%d) ...', code)
+  Log.debug('> Process.exit(%d) ...', code)
 
   setTimeout(() => process.exit(code), EXIT_TIMEOUT)
 

@@ -58,6 +58,14 @@ block contents
   ons-list(modifier='inset')
     ons-list-header
       | LOGIN
+    ons-list-item(  id='goSimple',
+                    modifier='chevron longdivider',
+                    tappable)
+      div.left
+        ons-icon( icon='fa-circle-thin',
+                  size='20px')
+      div.center
+        | Simple
     ons-list-item(  id='goGitHub',
                     modifier='chevron longdivider',
                     tappable)
@@ -74,3 +82,11 @@ block contents
                   size='20px')
       div.center
         | Google
+    ons-list-item(  id='goTwitter',
+                    modifier='chevron longdivider',
+                    tappable)
+      div.left
+        ons-icon( icon='fa-twitter',
+                  size='20px')
+      div.center
+        | Twitter

@@ -11,7 +11,7 @@ let Server = Object.create(_Server)
 
 Server.createServer = function(staticPath, modulesPath) {
 
-  const Authorize = require('./routes/authorize')
+  const Authorization = require('./routes/authorization')
   const _Log = require('./handlers/log')
   // const Sandbox = require('./routes/sandbox')
   const Static = require('./routes/static')
@@ -32,7 +32,7 @@ Server.createServer = function(staticPath, modulesPath) {
 
   _Log.createHandlers(server)
 
-  Authorize.createRoutes(server)
+  Authorization.createRoutes(server)
   // Sandbox.createRoutes(server)
   Static.createRoutes(server, staticPath, modulesPath)
   Status.createRoutes(server)

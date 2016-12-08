@@ -3,6 +3,7 @@
 const Co = require('co')
 const Timeout = require('timer-promise')
 const Utilities = require('util')
+const UUID = require('uuid/v4')
 
 const AlertDialog = require('./elements/dialogs/alert-dialog')
 const ConfirmationDialog = require('./elements/dialogs/confirmation-dialog')
@@ -37,9 +38,9 @@ class Application extends Element {
     this.emitEvent('dialogHidden', dialog, response)
   }
 
-  emitAuthorized(token) {
-    // Log.debug('- Application.emitAuthorized(token)\n\n%s\n', Utilities.inspect(token))
-    this.emitEvent('authorized', token)
+  emitAuthorized(authorizationId, token) {
+    // Log.debug('- Application.emitAuthorized(%j, token)\n\n%s\n\n', authorizationId, Utilities.inspect(token))
+    this.emitEvent('authorized', authorizationId, token)
   }
 
   bind() {
@@ -116,8 +117,8 @@ class Application extends Element {
     dialog.emitHidden(response)
   }
 
-  onAuthorized(token) {
-    Log.debug('- Application.onAuthorized(token)\n\n%s\n\n', Utilities.inspect(token))
+  onAuthorized(authorizationId, token) {
+    Log.debug('- Application.onAuthorized(%j, token)\n\n%s\n\n', authorizationId, Utilities.inspect(token))
   }
 
   showDialog(dialog, options = {
@@ -233,22 +234,51 @@ class Application extends Element {
     return this.hideDialog(dialog)
   }
 
-  authorize(system, scopes = []) {
-    Log.debug('> Application.authorize(%j, %j)', system, scopes)
+  // authorize(system, scopes = []) {
+  //   Log.debug('> Application.authorize(%j, %j)', system, scopes)
+  //
+  //   let authorizationId = UUID()
+  //
+  //   Log.debug('-   authorizationId=%j', authorizationId)
+  //
+  //   let url = `./authorize/${authorizationId}/${system}${scopes.length > 0 ? `?scopes=${scopes.join(',')}` : ''}`
+  //
+  //   Log.debug('-   url=%j', url)
+  //
+  //   window.open(url)
+  //
+  //   return new Promise((resolve, reject) => {
+  //     this.on('authorized', (token) => {
+  //
+  //       token.scopes = scopes
+  //
+  //       Log.debug('< Application.authorize(%j, %j)\n\n%s\n\n', system, scopes, Utilities.inspect(token))
+  //       resolve(token)
+  //
+  //     })
+  //   })
+  //
+  // }
 
-    let url = `./authorize/${system}${scopes.length > 0 ? `?scopes=${scopes.join(',')}` : ''}`
+  authorize(system) {
+    Log.debug('> Application.authorize(%j)', system)
 
-    Log.debug('-   url=%j', url)
+    let authorizationId = UUID()
+    // Log.debug('-   authorizationId=%j', authorizationId)
+
+    let url = `/api/authorize/${system}?authorizationId=${authorizationId}`
+
+    Log.debug('> window.open(%j)', url)
     window.open(url)
 
     return new Promise((resolve, reject) => {
-      this.on('authorized', (token) => {
-
-        token.scopes = scopes
-
-        Log.debug('< Application.authorize(%j, %j)\n\n%s\n\n', system, scopes, Utilities.inspect(token))
-        resolve(token)
-
+      this.on('authorized', (_authorizationId, _token) => {
+        if (authorizationId == _authorizationId) {
+          Log.debug('< Application.authorize(%j)\n\n%s\n\n', system, Utilities.inspect(_token))
+          resolve(_authorizationId, _token)
+        }
+        else
+          Log.debug('- Application.authorize(%j) authorizationId=%j _authorizationId=%j', system, authorizationId, _authorizationId)
       })
     })
 

@@ -201,134 +201,6 @@ namespace('bundle', () => {
     })
   })
 
-  // desc('Create the application bundle(s)')
-  // task('create', {'async': true}, () => {
-  //
-  //   // let CACHE_TIMESTAMP = null
-  //   // let INDEX = null
-  //
-  //   return Promise.resolve()
-  //     .then(() => Log.debug('Started bundle:create ...'))
-  //     .then(() => {
-  //       return Promise.resolve()
-  //         .then(() => FileSystem.Promise.access(INDEX_PATH, FileSystem.F_OK))
-  //         .then(() => FileSystem.Promise.readFile(INDEX_PATH, {
-  //           'encoding': 'utf-8'
-  //         }))
-  //         .then((data) => {
-  //
-  //           let index = JSON.parse(data)
-  //           index.value++
-  //
-  //           return Promise.resolve(index)
-  //
-  //         })
-  //         .catch((error) => Promise.resolve({
-  //           'value': 0
-  //         }))
-  //     })
-  //     .then((index) => FileSystem.Promise.writeFile(INDEX_PATH, JSON.stringify(index), {
-  //       'encoding': 'utf-8'
-  //     }))
-  //     .then(() => {
-  //
-  //       // CACHE_TIMESTAMP = new Date().toISOString()
-  //
-  //       // INDEX = index
-  //       // INDEX.value++
-  //
-  //       let Bundle = Bundler({
-  //         'devtool': 'source-map',
-  //         'entry': './www/scripts/index.js',
-  //         // 'externals': [
-  //         //   /datejs\/src/
-  //         // ],
-  //         'output': {
-  //           'filename': 'index.js',
-  //           'path': './www/scripts/bundles'
-  //         },
-  //         'module': {
-  //           'loaders': [
-  //             {
-  //               'test': /\.js$/,
-  //               'loader': 'babel-loader',
-  //               'exclude': /node_modules/
-  //             },
-  //             {
-  //               'test': /\.json$/,
-  //               'loader': 'json-loader'
-  //             },
-  //             {
-  //               'test': /\.pug$/,
-  //               'loader': 'pug-loader?pretty=true'
-  //             }
-  //           ]
-  //         },
-  //         'plugins': [
-  //           // new Bundler.DefinePlugin({
-  //           //   'CACHE_TIMESTAMP': JSON.stringify(CACHE_TIMESTAMP)
-  //           //   // ,
-  //           //   // 'INDEX': JSON.stringify(INDEX)
-  //           // }),
-  //           new Bundler.ExtendedAPIPlugin()
-  //         ]
-  //       })
-  //
-  //       Bundle.Promise = {}
-  //       Bundle.Promise.run = Promisify(Bundle.run, Bundle)
-  //
-  //       return Bundle.Promise.run()
-  //
-  //     })
-  //     .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
-  //     // .then(() => FileSystem.Promise.writeFile('./cacheTimestamp.json', `{ "value": "${CACHE_TIMESTAMP}" }\n`, {
-  //     //   'encoding': 'utf-8'
-  //     // }))
-  //     .then(() => {
-  //
-  //       let Bundle = Bundler({
-  //         'devtool': 'source-map',
-  //         'entry': [
-  //           'babel-polyfill',
-  //           './www/scripts/sandbox.js'
-  //         ],
-  //         'output': {
-  //           'filename': 'sandbox.js',
-  //           'path': './www/scripts/bundles'
-  //         },
-  //         'module': {
-  //           'loaders': [
-  //             {
-  //               'test': /\.js$/,
-  //               'loader': 'babel-loader',
-  //               'exclude': /node_modules/
-  //             },
-  //             {
-  //               'test': /\.json$/,
-  //               'loader': 'json-loader'
-  //             },
-  //             {
-  //               'test': /\.pug$/,
-  //               'loader': 'pug-loader?pretty=true'
-  //             }
-  //           ]
-  //         },
-  //         'plugins': [
-  //           new Bundler.ExtendedAPIPlugin()
-  //         ]
-  //       })
-  //
-  //       Bundle.Promise = {}
-  //       Bundle.Promise.run = Promisify(Bundle.run, Bundle)
-  //
-  //       return Bundle.Promise.run()
-  //
-  //     })
-  //     .then((statistics) => Log.debug('\n\n%s\n', statistics.toString()))
-  //     .then(() => Log.debug('... bundle:create finished'))
-  //
-  // })
-
   desc('Create the application bundle(s)')
   task('create', ['bundle:createIndex', 'bundle:createSandbox'], () => {
   })
@@ -432,8 +304,12 @@ namespace('server', () => {
 
       Log.debug('> server:recycle')
 
-      yield ShellSilent(`mv process/logs/rumil.log process/logs/rumil.${(new Date()).toString('yyyyMMddhhmmss')}.log`)
-      yield ShellSilent('kill -s HUP $(cat process/pids/rumil.pid)')
+      yield ShellSilent(`mv process/logs/rumil.log process/logs/rumil.${(new Date()).toString('yyyyMMddhhmmss')}.log`, {
+        'ignoreError': true
+      })
+      yield ShellSilent('kill -s HUP $(cat process/pids/rumil.pid)', {
+        'ignoreError': true
+      })
 
       Log.debug('< server:recycle')
 
@@ -451,6 +327,7 @@ namespace('server', () => {
 
       Log.debug('> server:restart')
 
+      yield ShellSilent('jake server:recycle')
       yield ShellSilent('jake server:stop')
       yield ShellSilent('jake server:start')
 

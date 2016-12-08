@@ -17,7 +17,7 @@ ons.ready(() => {
 
     window.application = search.application ? new (ApplicationContext(search.application))() : new DefaultApplication()
     window.application.addContent()
-    window.application.addContentElement()
+    // window.application.addContentElement()
 
     Timeout.start('ons.ready', 0)
       .then(() => window.application.emitReady())

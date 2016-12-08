@@ -42,7 +42,7 @@ describe('Server', () => {
     // vendor/mocha/mocha.js
 
     let methods = ['HEAD', 'GET']
-    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/www/authorize/GitHub', '/www/authorize/GitHub?scopes=user,repo', '/api/status']
+    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/api/authorize/GitHub', '/api/authorize/GitHub?scopes=user,repo', '/api/status']
 
     for (let method of methods) {
 
@@ -65,7 +65,7 @@ describe('Server', () => {
     }
 
     methods = ['GET']
-    urls = ['/www/authorize/GitHub?code=123']
+    urls = ['/api/authorize/GitHub?code=123']
 
     for (let method of methods) {
 
@@ -150,8 +150,8 @@ describe('Server', () => {
     })
 
     let methods = ['HEAD', 'GET']
-    // let urls = ['/favicon.ico', '/', '/www', '/www/index.html', '/www/authorize/GitHub', '/api/status']
-    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/www/authorize/GitHub', '/www/authorize/GitHub?scopes=user,repo', '/www/authorize/GitHub?code=123', '/api/status']
+    // let urls = ['/favicon.ico', '/', '/www', '/www/index.html', '/api/authorize/GitHub', '/api/status']
+    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/api/authorize/GitHub', '/api/authorize/GitHub?scopes=user,repo', '/api/authorize/GitHub?code=123', '/api/status']
 
     for (let method of methods) {
 

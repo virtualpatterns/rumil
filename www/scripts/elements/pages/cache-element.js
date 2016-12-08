@@ -8,6 +8,7 @@ const Element = require('../../element')
 const Log = require('../../log')
 
 const IntervalError = require('../../errors/interval-error')
+const CacheError = require('../../errors/cache-error')
 
 const ContentFn = require('./cache-element.pug')
 
@@ -158,6 +159,11 @@ class CacheElement extends Element {
       window.application.showError(error)
     }
 
+  }
+
+  onObsolete() {
+    Log.debug('- CacheElement.onObsolete()')
+    window.application.showError(new CacheError('An error occurred checking for application updates.  The application cache is obsolete.'))
   }
 
   onError(error) {

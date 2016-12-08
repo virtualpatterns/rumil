@@ -72,7 +72,7 @@ class StackedApplication extends Application {
   onPageShown(page, isInitial) {
     // Log.debug('- StackedApplication.onPageShown(page, %s) page.id=%j', isInitial, page.id)
 
-    page.addContentElement()
+    // page.addContentElement()
     page.bind()
 
     page.emitShown(isInitial)
@@ -85,7 +85,7 @@ class StackedApplication extends Application {
     page.emitHidden(isFinal)
 
     page.unbind()
-    page.removeContentElement()
+    // page.removeContentElement()
 
   }
 

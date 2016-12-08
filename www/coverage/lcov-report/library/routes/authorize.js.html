@@ -193,14 +193,14 @@ class Authorize {
 &nbsp;
   static createRoutes(server) {
 &nbsp;
-    server.head('/www/authorize/:system', (request, response, next) =&gt; {
-      // Log.debug('- server.head(\'/www/authorize/:system\', (request, response, next) =&gt; { ... }')
+    server.head('/api/authorize/:system', (request, response, next) =&gt; {
+      // Log.debug('- server.head(\'/api/authorize/:system\', (request, response, next) =&gt; { ... }')
       response.send(200)
       next()
     })
 &nbsp;
-    server.get('/www/authorize/:system', (request, response, next) =&gt; {
-      Log.debug('- server.get(\'/www/authorize/:system\', (request, response, next) =&gt; { ... }\n\n%s\n', Utilities.inspect(request.params))
+    server.get('/api/authorize/:system', (request, response, next) =&gt; {
+      Log.debug('- server.get(\'/api/authorize/:system\', (request, response, next) =&gt; { ... }\n\n%s\n', Utilities.inspect(request.params))
 &nbsp;
       let authorizeModuleName = `${request.params.system.toLowerCase()}-authorize`
       let authorizeModulePath = Path.join(__dirname, 'systems', authorizeModuleName)

@@ -1,6 +1,7 @@
 'use strict'
 
 const Search = require('query-string')
+const Utilities = require('util')
 
 const Application = require('../application')
 const Log = require('../log')
@@ -23,14 +24,11 @@ class AuthorizedApplication extends Application {
 
       Log.debug('- AuthorizedApplication.onReady()');
       // Log.debug('-   search.scopes=%j', search.scopes);
-      Log.debug('-   search.system=%j', search.system);
-      Log.debug('-   search.token=%j', search.token);
+      // Log.debug('-   search.system=%j', search.system);
+      Log.debug('-   search.authorizationId=%j', search.authorizationId);
+      Log.debug('-   search.token=\n\n%s\n', Utilities.inspect(JSON.parse(search.token)));
 
-      window.opener.application.emitAuthorized({
-        // 'scopes': search.scopes ? search.scopes.split(',') : [],
-        'system': search.system,
-        'value': search.token
-      })
+      window.opener.application.emitAuthorized(search.authorizationId, JSON.parse(search.token))
 
       window.close()
 
