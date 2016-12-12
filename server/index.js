@@ -17,6 +17,8 @@ const MODULES_PATH = Path.join(Process.cwd(), 'node_modules')
 const LOG_PATH = Path.join(Process.LOG_PATH, `${Package.name}.log`)
 const PID_PATH = Path.join(Process.PID_PATH, `${Package.name}.pid`)
 
+const STORAGE_URI = 'redis://localhost:6379/0'
+
 Command
   .version(Package.version)
 
@@ -30,6 +32,7 @@ Command
   .option('--modulesPath <path>', `Modules path, defaults to ${Path.trim(MODULES_PATH)}`)
   .option('--logPath <path>', `Server process log file path, defaults to ${Path.trim(LOG_PATH)}`)
   .option('--pidPath <path>', `Server process PID file path, defaults to ${Path.trim(PID_PATH)}`)
+  .option('--storageUri <uri>', `Storage server uri, format [redis:]//[[user][:password@]][host][:port][/db], defaults to ${STORAGE_URI}`)
   .action((options) => {
 
     if (options.fork)

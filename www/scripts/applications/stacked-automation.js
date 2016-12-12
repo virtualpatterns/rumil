@@ -16,8 +16,11 @@ class StackedAutomation extends Automation {
 
     return new Promise((resolve, reject) => {
 
+      let _onPageShown = null
+
       // Log.debug('> window.application.on(\'pageShown\', (page, isInitial) => { ... })')
-      window.application.on('pageShown', (page, isInitial) => {
+      window.application.once('pageShown', _onPageShown = (page, isInitial) => {
+        // window.application.off('pageShown', _onPageShown)
         Log.debug('- window.application.on(\'pageShown\', (page, %j) => { ... }) page.id=%j', isInitial, page.id)
         resolve(page, isInitial)
       })

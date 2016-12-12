@@ -20,12 +20,22 @@ const RESOURCES_PATH = Path.join(__dirname, 'resources')
 const INDEX_CONFIGURATION = {
   'devtool': 'source-map',
   // 'entry': './www/scripts/index.js',
-  'entry': [
-    'babel-polyfill',
-    './www/scripts/index.js'
-  ],
+  // 'entry': [
+  //   'babel-polyfill',
+  //   './www/scripts/index.js'
+  // ],
+  'entry': {
+    'index': [
+      'babel-polyfill',
+      './www/scripts/index.js'
+    ],
+    'sandbox': [
+      'babel-polyfill',
+      './www/scripts/sandbox.js'
+    ],
+  },
   'output': {
-    'filename': 'index.js',
+    'filename': '[name].js',
     'path': './www/scripts/bundles'
   },
   'module': {
@@ -41,7 +51,10 @@ const INDEX_CONFIGURATION = {
       },
       {
         'test': /\.pug$/,
-        'loader': 'pug-loader?pretty=true'
+        'loader': 'pug-loader',
+        'query': {
+          'pretty': true
+        }
       }
     ]
   },
@@ -50,37 +63,40 @@ const INDEX_CONFIGURATION = {
   ]
 }
 
-const SANDBOX_CONFIGURATION = {
-  'devtool': 'source-map',
-  'entry': [
-    'babel-polyfill',
-    './www/scripts/sandbox.js'
-  ],
-  'output': {
-    'filename': 'sandbox.js',
-    'path': './www/scripts/bundles'
-  },
-  'module': {
-    'loaders': [
-      {
-        'test': /\.js$/,
-        'loader': 'babel-loader',
-        'exclude': /node_modules/
-      },
-      {
-        'test': /\.json$/,
-        'loader': 'json-loader'
-      },
-      {
-        'test': /\.pug$/,
-        'loader': 'pug-loader?pretty=true'
-      }
-    ]
-  },
-  'plugins': [
-    new Bundler.ExtendedAPIPlugin()
-  ]
-}
+// const SANDBOX_CONFIGURATION = {
+//   'devtool': 'source-map',
+//   'entry': [
+//     'babel-polyfill',
+//     './www/scripts/sandbox.js'
+//   ],
+//   'output': {
+//     'filename': 'sandbox.js',
+//     'path': './www/scripts/bundles'
+//   },
+//   'module': {
+//     'loaders': [
+//       {
+//         'test': /\.js$/,
+//         'loader': 'babel-loader',
+//         'exclude': /node_modules/
+//       },
+//       {
+//         'test': /\.json$/,
+//         'loader': 'json-loader'
+//       },
+//       {
+//         'test': /\.pug$/,
+//         'loader': 'pug-loader',
+//         'query': {
+//           'pretty': true
+//         }
+//       }
+//     ]
+//   },
+//   'plugins': [
+//     new Bundler.ExtendedAPIPlugin()
+//   ]
+// }
 
 Log
   .addConsole()
@@ -110,9 +126,11 @@ task('unlink', {'async': true}, () => {
 
 namespace('bundle', () => {
 
-  desc('Create the indexapplication bundle')
-  task('createIndex', {'async': true}, () => {
-    return Co(function* () {
+  // desc('Create the indexapplication bundle')
+  // task('createIndex', {'async': true}, () => {
+  desc('Create the application bundle')
+  task('create', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> bundle:createIndex')
 
@@ -163,47 +181,48 @@ namespace('bundle', () => {
 
       Log.debug('< bundle:createIndex')
 
-    })
-  })
+    // })
+  }))
 
-  desc('Create the sandbox application bundle')
-  task('createSandbox', {'async': true}, () => {
-    return Co(function* () {
+  // desc('Create the sandbox application bundle')
+  // task('createSandbox', {'async': true}, () => {
+  //   return Co(function* () {
+  //
+  //     Log.debug('> bundle:createSandbox')
+  //
+  //     let Bundle = Bundler(SANDBOX_CONFIGURATION)
+  //
+  //     Bundle.Promise = {}
+  //     Bundle.Promise.run = Promisify(Bundle.run, Bundle)
+  //
+  //     let status = yield Bundle.Promise.run()
+  //
+  //     Log.debug('\n\n%s\n', status.toString({
+  //       'colors': true,
+  //       'hash': false, // add the hash of the compilation
+  //       'version': true, // add webpack version information
+  //       'timings': true, // add timing information
+  //       'assets': true, // add assets information
+  //       'chunks': true, // add chunk information (setting this to false allows for a less verbose output)
+  //       'chunkModules': false, // add built modules information to chunk information
+  //       'modules': false, // add built modules information
+  //       'children': false, // add children information
+  //       'cached': false, // add also information about cached (not built) modules
+  //       'reasons': false, // add information about the reasons why modules are included
+  //       'source': false, // add the source code of modules
+  //       'errorDetails': false, // add details to errors (like resolving log)
+  //       'chunkOrigins': false // add the origins of chunks and chunk merging info
+  //     }))
+  //
+  //     Log.debug('< bundle:createSandbox')
+  //
+  //   })
+  // })
 
-      Log.debug('> bundle:createSandbox')
-
-      let Bundle = Bundler(SANDBOX_CONFIGURATION)
-
-      Bundle.Promise = {}
-      Bundle.Promise.run = Promisify(Bundle.run, Bundle)
-
-      let status = yield Bundle.Promise.run()
-
-      Log.debug('\n\n%s\n', status.toString({
-        'colors': true,
-        'hash': false, // add the hash of the compilation
-        'version': true, // add webpack version information
-        'timings': true, // add timing information
-        'assets': true, // add assets information
-        'chunks': true, // add chunk information (setting this to false allows for a less verbose output)
-        'chunkModules': false, // add built modules information to chunk information
-        'modules': false, // add built modules information
-        'children': false, // add children information
-        'cached': false, // add also information about cached (not built) modules
-        'reasons': false, // add information about the reasons why modules are included
-        'source': false, // add the source code of modules
-        'errorDetails': false, // add details to errors (like resolving log)
-        'chunkOrigins': false // add the origins of chunks and chunk merging info
-      }))
-
-      Log.debug('< bundle:createSandbox')
-
-    })
-  })
-
-  desc('Create the application bundle(s)')
-  task('create', ['bundle:createIndex', 'bundle:createSandbox'], () => {
-  })
+  // desc('Create the application bundle(s)')
+  // // task('create', ['bundle:createIndex', 'bundle:createSandbox'], () => {
+  // task('create', ['bundle:createIndex'], () => {
+  // })
 
   // watchTask('watch', ['bundle:create'], function () {
   watchTask('watch', ['bundle:create'], function () {
@@ -288,6 +307,11 @@ namespace('manifest', () => {
 
 namespace('server', () => {
 
+  desc('Debug the server on port 8181')
+  task('debug', {'async': true}, () => {
+    return ShellSilent('node-debug ./server/index.js start --port 8181')
+  })
+
   desc('Run the server using defaults')
   task('run', {'async': true}, () => {
     return ShellSilent('node ./server/index.js start')
@@ -298,20 +322,23 @@ namespace('server', () => {
     return ShellSilent('node ./server/index.js start --fork')
   })
 
-  desc('Recycle (SIGHUP) the server')
-  task('recycle', {'async': true}, () => {
+  desc('Trim the server log (via SIGHUP)')
+  task('trim', {'async': true}, () => {
     return Co(function* () {
 
-      Log.debug('> server:recycle')
+      Log.debug('> server:trim')
 
       yield ShellSilent(`mv process/logs/rumil.log process/logs/rumil.${(new Date()).toString('yyyyMMddhhmmss')}.log`, {
+        'ignoreError': true
+      })
+      yield ShellSilent('find process/logs -name rumil.*.log -type f -mmin +15 -delete', {
         'ignoreError': true
       })
       yield ShellSilent('kill -s HUP $(cat process/pids/rumil.pid)', {
         'ignoreError': true
       })
 
-      Log.debug('< server:recycle')
+      Log.debug('< server:trim')
 
     })
   })
@@ -327,7 +354,7 @@ namespace('server', () => {
 
       Log.debug('> server:restart')
 
-      yield ShellSilent('jake server:recycle')
+      yield ShellSilent('jake server:trim')
       yield ShellSilent('jake server:stop')
       yield ShellSilent('jake server:start')
 
@@ -353,6 +380,74 @@ namespace('server', () => {
       .exclude('./www/**/*.*')
       .include('./*.json')
   })
+
+})
+
+namespace('storage', () => {
+
+  desc('Start the storage server')
+  task('start', {'async': true}, () => {
+    return ShellSilent('redis-server ./redis.config')
+  })
+
+  desc('Trim the storage server log (via SIGHUP)')
+  task('trim', {'async': true}, () => {
+    return Co(function* () {
+
+      Log.debug('> storage server:trim')
+
+      yield ShellSilent(`mv process/logs/redis.log process/logs/redis.${(new Date()).toString('yyyyMMddhhmmss')}.log`, {
+        'ignoreError': true
+      })
+      yield ShellSilent('find process/logs -name redis.*.log -type f -mmin +15 -delete', {
+        'ignoreError': true
+      })
+      yield ShellSilent('kill -s HUP $(cat process/pids/redis.pid)', {
+        'ignoreError': true
+      })
+
+      Log.debug('< storage server:trim')
+
+    })
+  })
+
+  desc('Stop the storage server')
+  task('stop', {'async': true}, () => {
+    return ShellSilent('kill $(cat process/pids/redis.pid)')
+  })
+
+  desc('Restart the storage server using defaults')
+  task('restart', {'async': true}, () => {
+    return Co(function* () {
+
+      Log.debug('> storage:restart')
+
+      yield ShellSilent('jake storage:trim')
+      yield ShellSilent('jake storage:stop')
+      yield ShellSilent('jake storage:start')
+
+      Log.debug('< storage:restart')
+
+    })
+  })
+
+  // watchTask('watch', ['storage:restart'], function () {
+  //   this.watchFiles
+  //     // Default includes/excludes
+  //     // .include('./**/*.js')
+  //     // .include('./**/*.coffee')
+  //     // .include('./**/*.css')
+  //     // .include('./**/*.less')
+  //     // .include('./**/*.scss')
+  //     // .exclude('node_modules/**')
+  //     // .exclude('.git/**')
+  //     .exclude('./process/**/*.*')
+  //     .exclude('./sandbox/**/*.*')
+  //     .exclude('./storage server/tests/**/*.*')
+  //     .exclude('./tasks/**/*.*')
+  //     .exclude('./www/**/*.*')
+  //     .include('./*.json')
+  // })
 
 })
 

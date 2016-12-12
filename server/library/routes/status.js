@@ -19,7 +19,6 @@ class Status {
       let memory = Process.memoryUsage()
 
       let status = {
-        // 'cacheTimestamp': Timestamp.value,
         'name': Package.name,
         'now': new Date().toISOString(),
         'version': `${Package.version}-${Index.value}`,

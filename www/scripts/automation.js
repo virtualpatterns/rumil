@@ -81,8 +81,11 @@ class Automation {
     Log.debug('- Automation.whenDialogShown(whenFn)')
     return new Promise((resolve, reject) => {
 
+      let _onDialogShown = null
+
       // Log.debug('> window.application.on(\'dialogShown\', (dialog) => { ... })')
-      window.application.on('dialogShown', (dialog) => {
+      window.application.once('dialogShown', _onDialogShown = (dialog) => {
+        // window.application.off('dialogShown', _onDialogShown)
         Log.debug('- window.application.on(\'dialogShown\', (dialog) => { ... }) dialog.id=%j', dialog.id)
         resolve(dialog)
       })
@@ -96,8 +99,11 @@ class Automation {
     Log.debug('- Automation.whenDialogHidden(whenFn)')
     return new Promise((resolve, reject) => {
 
+      let _onDialogHidden = null
+
       // Log.debug('> window.application.on(\'dialogHidden\', (dialog, response) => { ... })')
-      window.application.on('dialogHidden', (dialog, response) => {
+      window.application.on('dialogHidden', _onDialogHidden = (dialog, response) => {
+        window.application.off('dialogHidden', _onDialogHidden)
         Log.debug('- window.application.on(\'dialogHidden\', (dialog, response) => { ... })\n\n%s\n\n', Utilities.inspect(response))
         resolve(dialog, response)
       })

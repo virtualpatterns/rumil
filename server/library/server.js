@@ -26,9 +26,9 @@ Server.createServer = function(staticPath, modulesPath) {
     response.send(error)
   })
 
-  server.use(Server.CORS());
-  server.use(Server.queryParser());
-  server.use(Server.bodyParser());
+  server.use(Server.CORS())
+  server.use(Server.queryParser())
+  server.use(Server.bodyParser())
 
   _Log.createHandlers(server)
 

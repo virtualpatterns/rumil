@@ -43,6 +43,7 @@ class DefaultPage extends StackedPage {
     this.getContent().querySelector('#goConfirmation').addEventListener('click', this._onGoConfirmation = this.onGoConfirmation.bind(this))
     this.getContent().querySelector('#goSpinner').addEventListener('click', this._onGoSpinner = this.onGoSpinner.bind(this))
     this.getContent().querySelector('#goSimple').addEventListener('click', this._onGoSimple = this.onGoSimple.bind(this))
+    this.getContent().querySelector('#goOAuth2').addEventListener('click', this._onGoOAuth2 = this.onGoOAuth2.bind(this))
     this.getContent().querySelector('#goGitHub').addEventListener('click', this._onGoGitHub = this.onGoGitHub.bind(this))
     this.getContent().querySelector('#goGoogle').addEventListener('click', this._onGoGoogle = this.onGoGoogle.bind(this))
     this.getContent().querySelector('#goTwitter').addEventListener('click', this._onGoTwitter = this.onGoTwitter.bind(this))
@@ -54,6 +55,7 @@ class DefaultPage extends StackedPage {
     this.getContent().querySelector('#goTwitter').removeEventListener('click', this._onGoTwitter)
     this.getContent().querySelector('#goGoogle').removeEventListener('click', this._onGoGoogle)
     this.getContent().querySelector('#goGitHub').removeEventListener('click', this._onGoGitHub)
+    this.getContent().querySelector('#goOAuth2').removeEventListener('click', this._onGoOAuth2)
     this.getContent().querySelector('#goSimple').removeEventListener('click', this._onGoSimple)
     this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner)
     this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation)
@@ -244,7 +246,23 @@ class DefaultPage extends StackedPage {
 
       try {
         Log.debug('- DefaultPage.onGoSimple()')
-        // yield window.application.authorize('Simple')
+        yield window.application.authorize('Simple')
+        // yield window.application.authorize('OAuth2')
+      }
+      catch (error) {
+        window.application.showError(error)
+      }
+
+    })
+
+  }
+
+  onGoOAuth2() {
+
+    Co(function* () {
+
+      try {
+        Log.debug('- DefaultPage.onGoOAuth2()')
         yield window.application.authorize('OAuth2')
       }
       catch (error) {
@@ -281,7 +299,9 @@ class DefaultPage extends StackedPage {
         // yield window.application.pushPage(new GooglePage(yield window.application.authorize('Google', [
         //   'profile'
         // ])))
-        yield window.application.authorize('Google')
+        yield window.application.authorize('Google', {
+          'scopes': [ 'profile' ]
+        })
       }
       catch (error) {
         window.application.showError(error)

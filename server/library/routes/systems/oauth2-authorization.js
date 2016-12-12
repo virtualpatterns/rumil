@@ -21,13 +21,18 @@ class OAuth2Authorization extends SimpleAuthorization {
   }
 
   getOptions() {
+
+    let options = super.getOptions()
+
     return {
+      'scopes': options.scopes ? options.scopes : [],
       'state': this.getAuthorizationId()
     }
+
   }
 
-  authorize(token = {}) {
-    Log.debug('- OAuth2Authorization.authorize(token) { ... }')
+  *authorize(token = {}) {
+    Log.debug('- OAuth2Authorization.*authorize(token) { ... }')
 
     let options = this.getOptions()
     Log.debug('-   options ...\n\n%s\n', Utilities.inspect(options))
@@ -39,9 +44,9 @@ class OAuth2Authorization extends SimpleAuthorization {
     else {
 
       Log.debug('> oauth.code.getToken(%j)', this.request.url)
-      return oauth.code.getToken(this.request.url)
-        .then((token) => super.authorize(token.data))
-        .catch((error) => this.sendError(error))
+      let token = yield oauth.code.getToken(this.request.url)
+
+      yield super.authorize(token.data)
 
     }
 

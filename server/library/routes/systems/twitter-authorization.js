@@ -6,15 +6,33 @@ const Utilities = require('util')
 
 const Log = require('../../log')
 const Process = require('../../process')
-const SimpleAuthorization = require('./simple-authorization')
+// const SimpleAuthorization = require('./simple-authorization')
+const StoredAuthorization = require('./stored-authorization')
 
-class TwitterAuthorization extends SimpleAuthorization {
+// const Twitter = new _Twitter({
+//   'callback': `http://localhost:8080/api/authorize/Twitter`,
+//   'consumerKey': Process.env.RUMIL_TWITTER_PUBLIC_ID,
+//   'consumerSecret': Process.env.RUMIL_TWITTER_PRIVATE_ID
+// })
+//
+// Twitter.Promise = {}
+// Twitter.Promise.getRequestToken = Promisify(Twitter.getRequestToken, {
+//   'multiArgs': true,
+//   'thisArg': Twitter
+// })
+// Twitter.Promise.getAccessToken = Promisify(Twitter.getAccessToken, {
+//   'multiArgs': true,
+//   'thisArg': Twitter
+// })
+
+// class TwitterAuthorization extends SimpleAuthorization {
+class TwitterAuthorization extends StoredAuthorization {
 
   constructor(request, response, next) {
     super(request, response, next)
   }
 
-  getToken() {
+  getRequestToken() {
     return this.request.params.oauth_token
   }
 
@@ -22,26 +40,12 @@ class TwitterAuthorization extends SimpleAuthorization {
     return this.request.params.oauth_verifier
   }
 
-  authorize(token = {}) {
+  open(uri, options = {}) {
+    return super.open(uri || Process.env.RUMIL_TWITTER_STORAGE_URL, options)
+  }
+
+  *authorize(token = {}) {
     Log.debug('- TwitterAuthorization.authorize(token) { ... }')
-
-    // let options = this.getOptions()
-    // Log.debug('-   options ...\n\n%s\n', Utilities.inspect(options))
-    //
-    // let oauth = new OAuth(options)
-    //
-    // if (!this.getCode())
-    //   this.redirect(oauth.code.getUri())
-    // else {
-    //
-    //   Log.debug('> oauth.code.getToken(%j)', this.request.url)
-    //   return oauth.code.getToken(this.request.url)
-    //     .then((token) => super.authorize(token.data))
-    //     .catch((error) => this.sendError(error))
-    //
-    // }
-
-    // let [ publicRequestId, privateRequestId, ...parameters ] = yield Twitter.Promise.getRequestToken()
 
     const Twitter = new _Twitter({
       'callback': `http://localhost:8080/api/authorize/Twitter?authorizationId=${this.getAuthorizationId()}`,
@@ -59,57 +63,66 @@ class TwitterAuthorization extends SimpleAuthorization {
       'thisArg': Twitter
     })
 
-    if (!this.getToken()) {
-      return Twitter.Promise.getRequestToken()
-        .then((data) => {
+    // Twitter.callback = `${Twitter.callback}?authorizationId=${this.getAuthorizationId()}`
 
-          let [ publicRequestId, privateRequestId, ...parameters ] = data
+    if (!this.getRequestToken()) {
 
-          // Log.debug('-   this.request.url=%j', this.request.url)
-          Log.debug('-   publicRequestId=%j', publicRequestId)
-          Log.debug('-   privateRequestId=%j', privateRequestId)
-          Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))
+      let requestToken = yield Twitter.Promise.getRequestToken()
 
-          TwitterAuthorization.authorizations[this.getAuthorizationId()] = {
-            'publicRequestId': publicRequestId,
-            'privateRequestId': privateRequestId,
-            'created': new Date()
-          }
+      let [ publicRequestId, privateRequestId, ...parameters ] = requestToken
 
-          this.redirect(Twitter.getAuthUrl(publicRequestId))
+      Log.debug('-   publicRequestId=%j', publicRequestId)
+      Log.debug('-   privateRequestId=%j', privateRequestId)
+      Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))
 
+      // yield this.open()
+      this.open()
+
+      try {
+        yield this.set({
+          'publicRequestId': publicRequestId,
+          'privateRequestId': privateRequestId,
         })
-        .catch((error) => this.sendError(error))
+        this.expire()
+      }
+      finally {
+        // yield this.close()
+        this.close()
+      }
+
+      this.redirect(Twitter.getAuthUrl(publicRequestId))
+
     }
     else {
 
-      // Log.debug('-   this.getToken()=%j', this.getToken())
-      // Log.debug('-   this.getVerifier()=%j', this.getVerifier())
+      let data = null
 
-      let { publicRequestId, privateRequestId } = TwitterAuthorization.authorizations[this.getAuthorizationId()]
+      // yield this.open()
+      this.open()
 
-      // Log.debug('-   publicRequestId=%j', publicRequestId)
-      // Log.debug('-   privateRequestId=%j', privateRequestId)
+      try {
+        data = yield this.get()
+      }
+      finally {
+        // yield this.close()
+        this.close()
+      }
 
-      return Twitter.Promise.getAccessToken(publicRequestId, privateRequestId, this.getVerifier())
-        .then((data) => {
+      Log.debug('-   data.publicRequestId=%j', data.publicRequestId)
+      Log.debug('-   data.privateRequestId=%j', data.privateRequestId)
 
-          let [ publicAccessId, privateAccessId, ...parameters ] = data
+      let accessToken = yield Twitter.Promise.getAccessToken(data.publicRequestId, data.privateRequestId, this.getVerifier())
 
-          // Log.debug('-   this.request.url=%j', this.request.url)
-          Log.debug('-   publicAccessId=%j', publicAccessId)
-          Log.debug('-   privateAccessId=%j', privateAccessId)
-          Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))
+      let [ publicAccessId, privateAccessId, ...parameters ] = accessToken
 
-          // this.sendError(new Error('Hold!'))
+      Log.debug('-   publicAccessId=%j', publicAccessId)
+      Log.debug('-   privateAccessId=%j', privateAccessId)
+      Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))
 
-          super.authorize({
-            'publicAccessId': publicAccessId,
-            'privateAccessId': privateAccessId
-          })
-
-        })
-        .catch((error) => this.sendError(error))
+      yield super.authorize({
+        'publicAccessId': publicAccessId,
+        'privateAccessId': privateAccessId
+      })
 
     }
 

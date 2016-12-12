@@ -1,6 +1,7 @@
 'use strict'
 
 const Co = require('co')
+const Is = require('@pwn/is')
 const Timeout = require('timer-promise')
 const Utilities = require('util')
 const UUID = require('uuid/v4')
@@ -260,19 +261,21 @@ class Application extends Element {
   //
   // }
 
-  authorize(system) {
+  authorize(system, options = {}) {
     Log.debug('> Application.authorize(%j)', system)
 
     let authorizationId = UUID()
-    // Log.debug('-   authorizationId=%j', authorizationId)
-
-    let url = `/api/authorize/${system}?authorizationId=${authorizationId}`
+    let url = `/api/authorize/${system}?authorizationId=${authorizationId}${Is.emptyObject(options) ? '' : `&options=${encodeURI(JSON.stringify(options))}`}`
 
     Log.debug('> window.open(%j)', url)
     window.open(url)
 
     return new Promise((resolve, reject) => {
-      this.on('authorized', (_authorizationId, _token) => {
+
+      let _onAuthorized = null
+
+      this.once('authorized', _onAuthorized = (_authorizationId, _token) => {
+        // this.off('authorized', _onAuthorized)
         if (authorizationId == _authorizationId) {
           Log.debug('< Application.authorize(%j)\n\n%s\n\n', system, Utilities.inspect(_token))
           resolve(_authorizationId, _token)
@@ -280,6 +283,7 @@ class Application extends Element {
         else
           Log.debug('- Application.authorize(%j) authorizationId=%j _authorizationId=%j', system, authorizationId, _authorizationId)
       })
+
     })
 
   }
