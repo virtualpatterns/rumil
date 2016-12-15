@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "c6973d16677d1c0eb2c1";
+/******/ 	__webpack_require__.h = "521db20746bc38423e6f";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -11993,32 +11993,19 @@
 
 	'use strict';
 	
-	// const DiffFn = require('virtual-dom/diff')
-	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var Emitter = __webpack_require__(330);
 	var Is = __webpack_require__(323);
-	// const PatchFn = require('virtual-dom/patch')
 	var Utilities = __webpack_require__(318);
-	// const VirtualContentFn = require('virtual-dom/vnode/vnode')
-	// const VirtualTextFn = require('virtual-dom/vnode/vtext')
-	// const VirtualizeContentFn = require('vdom-virtualize')
-	// const VirtualizeHTMLFn = require('vdom-parser')
 	
 	var Log = __webpack_require__(346);
 	
-	// const IntervalError = require('./errors/interval-error')
 	var ElementError = __webpack_require__(348);
 	
 	var ContentFn = __webpack_require__(349);
-	
-	// const VirtualizeHTMLFn = _VirtualizeHTMLFn({
-	//   'VNode': VirtualContentFn,
-	//   'VText': VirtualTextFn
-	// })
 	
 	var Element = function () {
 	  function Element() {
@@ -12027,7 +12014,7 @@
 	
 	    _classCallCheck(this, Element);
 	
-	    this.id = 'id_' + Element.nextId++; // Utilities.format('id_%d', Element.nextId++)
+	    this.id = 'id_' + Element.nextId++;
 	    this.isUpdateable = isUpdateable;
 	    this.contentFn = contentFn;
 	    this.emitter = Emitter(this);
@@ -12043,13 +12030,11 @@
 	
 	      if (this.isUpdateable) {
 	
-	        var containerData = {
+	        var Container = __webpack_require__(352);
+	        return Container.addContent(parentOrSelector, location, {
 	          'contentElement': this,
 	          'contentData': data
-	        };
-	
-	        var Container = __webpack_require__(352);
-	        return Container.addContent(parentOrSelector, location, containerData);
+	        });
 	      } else return this.addContent(parentOrSelector, location, data);
 	    }
 	  }, {
@@ -12059,17 +12044,12 @@
 	      var location = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'beforeend';
 	      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	
-	      // Log.debug('- Element.addContent(%s, %j, data)\n%s\n\n', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location, this.renderContent())
-	      // Log.debug('- Element.addContent(%s, %j, data)', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location)
 	
 	      var parent = Is.string(parentOrSelector) ? document.querySelector(parentOrSelector) : parentOrSelector;
-	      var content = this.renderContent(data); // this.isUpdateable ? this.renderAllContent(data) : this.renderContent(data)
-	
-	      // parent.insertAdjacentHTML(location, this.isUpdateable ? require('./elements/container').renderContent(this.id, content) : content)
+	      var content = this.renderContent(data);
 	
 	      parent.insertAdjacentHTML(location, content);
 	
-	      // this.addContentElement()
 	      this.bind();
 	    }
 	  }, {
@@ -12080,14 +12060,11 @@
 	
 	      if (this.isUpdateable) {
 	
-	        var containerData = {
+	        var Container = __webpack_require__(352);
+	        return Container.renderContent({
 	          'contentElement': this,
 	          'contentData': data
-	        };
-	
-	        var Container = __webpack_require__(352);
-	        // return Container.renderContent(this, containerData)
-	        return Container.renderContent(containerData);
+	        });
 	      } else return this.renderContent(data);
 	    }
 	  }, {
@@ -12095,16 +12072,18 @@
 	    value: function renderContent() {
 	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
-	      // Log.debug('- Element.renderContent(data, %j)\n\n%s\n\n', isContainerIncluded, Utilities.inspect(data))
+	      return this.contentFn({
+	        // Modules
+	        'Is': Is,
 	
-	      data.Is = Is;
+	        // Globals
+	        'application': window.application,
+	        'element': this,
 	
-	      data.application = window.application;
-	      data.element = this;
+	        // Locals
+	        'data': data
 	
-	      return this.contentFn(data);
-	
-	      // return this.isUpdateable ? require('./elements/container').renderContent(this.id, this.contentFn(data)) : this.contentFn(data)
+	      });
 	    }
 	  }, {
 	    key: 'getContent',
@@ -12191,13 +12170,6 @@
 	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
 	      return this.renderAllContent(data);
-	
-	      // if (this.isUpdateable) {
-	      //   const Container = require('./elements/container')
-	      //   return Container.renderContent(this)
-	      // }
-	      // else
-	      //   return this.renderContent()
 	    }
 	  }]);
 	
@@ -12725,29 +12697,6 @@
 	    return _possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this, false, contentFn));
 	  }
 	
-	  // addContent(parentOrSelector = 'html > body', location = 'beforeend', data = {}, element) {
-	  //   Log.debug('- Container.addContent(%j, %j, data, element)', parentOrSelector, location)
-	  //   return super.addContent(parentOrSelector, location, {
-	  //     'contentElement': element,
-	  //     'contentData': data
-	  //   })
-	  // }
-	
-	  // renderContent(element, data) {
-	  //   Log.debug('- Container.renderContent(element, data)')
-	  //   return super.renderContent({
-	  //     'contentElement': element,
-	  //     'contentData': data
-	  //   })
-	  // }
-	
-	  // updateContent(element) {
-	  //   Log.debug('- Container.updateContent(element)')
-	  //   return super.updateContent({
-	  //     'content': element
-	  //   })
-	  // }
-	
 	  _createClass(Container, [{
 	    key: 'bind',
 	    value: function bind() {}
@@ -12767,8 +12716,8 @@
 
 	var pug = __webpack_require__(350);
 	
-	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (contentData, contentElement) {var pug_indent = [];
-	pug_html = pug_html + "\n\u003Cdiv" + (" class=\"rum-container rum-element\""+pug.attr("id", `_${contentElement.id}`, true, true)) + "\u003E" + (null == (pug_interp = contentElement.renderContent(contentData)) ? "" : pug_interp) + "\n\u003C\u002Fdiv\u003E";}.call(this,"contentData" in locals_for_with?locals_for_with.contentData:typeof contentData!=="undefined"?contentData:undefined,"contentElement" in locals_for_with?locals_for_with.contentElement:typeof contentElement!=="undefined"?contentElement:undefined));;return pug_html;};
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (data) {var pug_indent = [];
+	pug_html = pug_html + "\n\u003Cdiv" + (" class=\"rum-container rum-element\""+pug.attr("id", `_${data.contentElement.id}`, true, true)) + "\u003E" + (null == (pug_interp = data.contentElement.renderContent(data.contentData)) ? "" : pug_interp) + "\n\u003C\u002Fdiv\u003E";}.call(this,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined));;return pug_html;};
 	module.exports = template;
 
 /***/ },
@@ -12879,7 +12828,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"value": 521
+		"value": 555
 	};
 
 /***/ },
@@ -12916,6 +12865,7 @@
 			"pad": "^1.0.1",
 			"query-string": "^4.2.3",
 			"redis": "^2.6.3",
+			"redis-info": "^3.0.6",
 			"restify": "^4.1.1",
 			"timer-promise": "0.0.2",
 			"uuid": "^3.0.1",
@@ -13748,7 +13698,6 @@
 	    value: function renderContent() {
 	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
-	      // Log.debug('- CacheElement.renderContent(data)')
 	
 	      data.status = data.status || {
 	        'isUpdating': true,
@@ -13779,18 +13728,13 @@
 	
 	        Log.debug('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex);
 	
-	        if (this.onUpdatingIndex >= 1) {
-	
-	          var data = {
-	            'status': {
-	              'isUpdating': true,
-	              'isDownloading': false,
-	              'isUpdateRequired': false
-	            }
-	          };
-	
-	          this.updateContent(data);
-	        }
+	        if (this.onUpdatingIndex >= 1) this.updateContent({
+	          'status': {
+	            'isUpdating': true,
+	            'isDownloading': false,
+	            'isUpdateRequired': false
+	          }
+	        });
 	
 	        this.onUpdatingIndex++;
 	      } catch (error) {
@@ -13805,15 +13749,13 @@
 	
 	        Log.debug('- CacheElement.onDownloading()');
 	
-	        var data = {
+	        this.updateContent({
 	          'status': {
 	            'isUpdating': false,
 	            'isDownloading': true,
 	            'isUpdateRequired': false
 	          }
-	        };
-	
-	        this.updateContent(data);
+	        });
 	      } catch (error) {
 	        window.application.showError(error);
 	      }
@@ -13825,7 +13767,6 @@
 	      var self = this;
 	
 	      Co(regeneratorRuntime.mark(function _callee() {
-	        var data;
 	        return regeneratorRuntime.wrap(function _callee$(_context) {
 	          while (1) {
 	            switch (_context.prev = _context.next) {
@@ -13835,61 +13776,58 @@
 	
 	                Log.debug('- CacheElement.onUpdateReady()');
 	
-	                data = {
+	                self.updateContent({
 	                  'status': {
 	                    'isUpdating': false,
 	                    'isDownloading': false,
 	                    'isUpdateRequired': true
 	                  }
-	                };
+	                });
 	
-	
-	                self.updateContent(data);
-	
-	                _context.prev = 4;
-	                _context.next = 7;
+	                _context.prev = 3;
+	                _context.next = 6;
 	                return CountDown.start(self, '#onUpdateReady', 3);
 	
-	              case 7:
-	                _context.next = 17;
+	              case 6:
+	                _context.next = 16;
 	                break;
 	
-	              case 9:
-	                _context.prev = 9;
-	                _context.t0 = _context['catch'](4);
+	              case 8:
+	                _context.prev = 8;
+	                _context.t0 = _context['catch'](3);
 	
 	                if (!(_context.t0 instanceof IntervalError)) {
-	                  _context.next = 16;
+	                  _context.next = 15;
 	                  break;
 	                }
 	
 	                Log.warn('- CacheElement.onUpdateReady()');
 	                Log.warn(_context.t0);
-	                _context.next = 17;
+	                _context.next = 16;
 	                break;
 	
-	              case 16:
+	              case 15:
 	                throw _context.t0;
 	
-	              case 17:
+	              case 16:
 	
 	                window.location.reload(true);
 	
-	                _context.next = 23;
+	                _context.next = 22;
 	                break;
 	
-	              case 20:
-	                _context.prev = 20;
+	              case 19:
+	                _context.prev = 19;
 	                _context.t1 = _context['catch'](0);
 	
 	                window.application.showError(_context.t1);
 	
-	              case 23:
+	              case 22:
 	              case 'end':
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[0, 20], [4, 9]]);
+	        }, _callee, this, [[0, 19], [3, 8]]);
 	      }));
 	    }
 	  }, {
@@ -13900,15 +13838,13 @@
 	
 	        Log.debug('- CacheElement.onNoUpdate()');
 	
-	        var data = {
+	        this.updateContent({
 	          'status': {
 	            'isUpdating': false,
 	            'isDownloading': false,
 	            'isUpdateRequired': false
 	          }
-	        };
-	
-	        this.updateContent(data);
+	        });
 	      } catch (error) {
 	        window.application.showError(error);
 	      }
@@ -22283,12 +22219,15 @@
 	var Co = __webpack_require__(322);
 	var _Date = __webpack_require__(424);
 	var Format = __webpack_require__(594);
+	var Is = __webpack_require__(323);
 	var Request = __webpack_require__(595);
 	
 	var Element = __webpack_require__(345);
 	var Log = __webpack_require__(346);
 	
 	var ContentFn = __webpack_require__(620);
+	
+	var RequestCancellation = Request.CancelToken;
 	
 	var StatusElement = function (_Element) {
 	  _inherits(StatusElement, _Element);
@@ -22298,10 +22237,24 @@
 	
 	    _classCallCheck(this, StatusElement);
 	
-	    return _possibleConstructorReturn(this, (StatusElement.__proto__ || Object.getPrototypeOf(StatusElement)).call(this, true, contentFn));
+	    var _this = _possibleConstructorReturn(this, (StatusElement.__proto__ || Object.getPrototypeOf(StatusElement)).call(this, true, contentFn));
+	
+	    _this.updateContentCancellation = null;
+	    return _this;
 	  }
 	
 	  _createClass(StatusElement, [{
+	    key: 'renderContent',
+	    value: function renderContent() {
+	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	
+	      // Log.debug('- StatusElement.renderContent(data)')
+	
+	      data.status = data.status || {};
+	
+	      return _get(StatusElement.prototype.__proto__ || Object.getPrototypeOf(StatusElement.prototype), 'renderContent', this).call(this, data);
+	    }
+	  }, {
 	    key: 'updateContent',
 	    value: function updateContent() {
 	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -22321,11 +22274,19 @@
 	
 	                Log.debug('- StatusElement.updateContent(data)');
 	
-	                _context.next = 4;
-	                return Request.get('/api/status');
+	                self.updateContentCancellation = RequestCancellation.source();
 	
-	              case 4:
+	                _context.next = 5;
+	                return Request.get('/api/status', {
+	                  cancelToken: self.updateContentCancellation.token
+	                });
+	
+	              case 5:
 	                response = _context.sent;
+	
+	
+	                self.updateContentCancellation = null;
+	
 	                status = response.data;
 	
 	                // Log.debug(status)
@@ -22348,28 +22309,42 @@
 	
 	                // Log.debug(status)
 	
-	                data.status = status;
+	                superFn.call(self, {
+	                  'status': status
+	                });
 	
-	                // super.updateContent(data)
-	                // Element.prototype.updateContent.call(self, data)
-	                superFn.call(self, data);
-	
-	                _context.next = 19;
+	                _context.next = 20;
 	                break;
 	
-	              case 16:
-	                _context.prev = 16;
+	              case 17:
+	                _context.prev = 17;
 	                _context.t0 = _context['catch'](0);
 	
-	                window.application.showError(_context.t0);
+	                if (Request.isCancel(_context.t0)) {
+	                  Log.warn('- StatusElement.updateContent(data)');
+	                  Log.warn('-   error.message=%j', _context.t0.message);
+	                } else window.application.showError(_context.t0);
 	
-	              case 19:
+	              case 20:
 	              case 'end':
 	                return _context.stop();
 	            }
 	          }
-	        }, _callee, this, [[0, 16]]);
+	        }, _callee, this, [[0, 17]]);
 	      }));
+	    }
+	  }, {
+	    key: 'bind',
+	    value: function bind() {
+	      _get(StatusElement.prototype.__proto__ || Object.getPrototypeOf(StatusElement.prototype), 'bind', this).call(this);
+	    }
+	  }, {
+	    key: 'unbind',
+	    value: function unbind() {
+	
+	      if (this.updateContentCancellation) this.updateContentCancellation.cancel('Cancelling StatusElement.updateContent(data) ...');
+	
+	      _get(StatusElement.prototype.__proto__ || Object.getPrototypeOf(StatusElement.prototype), 'unbind', this).call(this);
 	    }
 	  }]);
 	
@@ -57511,19 +57486,19 @@
 
 	var pug = __webpack_require__(350);
 	
-	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Is, application, element, status) {var pug_indent = [];
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Is, application, data, element) {var pug_indent = [];
 	pug_html = pug_html + "\n\u003Cdiv" + (" class=\"rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E";
-	if (Is.undefined(status.isUpdateRequired)) {
+	if (Is.undefined(data.status.isUpdateRequired)) {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-ellipsis-h\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003EChecking\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003EChecking for application updates ...\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 	}
 	else
-	if (status.isUpdateRequired) {
+	if (data.status.isUpdateRequired) {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-cloud-download\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003EUpdates Available\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003EUpdates are available for your version of the application.\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 	}
 	else {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"left\"\u003E\n        \u003Cons-icon icon=\"fa-cloud\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"center\"\u003E\u003Cspan class=\"list__item__title\"\u003ENo Updates Available\u003C\u002Fspan\u003E\u003Cspan class=\"list__item__subtitle\"\u003EYour version of the application is the latest version.  No updates are available.\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E";
 	}
-	pug_html = pug_html + "\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Version\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = status.version || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003ELocal Version\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = application.version) ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Date\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = status.nowAsDateString || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Time\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = status.nowAsTimeString || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003EHEAP\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003ETotal\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = status.heap ? status.heap.totalAsString : '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EUsed\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = status.heap ? status.heap.usedAsString : '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fdiv\u003E";}.call(this,"Is" in locals_for_with?locals_for_with.Is:typeof Is!=="undefined"?Is:undefined,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined,"status" in locals_for_with?locals_for_with.status:typeof status!=="undefined"?status:undefined));;return pug_html;};
+	pug_html = pug_html + "\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Version\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = data.status.version || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003ELocal Version\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = application.version) ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Date\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = data.status.nowAsDateString || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EServer Time\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = data.status.nowAsTimeString || '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-header\u003EHEAP\u003C\u002Fons-list-header\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003ETotal\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = data.status.heap ? data.status.heap.totalAsString : '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EUsed\u003C\u002Fdiv\u003E\n      \u003Cdiv class=\"right\"\u003E" + (pug.escape(null == (pug_interp = data.status.heap ? data.status.heap.usedAsString : '(unknown)') ? "" : pug_interp)) + "\n      \u003C\u002Fdiv\u003E\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n\u003C\u002Fdiv\u003E";}.call(this,"Is" in locals_for_with?locals_for_with.Is:typeof Is!=="undefined"?Is:undefined,"application" in locals_for_with?locals_for_with.application:typeof application!=="undefined"?application:undefined,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
 	module.exports = template;
 
 /***/ },
@@ -57715,23 +57690,23 @@
 
 	var pug = __webpack_require__(350);
 	
-	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (element, statistics) {var pug_indent = [];
+	function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (data, element) {var pug_indent = [];
 	pug_html = pug_html + "\n\u003Cdiv" + (" class=\"rum-element\""+pug.attr("id", element.id, true, true)) + "\u003E\n  \u003Cons-list modifier=\"inset\"\u003E\n    \u003Cons-list-item modifier=\"longdivider\"\u003E\n      \u003Cdiv class=\"left\"\u003EResult\u003C\u002Fdiv\u003E";
-	if (statistics.failures) {
+	if (data.statistics.failures) {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"right rum-failed\"\u003E\n        \u003Cons-icon icon=\"close\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003EFailed\n      \u003C\u002Fdiv\u003E";
 	}
 	else
-	if (statistics.pending) {
+	if (data.statistics.pending) {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"right rum-pending\"\u003E\n        \u003Cons-icon icon=\"circle-o\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003EPending\n      \u003C\u002Fdiv\u003E";
 	}
 	else
-	if (statistics.passes) {
+	if (data.statistics.passes) {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"right rum-succeeded\"\u003E\n        \u003Cons-icon icon=\"check\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003ESucceeded\n      \u003C\u002Fdiv\u003E";
 	}
 	else {
 	pug_html = pug_html + "\n      \u003Cdiv class=\"right\"\u003E\n        \u003Cons-icon icon=\"ellipsis-h\" size=\"20px\"\u003E\u003C\u002Fons-icon\u003E\n      \u003C\u002Fdiv\u003E";
 	}
-	pug_html = pug_html + "\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cdiv class=\"rum-memo\"\u003E\u003Cspan class=\"rum-memo-bold\"\u003ENOTE:&nbsp;&nbsp;\u003C\u002Fspan\u003ERefresh the page before re-running the tests.\u003C\u002Fdiv\u003E\n\u003C\u002Fdiv\u003E";}.call(this,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined,"statistics" in locals_for_with?locals_for_with.statistics:typeof statistics!=="undefined"?statistics:undefined));;return pug_html;};
+	pug_html = pug_html + "\n    \u003C\u002Fons-list-item\u003E\n  \u003C\u002Fons-list\u003E\n  \u003Cdiv class=\"rum-memo\"\u003E\u003Cspan class=\"rum-memo-bold\"\u003ENOTE:&nbsp;&nbsp;\u003C\u002Fspan\u003ERefresh the page before re-running the tests.\u003C\u002Fdiv\u003E\n\u003C\u002Fdiv\u003E";}.call(this,"data" in locals_for_with?locals_for_with.data:typeof data!=="undefined"?data:undefined,"element" in locals_for_with?locals_for_with.element:typeof element!=="undefined"?element:undefined));;return pug_html;};
 	module.exports = template;
 
 /***/ },
@@ -59545,14 +59520,7 @@
 	    value: function renderContent() {
 	      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	
-	      data.status = data.status || {
-	        // 'status': {
-	        //     'index': this.index++,
-	        //     'nowAsDate': new Date(),
-	        //     'nowAsDateString': (new Date()).toString('MMM d, yyyy'),
-	        //     'nowAsTimeString': (new Date()).toString('h:mm:ss tt')
-	        // }
-	      };
+	      data.status = data.status || {};
 	      return _get(BlinkElement.prototype.__proto__ || Object.getPrototypeOf(BlinkElement.prototype), 'renderContent', this).call(this, data);
 	    }
 	  }, {

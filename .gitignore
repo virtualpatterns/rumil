@@ -3,6 +3,7 @@
 *.log
 *.out
 *.pid
+*.rdb
 node_modules
 sandbox
 sandbox.*

@@ -16,103 +16,55 @@ class StoredAuthorization extends SimpleAuthorization {
   open(uri, options = {}) {
     Log.debug('- StoredAuthorization.open(%j, options)\n\n%s\n', uri, Utilities.inspect(options))
 
-    // return new Promise((resolve, reject) => {
-      if (!this.storage) {
+    if (!this.storage) {
 
-        let storage = uri ? Redis.createClient(uri, options) : Redis.createClient(options)
+      options.retry_strategy = options.retry_strategy || ((retry) => {
+        Log.warn('- retryFn(retry) { ... }\n\n%s\n', Utilities.inspect(retry))
+        return new Error(retry.error.message)
+      })
 
-        // let _onReady = null
-        // let _onError = null
+      let storage = uri ? Redis.createClient(uri, options) : Redis.createClient(options)
 
-        // storage.once('ready', _onReady = () => {
-        //   Log.debug('- storage.once(\'ready\', _onReady = () => { ... })')
-        //   // storage.off('ready', _onReady)
-        //   // storage.off('error', _onError)
-        //   resolve()
-        // })
-        // storage.once('error', _onError = (error) => {
-        //   Log.error('- storage.once(\'error\', _onError = (error) => { ... })')
-        //   // storage.off('ready', _onReady)
-        //   // storage.off('error', _onError)
-        //   reject(error)
-        // })
+      storage.Promise = {}
+      storage.Promise.ping = Promisify(storage.ping, storage)
+      storage.Promise.set = Promisify(storage.hmset, storage)
+      storage.Promise.get = Promisify(storage.hgetall, storage)
+      storage.Promise.expire = Promisify(storage.expire, storage)
 
-        storage.Promise = {}
-        storage.Promise.hmset = Promisify(storage.hmset, storage)
-        storage.Promise.hgetall = Promisify(storage.hgetall, storage)
-        storage.Promise.expire = Promisify(storage.expire, storage)
-        storage.Promise.del = Promisify(storage.del, storage)
+      this.storage = storage
 
-        this.storage = storage
-
-      }
-    //   else
-    //     resolve()
-    // })
+    }
 
   }
 
   close() {
     Log.debug('- StoredAuthorization.close()')
 
-    // return new Promise((resolve, reject) => {
-      if (this.storage) {
-
-        let storage = this.storage
-
-        storage.quit()
-
-        // let _onEnd = null
-        // let _onError = null
-        //
-        // storage.once('end', _onEnd = () => {
-        //   Log.debug('- storage.once(\'end\', _onEnd = () => { ... })')
-        //   // storage.off('end', _onEnd)
-        //   // storage.off('error', _onError)
-          delete this.storage
-        //   resolve()
-        // })
-        // storage.once('error', _onError = (error) => {
-        //   Log.error('- storage.once(\'error\', _onError = (error) => { ... })')
-        //   // storage.off('end', _onEnd)
-        //   // storage.off('error', _onError)
-        //   reject(error)
-        // })
-
-      }
-    //   else
-    //     resolve()
-    // })
+    if (this.storage) {
+      this.storage.quit()
+      delete this.storage
+    }
 
   }
 
-  set(value) {
-    Log.debug('> StoredAuthorization.set(value)\n\n%s\n', Utilities.inspect(value))
-    return Promise.resolve()
-      .then(() => this.storage.Promise.hmset(this.getAuthorizationId(), value))
-      .then(() => {
-        Log.debug('< StoredAuthorization.set(value)\n\n%s\n', Utilities.inspect(value))
-      })
+  *ping() {
+    Log.debug('- StoredAuthorization.ping()')
+    yield this.storage.Promise.ping()
   }
 
-  get() {
-    Log.debug('> StoredAuthorization.get()')
-    return Promise.resolve()
-      .then(() => this.storage.Promise.hgetall(this.getAuthorizationId()))
-      .then((value) => {
-        Log.debug('< StoredAuthorization.get()\n\n%s\n', Utilities.inspect(value))
-        return Promise.resolve(value)
-      })
+  *set(value) {
+    Log.debug('- StoredAuthorization.set(value)\n\n%s\n', Utilities.inspect(value))
+    yield this.storage.Promise.set(this.getAuthorizationId(), value)
   }
 
-  expire(seconds = 15) {
+  *get() {
+    Log.debug('- StoredAuthorization.get()')
+    return yield this.storage.Promise.get(this.getAuthorizationId())
+  }
+
+  *expire(seconds = 15) {
     Log.debug('- StoredAuthorization.expire(%j)', seconds)
-    return this.storage.Promise.expire(this.getAuthorizationId(), seconds)
-  }
-
-  delete() {
-    Log.debug('- StoredAuthorization.delete()')
-    return this.storage.Promise.del(this.getAuthorizationId())
+    yield this.storage.Promise.expire(this.getAuthorizationId(), seconds)
   }
 
 }

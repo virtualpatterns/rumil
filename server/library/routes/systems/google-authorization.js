@@ -17,7 +17,7 @@ class GoogleAuthorization extends OAuth2Authorization {
       'accessTokenUri': 'https://www.googleapis.com/oauth2/v4/token',
       'authorizationUri': 'https://accounts.google.com/o/oauth2/v2/auth',
       'authorizationGrants': ['authorization_code'],
-      'redirectUri': 'http://localhost:8080/api/authorize/Google',
+      'redirectUri': 'http://localhost:8081/api/authorize/Google',
     }, super.getOptions())
   }
 

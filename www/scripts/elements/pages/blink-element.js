@@ -22,12 +22,6 @@ class BlinkElement extends Blink {
 
   renderContent(data = {}) {
     data.status = data.status || {
-      // 'status': {
-      //     'index': this.index++,
-      //     'nowAsDate': new Date(),
-      //     'nowAsDateString': (new Date()).toString('MMM d, yyyy'),
-      //     'nowAsTimeString': (new Date()).toString('h:mm:ss tt')
-      // }
     }
     return super.renderContent(data)
   }

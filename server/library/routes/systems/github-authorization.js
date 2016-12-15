@@ -17,7 +17,7 @@ class GitHubAuthorization extends OAuth2Authorization {
       'accessTokenUri': 'https://github.com/login/oauth/access_token',
       'authorizationUri': 'https://github.com/login/oauth/authorize',
       'authorizationGrants': ['credentials'],
-      'redirectUri': 'http://localhost:8080/api/authorize/GitHub',
+      'redirectUri': 'http://localhost:8081/api/authorize/GitHub',
     }, super.getOptions())
   }
 

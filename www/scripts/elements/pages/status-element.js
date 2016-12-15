@@ -3,6 +3,7 @@
 const Co = require('co')
 const _Date = require('datejs')
 const Format = require('human-format')
+const Is = require('@pwn/is')
 const Request = require('axios')
 
 const Element = require('../../element')
@@ -10,10 +11,22 @@ const Log = require('../../log')
 
 const ContentFn = require('./status-element.pug')
 
+const RequestCancellation = Request.CancelToken
+
 class StatusElement extends Element {
 
   constructor(contentFn = ContentFn) {
     super(true, contentFn)
+    this.updateContentCancellation = null
+  }
+
+  renderContent(data = {}) {
+    // Log.debug('- StatusElement.renderContent(data)')
+
+    data.status = data.status || {}
+
+    return super.renderContent(data)
+
   }
 
   updateContent(data = {}) {
@@ -27,7 +40,14 @@ class StatusElement extends Element {
 
         Log.debug('- StatusElement.updateContent(data)')
 
-        let response = yield Request.get('/api/status')
+        self.updateContentCancellation = RequestCancellation.source()
+
+        let response = yield Request.get('/api/status', {
+          cancelToken: self.updateContentCancellation.token
+        })
+
+        self.updateContentCancellation = null
+
         let status = response.data
 
         // Log.debug(status)
@@ -50,18 +70,33 @@ class StatusElement extends Element {
 
         // Log.debug(status)
 
-        data.status = status
-
-        // super.updateContent(data)
-        // Element.prototype.updateContent.call(self, data)
-        superFn.call(self, data)
+        superFn.call(self, {
+          'status': status
+        })
 
       }
       catch (error) {
-        window.application.showError(error)
+        if (Request.isCancel(error)) {
+          Log.warn('- StatusElement.updateContent(data)')
+          Log.warn('-   error.message=%j', error.message)
+        }
+        else
+          window.application.showError(error)
       }
 
     })
+  }
+
+  bind() {
+    super.bind()
+  }
+
+  unbind() {
+
+    if (this.updateContentCancellation)
+      this.updateContentCancellation.cancel('Cancelling StatusElement.updateContent(data) ...')
+
+    super.unbind()
   }
 
 }

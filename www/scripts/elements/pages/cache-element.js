@@ -20,7 +20,6 @@ class CacheElement extends Element {
   }
 
   renderContent(data = {}) {
-    // Log.debug('- CacheElement.renderContent(data)')
 
     data.status = data.status || {
       'isUpdating': true,
@@ -49,19 +48,14 @@ class CacheElement extends Element {
 
       Log.debug('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex)
 
-      if (this.onUpdatingIndex >= 1) {
-
-        let data = {
+      if (this.onUpdatingIndex >= 1)
+        this.updateContent({
           'status': {
             'isUpdating': true,
             'isDownloading': false,
             'isUpdateRequired': false
           }
-        }
-
-        this.updateContent(data)
-
-      }
+        })
 
       this.onUpdatingIndex++
 
@@ -78,15 +72,13 @@ class CacheElement extends Element {
 
       Log.debug('- CacheElement.onDownloading()')
 
-      let data = {
+      this.updateContent({
         'status': {
           'isUpdating': false,
           'isDownloading': true,
           'isUpdateRequired': false
         }
-      }
-
-      this.updateContent(data)
+      })
 
     }
     catch (error) {
@@ -105,15 +97,13 @@ class CacheElement extends Element {
 
         Log.debug('- CacheElement.onUpdateReady()')
 
-        let data = {
+        self.updateContent({
           'status': {
             'isUpdating': false,
             'isDownloading': false,
             'isUpdateRequired': true
           }
-        }
-
-        self.updateContent(data)
+        })
 
         try {
           yield CountDown.start(self, '#onUpdateReady', 3)
@@ -144,15 +134,13 @@ class CacheElement extends Element {
 
       Log.debug('- CacheElement.onNoUpdate()')
 
-      let data = {
+      this.updateContent({
         'status': {
           'isUpdating': false,
           'isDownloading': false,
           'isUpdateRequired': false
         }
-      }
-
-      this.updateContent(data)
+      })
 
     }
     catch (error) {

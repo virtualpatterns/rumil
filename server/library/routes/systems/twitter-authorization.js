@@ -6,26 +6,8 @@ const Utilities = require('util')
 
 const Log = require('../../log')
 const Process = require('../../process')
-// const SimpleAuthorization = require('./simple-authorization')
 const StoredAuthorization = require('./stored-authorization')
 
-// const Twitter = new _Twitter({
-//   'callback': `http://localhost:8080/api/authorize/Twitter`,
-//   'consumerKey': Process.env.RUMIL_TWITTER_PUBLIC_ID,
-//   'consumerSecret': Process.env.RUMIL_TWITTER_PRIVATE_ID
-// })
-//
-// Twitter.Promise = {}
-// Twitter.Promise.getRequestToken = Promisify(Twitter.getRequestToken, {
-//   'multiArgs': true,
-//   'thisArg': Twitter
-// })
-// Twitter.Promise.getAccessToken = Promisify(Twitter.getAccessToken, {
-//   'multiArgs': true,
-//   'thisArg': Twitter
-// })
-
-// class TwitterAuthorization extends SimpleAuthorization {
 class TwitterAuthorization extends StoredAuthorization {
 
   constructor(request, response, next) {
@@ -48,7 +30,7 @@ class TwitterAuthorization extends StoredAuthorization {
     Log.debug('- TwitterAuthorization.authorize(token) { ... }')
 
     const Twitter = new _Twitter({
-      'callback': `http://localhost:8080/api/authorize/Twitter?authorizationId=${this.getAuthorizationId()}`,
+      'callback': `http://localhost:8081/api/authorize/Twitter?authorizationId=${this.getAuthorizationId()}`,
       'consumerKey': Process.env.RUMIL_TWITTER_PUBLIC_ID,
       'consumerSecret': Process.env.RUMIL_TWITTER_PRIVATE_ID
     })
@@ -63,8 +45,6 @@ class TwitterAuthorization extends StoredAuthorization {
       'thisArg': Twitter
     })
 
-    // Twitter.callback = `${Twitter.callback}?authorizationId=${this.getAuthorizationId()}`
-
     if (!this.getRequestToken()) {
 
       let requestToken = yield Twitter.Promise.getRequestToken()
@@ -75,7 +55,6 @@ class TwitterAuthorization extends StoredAuthorization {
       Log.debug('-   privateRequestId=%j', privateRequestId)
       Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))
 
-      // yield this.open()
       this.open()
 
       try {
@@ -83,10 +62,9 @@ class TwitterAuthorization extends StoredAuthorization {
           'publicRequestId': publicRequestId,
           'privateRequestId': privateRequestId,
         })
-        this.expire()
+        yield this.expire()
       }
       finally {
-        // yield this.close()
         this.close()
       }
 
@@ -97,14 +75,12 @@ class TwitterAuthorization extends StoredAuthorization {
 
       let data = null
 
-      // yield this.open()
       this.open()
 
       try {
         data = yield this.get()
       }
       finally {
-        // yield this.close()
         this.close()
       }
 
@@ -129,7 +105,5 @@ class TwitterAuthorization extends StoredAuthorization {
   }
 
 }
-
-TwitterAuthorization.authorizations = {}
 
 module.exports = TwitterAuthorization

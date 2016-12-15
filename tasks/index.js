@@ -251,8 +251,8 @@ namespace('bundle', () => {
 namespace('manifest', () => {
 
   desc('Create the application cache manifest')
-  task('create', {'async': true}, () => {
-    return Co(function* () {
+  task('create', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> manifest:create')
 
@@ -281,8 +281,8 @@ namespace('manifest', () => {
 
       Log.debug('< manifest:create')
 
-    })
-  })
+    // })
+  }))
 
   watchTask('watch', ['manifest:create'], function () {
     this.watchFiles
@@ -309,7 +309,7 @@ namespace('server', () => {
 
   desc('Debug the server on port 8181')
   task('debug', {'async': true}, () => {
-    return ShellSilent('node-debug ./server/index.js start --port 8181')
+    return ShellSilent('node-debug ./server/index.js start')
   })
 
   desc('Run the server using defaults')
@@ -323,8 +323,8 @@ namespace('server', () => {
   })
 
   desc('Trim the server log (via SIGHUP)')
-  task('trim', {'async': true}, () => {
-    return Co(function* () {
+  task('trim', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> server:trim')
 
@@ -340,8 +340,8 @@ namespace('server', () => {
 
       Log.debug('< server:trim')
 
-    })
-  })
+    // })
+  }))
 
   desc('Stop the server using defaults')
   task('stop', {'async': true}, () => {
@@ -349,8 +349,8 @@ namespace('server', () => {
   })
 
   desc('Restart the server using defaults')
-  task('restart', {'async': true}, () => {
-    return Co(function* () {
+  task('restart', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> server:restart')
 
@@ -360,8 +360,8 @@ namespace('server', () => {
 
       Log.debug('< server:restart')
 
-    })
-  })
+    // })
+  }))
 
   watchTask('watch', ['server:restart'], function () {
     this.watchFiles
@@ -391,8 +391,8 @@ namespace('storage', () => {
   })
 
   desc('Trim the storage server log (via SIGHUP)')
-  task('trim', {'async': true}, () => {
-    return Co(function* () {
+  task('trim', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> storage server:trim')
 
@@ -408,8 +408,8 @@ namespace('storage', () => {
 
       Log.debug('< storage server:trim')
 
-    })
-  })
+    // })
+  }))
 
   desc('Stop the storage server')
   task('stop', {'async': true}, () => {
@@ -417,8 +417,8 @@ namespace('storage', () => {
   })
 
   desc('Restart the storage server using defaults')
-  task('restart', {'async': true}, () => {
-    return Co(function* () {
+  task('restart', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> storage:restart')
 
@@ -428,8 +428,8 @@ namespace('storage', () => {
 
       Log.debug('< storage:restart')
 
-    })
-  })
+    // })
+  }))
 
   // watchTask('watch', ['storage:restart'], function () {
   //   this.watchFiles
@@ -480,8 +480,8 @@ namespace('watch', () => {
   // })
 
   desc('Start watch tasks')
-  task('start', ['bundle:create', 'manifest:create', 'server:restart'], {'async': true}, () => {
-    return Co(function* () {
+  task('start', ['bundle:create', 'manifest:create', 'server:restart'], {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> watch:start')
 
@@ -491,12 +491,12 @@ namespace('watch', () => {
 
       Log.debug('< watch:start')
 
-    })
-  })
+    // })
+  }))
 
   desc('Stop watch tasks')
-  task('stop', {'async': true}, () => {
-    return Co(function* () {
+  task('stop', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> watch:stop')
 
@@ -516,12 +516,12 @@ namespace('watch', () => {
 
       Log.debug('< watch:stop')
 
-    })
-  })
+    // })
+  }))
 
   desc('Restart the watch tasks')
-  task('restart', {'async': true}, () => {
-    return Co(function* () {
+  task('restart', {'async': true}, Co.wrap(function* () {
+    // return Co(function* () {
 
       Log.debug('> watch:restart')
 
@@ -530,8 +530,8 @@ namespace('watch', () => {
 
       Log.debug('< watch:restart')
 
-    })
-  })
+    // })
+  }))
 
   watchTask('watch', ['watch:restart'], function () {
     this.watchFiles

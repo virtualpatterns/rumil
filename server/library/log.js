@@ -33,11 +33,8 @@ Log.addConsole = function(level = 'debug') {
 }
 
 Log.removeConsole = function() {
-
   this.remove(Winston.transports.Console)
-
   return this
-
 }
 
 Log.addFile = function(path, level = 'debug') {
@@ -56,27 +53,18 @@ Log.addFile = function(path, level = 'debug') {
 }
 
 Log.removeFile = function(path) {
-
   this.remove(path)
-
   return this
-
 }
 
 Log.inspect = function(object) {
-
   this.debug('- Log.inspect(object) { ... }\n\n%s', Utilities.inspect(object))
-
   return this
-
 }
 
 Log.line = function(level = 'info') {
-
   this.log(level, '-'.repeat(80))
-
   return this
-
 }
 
 Log.removeConsole()

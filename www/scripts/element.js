@@ -1,31 +1,19 @@
 'use strict'
 
-// const DiffFn = require('virtual-dom/diff')
 const Emitter = require('event-emitter')
 const Is = require('@pwn/is')
-// const PatchFn = require('virtual-dom/patch')
 const Utilities = require('util')
-// const VirtualContentFn = require('virtual-dom/vnode/vnode')
-// const VirtualTextFn = require('virtual-dom/vnode/vtext')
-// const VirtualizeContentFn = require('vdom-virtualize')
-// const VirtualizeHTMLFn = require('vdom-parser')
 
 const Log = require('./log')
 
-// const IntervalError = require('./errors/interval-error')
 const ElementError = require('./errors/element-error')
 
 const ContentFn = require('./element.pug')
 
-// const VirtualizeHTMLFn = _VirtualizeHTMLFn({
-//   'VNode': VirtualContentFn,
-//   'VText': VirtualTextFn
-// })
-
 class Element {
 
   constructor(isUpdateable = false, contentFn = ContentFn) {
-    this.id = `id_${Element.nextId++}` // Utilities.format('id_%d', Element.nextId++)
+    this.id = `id_${Element.nextId++}`
     this.isUpdateable = isUpdateable
     this.contentFn = contentFn
     this.emitter = Emitter(this)
@@ -35,13 +23,11 @@ class Element {
 
     if (this.isUpdateable) {
 
-      let containerData = {
+      const Container = require('./elements/container')
+      return Container.addContent(parentOrSelector, location, {
         'contentElement': this,
         'contentData': data
-      }
-
-      const Container = require('./elements/container')
-      return Container.addContent(parentOrSelector, location, containerData)
+      })
 
     }
     else
@@ -50,17 +36,12 @@ class Element {
   }
 
   addContent(parentOrSelector = 'html > body', location = 'beforeend', data = {}) {
-    // Log.debug('- Element.addContent(%s, %j, data)\n%s\n\n', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location, this.renderContent())
-    // Log.debug('- Element.addContent(%s, %j, data)', Is.string(parentOrSelector) ? `"${parentOrSelector}"` : 'parentOrSelector', location)
 
     let parent = Is.string(parentOrSelector) ? document.querySelector(parentOrSelector) : parentOrSelector
-    let content = this.renderContent(data) // this.isUpdateable ? this.renderAllContent(data) : this.renderContent(data)
-
-    // parent.insertAdjacentHTML(location, this.isUpdateable ? require('./elements/container').renderContent(this.id, content) : content)
+    let content = this.renderContent(data)
 
     parent.insertAdjacentHTML(location, content)
 
-    // this.addContentElement()
     this.bind()
 
   }
@@ -69,14 +50,11 @@ class Element {
 
     if (this.isUpdateable) {
 
-      let containerData = {
+      const Container = require('./elements/container')
+      return Container.renderContent({
         'contentElement': this,
         'contentData': data
-      }
-
-      const Container = require('./elements/container')
-      // return Container.renderContent(this, containerData)
-      return Container.renderContent(containerData)
+      })
 
     }
     else
@@ -85,17 +63,18 @@ class Element {
   }
 
   renderContent(data = {}) {
-    // Log.debug('- Element.renderContent(data, %j)\n\n%s\n\n', isContainerIncluded, Utilities.inspect(data))
+    return this.contentFn({
+      // Modules
+      'Is': Is,
 
-    data.Is = Is
+      // Globals
+      'application': window.application,
+      'element': this,
 
-    data.application = window.application
-    data.element = this
+      // Locals
+      'data': data
 
-    return this.contentFn(data)
-
-    // return this.isUpdateable ? require('./elements/container').renderContent(this.id, this.contentFn(data)) : this.contentFn(data)
-
+    })
   }
 
   getContent() {
@@ -165,14 +144,6 @@ class Element {
 
   toString(data = {}) {
     return this.renderAllContent(data)
-
-    // if (this.isUpdateable) {
-    //   const Container = require('./elements/container')
-    //   return Container.renderContent(this)
-    // }
-    // else
-    //   return this.renderContent()
-
   }
 
 }

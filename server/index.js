@@ -11,7 +11,7 @@ const Path = require('./library/path')
 const Process = require('./library/process')
 
 const ADDRESS = '0.0.0.0'
-const PORT = 8080
+const PORT = 8081
 const STATIC_PATH = Path.join(Process.cwd(), 'www')
 const MODULES_PATH = Path.join(Process.cwd(), 'node_modules')
 const LOG_PATH = Path.join(Process.LOG_PATH, `${Package.name}.log`)

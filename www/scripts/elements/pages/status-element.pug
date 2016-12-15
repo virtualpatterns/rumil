@@ -2,7 +2,7 @@ extends ../../element.pug
 block body
   ons-list(modifier='inset')
     ons-list-item(modifier='longdivider')
-      if Is.undefined(status.isUpdateRequired)
+      if Is.undefined(data.status.isUpdateRequired)
         div.left
           ons-icon( icon='fa-ellipsis-h',
                     size='20px')
@@ -11,7 +11,7 @@ block body
             | Checking
           span.list__item__subtitle
             | Checking for application updates ...
-      else if status.isUpdateRequired
+      else if data.status.isUpdateRequired
         div.left
           ons-icon( icon='fa-cloud-download',
                     size='20px')
@@ -35,7 +35,7 @@ block body
       div.left
         | Server Version
       div.right
-        = status.version || '(unknown)'
+        = data.status.version || '(unknown)'
     ons-list-item(modifier='longdivider')
       div.left
         | Local Version
@@ -45,12 +45,12 @@ block body
       div.left
         | Server Date
       div.right
-        = status.nowAsDateString || '(unknown)'
+        = data.status.nowAsDateString || '(unknown)'
     ons-list-item(modifier='longdivider')
       div.left
         | Server Time
       div.right
-        = status.nowAsTimeString || '(unknown)'
+        = data.status.nowAsTimeString || '(unknown)'
 
   ons-list(modifier='inset')
     ons-list-header
@@ -59,9 +59,9 @@ block body
       div.left
         | Total
       div.right
-        = status.heap ? status.heap.totalAsString : '(unknown)'
+        = data.status.heap ? data.status.heap.totalAsString : '(unknown)'
     ons-list-item(modifier='longdivider')
       div.left
         | Used
       div.right
-        = status.heap ? status.heap.usedAsString : '(unknown)'
+        = data.status.heap ? data.status.heap.usedAsString : '(unknown)'
