@@ -1,6 +1,6 @@
 {
   "name": "rumil",
-  "version": "0.0.2-247",
+  "version": "0.0.2-248",
   "description": "Rúmil was a marchwarden of Lórien, and was one who guarded the border of the western part of the forest, with his brothers. He was present at the Fellowship of the Ring's first meeting with the Galadhrim.",
   "main": "index.js",
   "scripts": {
