@@ -104,9 +104,9 @@ describe('DefaultPage', () => {
   describe('(when the item for Status is clicked)', () => {
 
     before(() => {
-      return DefaultAutomation.whenPageShown(Co.wrap(function* () {
-        yield DefaultAutomation.clickListItem('Status')
-      }))
+      return DefaultAutomation.whenPageShown(() => {
+        DefaultAutomation.clickListItem('Status')
+      })
     })
 
     it('should contain the title Status', () => {

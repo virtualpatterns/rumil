@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "e2a5d56de9846e1ab3c6";
+/******/ 	__webpack_require__.h = "b36f9a6458780847a9e5";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -14338,7 +14338,7 @@
 
 	module.exports = {
 		"name": "rumil",
-		"version": "0.0.2-246",
+		"version": "0.0.2-247",
 		"description": "Rúmil was a marchwarden of Lórien, and was one who guarded the border of the western part of the forest, with his brothers. He was present at the Fellowship of the Ring's first meeting with the Galadhrim.",
 		"main": "index.js",
 		"scripts": {
@@ -57803,21 +57803,9 @@
 	  describe('(when the item for Status is clicked)', function () {
 	
 	    before(function () {
-	      return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee2() {
-	        return regeneratorRuntime.wrap(function _callee2$(_context2) {
-	          while (1) {
-	            switch (_context2.prev = _context2.next) {
-	              case 0:
-	                _context2.next = 2;
-	                return DefaultAutomation.clickListItem('Status');
-	
-	              case 2:
-	              case 'end':
-	                return _context2.stop();
-	            }
-	          }
-	        }, _callee2, this);
-	      })));
+	      return DefaultAutomation.whenPageShown(function () {
+	        DefaultAutomation.clickListItem('Status');
+	      });
 	    });
 	
 	    it('should contain the title Status', function () {
@@ -57825,20 +57813,20 @@
 	    });
 	
 	    after(function () {
-	      return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee3() {
-	        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+	      return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee2() {
+	        return regeneratorRuntime.wrap(function _callee2$(_context2) {
 	          while (1) {
-	            switch (_context3.prev = _context3.next) {
+	            switch (_context2.prev = _context2.next) {
 	              case 0:
-	                _context3.next = 2;
+	                _context2.next = 2;
 	                return window.application.popPage();
 	
 	              case 2:
 	              case 'end':
-	                return _context3.stop();
+	                return _context2.stop();
 	            }
 	          }
-	        }, _callee3, this);
+	        }, _callee2, this);
 	      })));
 	    });
 	  });
@@ -57857,28 +57845,28 @@
 	    //     ))
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee4() {
-	      return regeneratorRuntime.wrap(function _callee4$(_context4) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee3() {
+	      return regeneratorRuntime.wrap(function _callee3$(_context3) {
 	        while (1) {
-	          switch (_context4.prev = _context4.next) {
+	          switch (_context3.prev = _context3.next) {
 	            case 0:
-	              _context4.next = 2;
+	              _context3.next = 2;
 	              return DefaultAutomation.whenPageShown(function () {
 	                DefaultAutomation.clickListItem('Status');
 	              });
 	
 	            case 2:
-	              _context4.next = 4;
+	              _context3.next = 4;
 	              return DefaultAutomation.whenPageShown(function () {
 	                DefaultAutomation.clickToolbarButton('Features');
 	              });
 	
 	            case 4:
 	            case 'end':
-	              return _context4.stop();
+	              return _context3.stop();
 	          }
 	        }
-	      }, _callee4, this);
+	      }, _callee3, this);
 	    })));
 	
 	    it('should contain the title Features', function () {
@@ -57899,48 +57887,48 @@
 	    });
 	
 	    after(function () {
-	      return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee5() {
-	        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+	      return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee4() {
+	        return regeneratorRuntime.wrap(function _callee4$(_context4) {
 	          while (1) {
-	            switch (_context5.prev = _context5.next) {
+	            switch (_context4.prev = _context4.next) {
 	              case 0:
-	                _context5.next = 2;
+	                _context4.next = 2;
 	                return window.application.popPage();
 	
 	              case 2:
 	              case 'end':
-	                return _context5.stop();
+	                return _context4.stop();
 	            }
 	          }
-	        }, _callee5, this);
+	        }, _callee4, this);
 	      })));
 	    });
 	  });
 	
 	  describe('(when the item for Updates and the Features button are clicked)', function () {
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee6() {
-	      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee5() {
+	      return regeneratorRuntime.wrap(function _callee5$(_context5) {
 	        while (1) {
-	          switch (_context6.prev = _context6.next) {
+	          switch (_context5.prev = _context5.next) {
 	            case 0:
-	              _context6.next = 2;
+	              _context5.next = 2;
 	              return DefaultAutomation.whenPageShown(function () {
 	                DefaultAutomation.clickListItem('Updates');
 	              });
 	
 	            case 2:
-	              _context6.next = 4;
+	              _context5.next = 4;
 	              return DefaultAutomation.whenPageShown(function () {
 	                DefaultAutomation.clickToolbarButton('Features');
 	              });
 	
 	            case 4:
 	            case 'end':
-	              return _context6.stop();
+	              return _context5.stop();
 	          }
 	        }
-	      }, _callee6, this);
+	      }, _callee5, this);
 	    })));
 	
 	    it('should contain the title Features', function () {
@@ -57961,25 +57949,25 @@
 	    //     })
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee7() {
-	      return regeneratorRuntime.wrap(function _callee7$(_context7) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee6() {
+	      return regeneratorRuntime.wrap(function _callee6$(_context6) {
 	        while (1) {
-	          switch (_context7.prev = _context7.next) {
+	          switch (_context6.prev = _context6.next) {
 	            case 0:
-	              _context7.next = 2;
+	              _context6.next = 2;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickListItem('Alert');
 	              });
 	
 	            case 2:
-	              dialog = _context7.sent;
+	              dialog = _context6.sent;
 	
 	            case 3:
 	            case 'end':
-	              return _context7.stop();
+	              return _context6.stop();
 	          }
 	        }
-	      }, _callee7, this);
+	      }, _callee6, this);
 	    })));
 	
 	    it('should show an alert dialog with the text Danger!', function () {
@@ -57987,20 +57975,20 @@
 	    });
 	
 	    after(function () {
-	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee8() {
-	        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee7() {
+	        return regeneratorRuntime.wrap(function _callee7$(_context7) {
 	          while (1) {
-	            switch (_context8.prev = _context8.next) {
+	            switch (_context7.prev = _context7.next) {
 	              case 0:
-	                _context8.next = 2;
+	                _context7.next = 2;
 	                return window.application.hideDialog(dialog);
 	
 	              case 2:
 	              case 'end':
-	                return _context8.stop();
+	                return _context7.stop();
 	            }
 	          }
-	        }, _callee8, this);
+	        }, _callee7, this);
 	      })));
 	    });
 	  });
@@ -58017,28 +58005,28 @@
 	    //     }))
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee9() {
-	      return regeneratorRuntime.wrap(function _callee9$(_context9) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee8() {
+	      return regeneratorRuntime.wrap(function _callee8$(_context8) {
 	        while (1) {
-	          switch (_context9.prev = _context9.next) {
+	          switch (_context8.prev = _context8.next) {
 	            case 0:
-	              _context9.next = 2;
+	              _context8.next = 2;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickListItem('Alert');
 	              });
 	
 	            case 2:
-	              _context9.next = 4;
+	              _context8.next = 4;
 	              return DefaultAutomation.whenDialogHidden(function () {
 	                DefaultAutomation.clickAlertButton('Ok');
 	              });
 	
 	            case 4:
 	            case 'end':
-	              return _context9.stop();
+	              return _context8.stop();
 	          }
 	        }
-	      }, _callee9, this);
+	      }, _callee8, this);
 	    })));
 	
 	    it('should hide the alert dialog with the text Danger!', function () {
@@ -58059,25 +58047,25 @@
 	    //     })
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee10() {
-	      return regeneratorRuntime.wrap(function _callee10$(_context10) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee9() {
+	      return regeneratorRuntime.wrap(function _callee9$(_context9) {
 	        while (1) {
-	          switch (_context10.prev = _context10.next) {
+	          switch (_context9.prev = _context9.next) {
 	            case 0:
-	              _context10.next = 2;
+	              _context9.next = 2;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickListItem('Confirmation');
 	              });
 	
 	            case 2:
-	              dialog = _context10.sent;
+	              dialog = _context9.sent;
 	
 	            case 3:
 	            case 'end':
-	              return _context10.stop();
+	              return _context9.stop();
 	          }
 	        }
-	      }, _callee10, this);
+	      }, _callee9, this);
 	    })));
 	
 	    it('should show a confirmation dialog with the text Are you sure?', function () {
@@ -58097,13 +58085,32 @@
 	    //     }))
 	    // })
 	
-	    after(Co.wrap(regeneratorRuntime.mark(function _callee13() {
-	      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+	    after(Co.wrap(regeneratorRuntime.mark(function _callee12() {
+	      return regeneratorRuntime.wrap(function _callee12$(_context12) {
 	        while (1) {
-	          switch (_context13.prev = _context13.next) {
+	          switch (_context12.prev = _context12.next) {
 	            case 0:
-	              _context13.next = 2;
-	              return DefaultAutomation.whenDialogShown(Co.wrap(regeneratorRuntime.mark(function _callee11() {
+	              _context12.next = 2;
+	              return DefaultAutomation.whenDialogShown(Co.wrap(regeneratorRuntime.mark(function _callee10() {
+	                return regeneratorRuntime.wrap(function _callee10$(_context10) {
+	                  while (1) {
+	                    switch (_context10.prev = _context10.next) {
+	                      case 0:
+	                        _context10.next = 2;
+	                        return window.application.hideDialog(dialog);
+	
+	                      case 2:
+	                      case 'end':
+	                        return _context10.stop();
+	                    }
+	                  }
+	                }, _callee10, this);
+	              })));
+	
+	            case 2:
+	              dialog = _context12.sent;
+	              _context12.next = 5;
+	              return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee11() {
 	                return regeneratorRuntime.wrap(function _callee11$(_context11) {
 	                  while (1) {
 	                    switch (_context11.prev = _context11.next) {
@@ -58119,31 +58126,12 @@
 	                }, _callee11, this);
 	              })));
 	
-	            case 2:
-	              dialog = _context13.sent;
-	              _context13.next = 5;
-	              return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee12() {
-	                return regeneratorRuntime.wrap(function _callee12$(_context12) {
-	                  while (1) {
-	                    switch (_context12.prev = _context12.next) {
-	                      case 0:
-	                        _context12.next = 2;
-	                        return window.application.hideDialog(dialog);
-	
-	                      case 2:
-	                      case 'end':
-	                        return _context12.stop();
-	                    }
-	                  }
-	                }, _callee12, this);
-	              })));
-	
 	            case 5:
 	            case 'end':
-	              return _context13.stop();
+	              return _context12.stop();
 	          }
 	        }
-	      }, _callee13, this);
+	      }, _callee12, this);
 	    })));
 	  });
 	
@@ -58164,31 +58152,31 @@
 	    //     })
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee14() {
-	      return regeneratorRuntime.wrap(function _callee14$(_context14) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee13() {
+	      return regeneratorRuntime.wrap(function _callee13$(_context13) {
 	        while (1) {
-	          switch (_context14.prev = _context14.next) {
+	          switch (_context13.prev = _context13.next) {
 	            case 0:
-	              _context14.next = 2;
+	              _context13.next = 2;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickListItem('Confirmation');
 	              });
 	
 	            case 2:
-	              _context14.next = 4;
+	              _context13.next = 4;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickConfirmationButton('Yes');
 	              });
 	
 	            case 4:
-	              dialog = _context14.sent;
+	              dialog = _context13.sent;
 	
 	            case 5:
 	            case 'end':
-	              return _context14.stop();
+	              return _context13.stop();
 	          }
 	        }
-	      }, _callee14, this);
+	      }, _callee13, this);
 	    })));
 	
 	    it('should show an alert dialog with the text You said ... Yes.', function () {
@@ -58196,20 +58184,20 @@
 	    });
 	
 	    after(function () {
-	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee15() {
-	        return regeneratorRuntime.wrap(function _callee15$(_context15) {
+	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee14() {
+	        return regeneratorRuntime.wrap(function _callee14$(_context14) {
 	          while (1) {
-	            switch (_context15.prev = _context15.next) {
+	            switch (_context14.prev = _context14.next) {
 	              case 0:
-	                _context15.next = 2;
+	                _context14.next = 2;
 	                return window.application.hideDialog(dialog);
 	
 	              case 2:
 	              case 'end':
-	                return _context15.stop();
+	                return _context14.stop();
 	            }
 	          }
-	        }, _callee15, this);
+	        }, _callee14, this);
 	      })));
 	    });
 	  });
@@ -58231,31 +58219,31 @@
 	    //     })
 	    // })
 	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee16() {
-	      return regeneratorRuntime.wrap(function _callee16$(_context16) {
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee15() {
+	      return regeneratorRuntime.wrap(function _callee15$(_context15) {
 	        while (1) {
-	          switch (_context16.prev = _context16.next) {
+	          switch (_context15.prev = _context15.next) {
 	            case 0:
-	              _context16.next = 2;
+	              _context15.next = 2;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickListItem('Confirmation');
 	              });
 	
 	            case 2:
-	              _context16.next = 4;
+	              _context15.next = 4;
 	              return DefaultAutomation.whenDialogShown(function () {
 	                DefaultAutomation.clickConfirmationButton('No');
 	              });
 	
 	            case 4:
-	              dialog = _context16.sent;
+	              dialog = _context15.sent;
 	
 	            case 5:
 	            case 'end':
-	              return _context16.stop();
+	              return _context15.stop();
 	          }
 	        }
-	      }, _callee16, this);
+	      }, _callee15, this);
 	    })));
 	
 	    it('should show an alert dialog with the text You said ... No.', function () {
@@ -58263,20 +58251,20 @@
 	    });
 	
 	    after(function () {
-	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee17() {
-	        return regeneratorRuntime.wrap(function _callee17$(_context17) {
+	      return DefaultAutomation.whenDialogHidden(Co.wrap(regeneratorRuntime.mark(function _callee16() {
+	        return regeneratorRuntime.wrap(function _callee16$(_context16) {
 	          while (1) {
-	            switch (_context17.prev = _context17.next) {
+	            switch (_context16.prev = _context16.next) {
 	              case 0:
-	                _context17.next = 2;
+	                _context16.next = 2;
 	                return window.application.hideDialog(dialog);
 	
 	              case 2:
 	              case 'end':
-	                return _context17.stop();
+	                return _context16.stop();
 	            }
 	          }
-	        }, _callee17, this);
+	        }, _callee16, this);
 	      })));
 	    });
 	  });
@@ -58307,6 +58295,40 @@
 	
 	    var result = null;
 	
+	    before(Co.wrap(regeneratorRuntime.mark(function _callee17() {
+	      return regeneratorRuntime.wrap(function _callee17$(_context17) {
+	        while (1) {
+	          switch (_context17.prev = _context17.next) {
+	            case 0:
+	              _context17.next = 2;
+	              return DefaultAutomation.whenAuthorized(function () {
+	                DefaultAutomation.clickListItem('Simple');
+	              });
+	
+	            case 2:
+	              result = _context17.sent;
+	
+	            case 3:
+	            case 'end':
+	              return _context17.stop();
+	          }
+	        }
+	      }, _callee17, this);
+	    })));
+	
+	    it('should authorize with an authorization id', function () {
+	      Assert.ok(result.authorizationId);
+	    });
+	
+	    it('should authorize with an empty token', function () {
+	      Assert.ok(Is.emptyObject(result.token));
+	    });
+	  });
+	
+	  describe('(when the item for GitHub is clicked)', function () {
+	
+	    var result = null;
+	
 	    before(Co.wrap(regeneratorRuntime.mark(function _callee18() {
 	      return regeneratorRuntime.wrap(function _callee18$(_context18) {
 	        while (1) {
@@ -58314,7 +58336,7 @@
 	            case 0:
 	              _context18.next = 2;
 	              return DefaultAutomation.whenAuthorized(function () {
-	                DefaultAutomation.clickListItem('Simple');
+	                DefaultAutomation.clickListItem('GitHub');
 	              });
 	
 	            case 2:
@@ -58332,12 +58354,12 @@
 	      Assert.ok(result.authorizationId);
 	    });
 	
-	    it('should authorize with an empty token', function () {
-	      Assert.ok(Is.emptyObject(result.token));
+	    it('should authorize with a non-empty token', function () {
+	      Assert.ok(!Is.emptyObject(result.token));
 	    });
 	  });
 	
-	  describe('(when the item for GitHub is clicked)', function () {
+	  describe('(when the item for Google is clicked)', function () {
 	
 	    var result = null;
 	
@@ -58348,7 +58370,7 @@
 	            case 0:
 	              _context19.next = 2;
 	              return DefaultAutomation.whenAuthorized(function () {
-	                DefaultAutomation.clickListItem('GitHub');
+	                DefaultAutomation.clickListItem('Google');
 	              });
 	
 	            case 2:
@@ -58371,7 +58393,7 @@
 	    });
 	  });
 	
-	  describe('(when the item for Google is clicked)', function () {
+	  describe('(when the item for Twitter is clicked)', function () {
 	
 	    var result = null;
 	
@@ -58382,7 +58404,7 @@
 	            case 0:
 	              _context20.next = 2;
 	              return DefaultAutomation.whenAuthorized(function () {
-	                DefaultAutomation.clickListItem('Google');
+	                DefaultAutomation.clickListItem('Twitter');
 	              });
 	
 	            case 2:
@@ -58405,55 +58427,21 @@
 	    });
 	  });
 	
-	  describe('(when the item for Twitter is clicked)', function () {
-	
-	    var result = null;
-	
-	    before(Co.wrap(regeneratorRuntime.mark(function _callee21() {
+	  after(function () {
+	    return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee21() {
 	      return regeneratorRuntime.wrap(function _callee21$(_context21) {
 	        while (1) {
 	          switch (_context21.prev = _context21.next) {
 	            case 0:
 	              _context21.next = 2;
-	              return DefaultAutomation.whenAuthorized(function () {
-	                DefaultAutomation.clickListItem('Twitter');
-	              });
+	              return window.application.popPage();
 	
 	            case 2:
-	              result = _context21.sent;
-	
-	            case 3:
 	            case 'end':
 	              return _context21.stop();
 	          }
 	        }
 	      }, _callee21, this);
-	    })));
-	
-	    it('should authorize with an authorization id', function () {
-	      Assert.ok(result.authorizationId);
-	    });
-	
-	    it('should authorize with a non-empty token', function () {
-	      Assert.ok(!Is.emptyObject(result.token));
-	    });
-	  });
-	
-	  after(function () {
-	    return DefaultAutomation.whenPageShown(Co.wrap(regeneratorRuntime.mark(function _callee22() {
-	      return regeneratorRuntime.wrap(function _callee22$(_context22) {
-	        while (1) {
-	          switch (_context22.prev = _context22.next) {
-	            case 0:
-	              _context22.next = 2;
-	              return window.application.popPage();
-	
-	            case 2:
-	            case 'end':
-	              return _context22.stop();
-	          }
-	        }
-	      }, _callee22, this);
 	    })));
 	  });
 	});
