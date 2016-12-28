@@ -41,11 +41,11 @@ namespace('test', () => {
     return ShellQuiet(`istanbul cover "${Path.join(__dirname, '..', 'node_modules', '.bin', '_mocha')}" --dir "${Path.join(__dirname, '..', 'www', 'coverage')}" -- --bail --timeout 0 "${Path.join(__dirname, '..', 'server', 'tests')}"`)
   })
 
-  // desc('Test /www')
-  // task('www', {'async': true}, () => {
-  //   // return ShellSilent(`mocha-phantomjs --bail --hooks "${Path.trim(Path.join(RESOURCES_PATH, 'hooks.js'))}" --ignore-resource-errors http://localhost:8080/www/index.html?page=./test-page.js`)
-  //   return ShellSilent('lsp')
-  // })
+  desc('Test /www')
+  task('www', {'async': true}, () => {
+    return ShellEcho(`mocha-phantomjs --bail --hooks "${Path.join(RESOURCES_PATH, 'hooks.js')}" --ignore-resource-errors http://localhost:8081/www/index.html?page=./test-page.js`)
+    // return ShellSilent('lsp')
+  })
 
 })
 

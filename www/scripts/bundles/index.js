@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// __webpack_hash__
-/******/ 	__webpack_require__.h = "4a642b74271781e21a25";
+/******/ 	__webpack_require__.h = "288bc256175be2b4322e";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -14338,7 +14338,7 @@
 
 	module.exports = {
 		"name": "rumil",
-		"version": "0.0.2-248",
+		"version": "0.0.2-261",
 		"description": "Rúmil was a marchwarden of Lórien, and was one who guarded the border of the western part of the forest, with his brothers. He was present at the Fellowship of the Ring's first meeting with the Galadhrim.",
 		"main": "index.js",
 		"scripts": {
@@ -14387,6 +14387,7 @@
 			"jake": "^8.0.14",
 			"json-loader": "^0.5.4",
 			"mocha": "^3.1.0",
+			"mocha-phantomjs": "^4.1.0",
 			"nodemon": "^1.11.0",
 			"pshell": "^1.0.2",
 			"pug": "^2.0.0-beta6",

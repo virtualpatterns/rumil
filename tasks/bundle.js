@@ -36,6 +36,10 @@ namespace('bundle', () => {
         'index': [
           'babel-polyfill',
           `${Path.join(__dirname, '..', 'www', 'scripts', 'index.js')}`
+        ],
+        'sandbox': [
+          'babel-polyfill',
+          `${Path.join(__dirname, '..', 'www', 'scripts', 'sandbox.js')}`
         ]
       },
       'output': {

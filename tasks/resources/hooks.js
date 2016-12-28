@@ -7,9 +7,7 @@ module.exports = {
 
     try {
 
-      outputStream = FileSystem.open( 'process/log/rumil.www.log',
-                                      'a',
-                                      'utf-8')
+      outputStream = FileSystem.open( 'process/logs/rumil.www.log', 'a', 'utf-8')
 
       outputStream.writeLine('----------------------------------------------------------------')
 
