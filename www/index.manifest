@@ -1,7 +1,12 @@
 CACHE MANIFEST
+/www/configuration.json
 /www/coverage/coverage.json
 /www/coverage/lcov-report/base.css
 /www/coverage/lcov-report/index.html
+/www/coverage/lcov-report/library/configuration.js.html
+/www/coverage/lcov-report/library/configurations/default-configuration.js.html
+/www/coverage/lcov-report/library/configurations/default.js.html
+/www/coverage/lcov-report/library/configurations/index.html
 /www/coverage/lcov-report/library/errors/argument-error.js.html
 /www/coverage/lcov-report/library/errors/index.html
 /www/coverage/lcov-report/library/errors/process-error.js.html
@@ -17,16 +22,22 @@ CACHE MANIFEST
 /www/coverage/lcov-report/library/routes/index.html
 /www/coverage/lcov-report/library/routes/static.js.html
 /www/coverage/lcov-report/library/routes/status.js.html
+/www/coverage/lcov-report/library/routes/systems/github-authorization.js.html
 /www/coverage/lcov-report/library/routes/systems/github-authorize.js.html
+/www/coverage/lcov-report/library/routes/systems/google-authorization.js.html
 /www/coverage/lcov-report/library/routes/systems/index.html
+/www/coverage/lcov-report/library/routes/systems/oauth2-authorization.js.html
+/www/coverage/lcov-report/library/routes/systems/simple-authorization.js.html
+/www/coverage/lcov-report/library/routes/systems/stored-authorization.js.html
+/www/coverage/lcov-report/library/routes/systems/twitter-authorization.js.html
 /www/coverage/lcov-report/library/server.js.html
 /www/coverage/lcov-report/prettify.css
 /www/coverage/lcov-report/prettify.js
 /www/coverage/lcov-report/sort-arrow-sprite.png
 /www/coverage/lcov-report/sorter.js
 /www/coverage/lcov.info
-/www/resources/application.ico
 /www/scripts/bundles/index.js
+/www/scripts/bundles/index.js.map
 /www/styles/index.css
 /www/vendor/OnsenUI-dist-2.0.2/css/font_awesome/css/font-awesome.css
 /www/vendor/OnsenUI-dist-2.0.2/css/font_awesome/css/font-awesome.min.css
@@ -57,11 +68,12 @@ CACHE MANIFEST
 /www/vendor/OnsenUI-dist-2.0.2/css/onsen-css-components-sunshine-theme.css
 /www/vendor/OnsenUI-dist-2.0.2/css/onsen-css-components.css
 /www/vendor/OnsenUI-dist-2.0.2/css/onsenui.css
+/www/vendor/OnsenUI-dist-2.0.2/js/angular-onsenui.js
 /www/vendor/OnsenUI-dist-2.0.2/js/angular-onsenui.min.js
+/www/vendor/OnsenUI-dist-2.0.2/js/onsenui.js
 /www/vendor/OnsenUI-dist-2.0.2/js/onsenui.min.js
 /www/vendor/mocha/mocha.css
 /www/vendor/mocha/mocha.js
-#e450e5b399f4a5552fcfb3a212bc7f2b
+# Created at 2016-12-28T02:52:12.162Z
 NETWORK:
 *
-# Created at 2016-12-14T21:17:56.336Z

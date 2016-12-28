@@ -7,7 +7,7 @@ const Package = require('../../package.json')
 const Path = require('../library/path')
 const Process = require('../library/process')
 
-const FILE_PATH = Path.join(Process.OUTPUT_PATH, `${Package.name}.mocha.out`)
+const FILE_PATH = Path.join(__dirname, '..', '..', 'process', 'output', `${Package.name}.mocha.out`)
 
 describe('FileSystem', () => {
 

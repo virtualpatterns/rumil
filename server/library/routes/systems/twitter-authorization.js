@@ -4,8 +4,8 @@ const Promisify = require("es6-promisify");
 const _Twitter = require('node-twitter-api')
 const Utilities = require('util')
 
+const Configuration = require('../../configuration')
 const Log = require('../../log')
-const Process = require('../../process')
 const StoredAuthorization = require('./stored-authorization')
 
 class TwitterAuthorization extends StoredAuthorization {
@@ -22,17 +22,17 @@ class TwitterAuthorization extends StoredAuthorization {
     return this.request.params.oauth_verifier
   }
 
-  open(uri, options = {}) {
-    return super.open(uri || Process.env.RUMIL_TWITTER_STORAGE_URL, options)
+  open(uri = Configuration.twitterStorageUri, options = Configuration.twitterStorageOptions) {
+    return super.open(uri, options)
   }
 
   *authorize(token = {}) {
     Log.debug('- TwitterAuthorization.authorize(token) { ... }')
 
     const Twitter = new _Twitter({
-      'callback': `http://localhost:8081/api/authorize/Twitter?authorizationId=${this.getAuthorizationId()}`,
-      'consumerKey': Process.env.RUMIL_TWITTER_PUBLIC_ID,
-      'consumerSecret': Process.env.RUMIL_TWITTER_PRIVATE_ID
+      'callback': `${Configuration.twitterRedirectUri}?authorizationId=${this.getAuthorizationId()}`,
+      'consumerKey': Configuration.twitterPublicKey,
+      'consumerSecret': Configuration.twitterPrivateKey
     })
 
     Twitter.Promise = {}
@@ -62,7 +62,6 @@ class TwitterAuthorization extends StoredAuthorization {
           'publicRequestId': publicRequestId,
           'privateRequestId': privateRequestId,
         })
-        yield this.expire()
       }
       finally {
         this.close()

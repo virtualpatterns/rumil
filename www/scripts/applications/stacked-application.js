@@ -46,19 +46,22 @@ class StackedApplication extends Application {
   }
 
   onReady(Page) {
-    super.onReady()
+    Log.debug('- StackedApplication.onReady()');
 
     let self = this
+    let superFn = super.onReady.bind(self)
 
-    Co(function* () {
+    Co(function*() {
 
       try {
 
+          superFn()
+
           let search = Search.parse(window.location.search);
 
-          Log.debug('- StackedApplication.onReady() search.page=%j', search.page);
+          // Log.debug(search);
 
-          yield self.pushPage(new (search.page ? PageContext(search.page) : Page))
+          yield window.application.pushPage(new (search.page ? PageContext(search.page) : Page))
 
       }
       catch (error) {
@@ -72,7 +75,6 @@ class StackedApplication extends Application {
   onPageShown(page, isInitial) {
     // Log.debug('- StackedApplication.onPageShown(page, %s) page.id=%j', isInitial, page.id)
 
-    // page.addContentElement()
     page.bind()
 
     page.emitShown(isInitial)
@@ -85,69 +87,32 @@ class StackedApplication extends Application {
     page.emitHidden(isFinal)
 
     page.unbind()
-    // page.removeContentElement()
 
   }
 
-  pushPage(page, options = {
+  *pushPage(page, options = {
     'animation': 'slide'
   }) {
+    // Log.debug('- StackedApplication.pushPage(page, options)')
 
-    let self = this
+    let hiddenPage = this.pages.last()
+    let shownPage = page
 
-    return Co(function* () {
+    this.pages.push(shownPage)
 
-      Log.debug('- StackedApplication.pushPage(page, options)')
+    if (hiddenPage)
+      this.emitPageHidden(hiddenPage, false)
 
-      let hiddenPage = self.pages.last()
-      let shownPage = page
-
-      self.pages.push(shownPage)
-
-      if (hiddenPage)
-        self.emitPageHidden(hiddenPage, false)
-
-      yield self.getContent().pushPage(null, {
-        'pageHTML': shownPage.renderContent(),
-        'animation': options.animation,
-        'animationOptions': options.animationOptions,
-        'data': options.data
-      })
-
-      self.emitPageShown(shownPage, true)
-
-      return { shownPage, hiddenPage }
-
+    yield this.getContent().pushPage(null, {
+      'pageHTML': shownPage.renderContent(),
+      'animation': options.animation,
+      'animationOptions': options.animationOptions,
+      'data': options.data
     })
 
-    // return Promise.resolve()
-    //   .then(() => {
-    //     // Log.debug('- StackedApplication.pushPage(page, options)\n%s\n\n', page.renderContent())
-    //     Log.debug('- StackedApplication.pushPage(page, options)')
-    //
-    //     let hiddenPage = this.pages.last()
-    //     let shownPage = page
-    //
-    //     this.pages.push(shownPage)
-    //
-    //     if (hiddenPage)
-    //       this.emitPageHidden(hiddenPage, false)
-    //
-    //     return this.getContent().pushPage(null, {
-    //       'pageHTML': shownPage.renderContent(),
-    //       'animation': options.animation,
-    //       'animationOptions': options.animationOptions,
-    //       'data': options.data
-    //     })
-    //       .then(() => {
-    //
-    //         this.emitPageShown(shownPage, true)
-    //
-    //         return Promise.resolve(shownPage, hiddenPage)
-    //
-    //       })
-    //
-    //   })
+    this.emitPageShown(shownPage, true)
+
+    return { shownPage, hiddenPage }
 
   }
 
@@ -155,66 +120,30 @@ class StackedApplication extends Application {
     return this.pages.length > 1
   }
 
-  popPage(options = {
+  *popPage(options = {
     'animation': 'slide'
   }) {
+    // Log.debug('- StackedApplication.popPage(options)')
 
-    let self = this
+    if (this.canPopPage()) {
 
-    return Co(function* () {
+      let hiddenPage = this.pages.pop()
+      let shownPage = this.pages.last()
 
-      Log.debug('- StackedApplication.popPage(options)')
+      this.emitPageHidden(hiddenPage, true)
 
-      if (self.canPopPage()) {
+      yield this.getContent().popPage({
+        'animation': options.animation,
+        'animationOptions': options.animationOptions
+      })
 
-        let hiddenPage = self.pages.pop()
-        let shownPage = self.pages.last()
+      this.emitPageShown(shownPage, false)
 
-        self.emitPageHidden(hiddenPage, true)
+      return { hiddenPage, shownPage }
 
-        yield self.getContent().popPage({
-          'animation': options.animation,
-          'animationOptions': options.animationOptions
-        })
-
-        self.emitPageShown(shownPage, false)
-
-        return { hiddenPage, shownPage }
-
-      }
-      else
-        throw new RangeError('The last page on the stack cannot be removed.')
-
-    })
-
-    // return Promise.resolve()
-    //   .then(() => {
-    //     Log.debug('- StackedApplication.popPage(options)')
-    //
-    //     if (this.canPopPage()) {
-    //
-    //       let hiddenPage = this.pages.pop()
-    //       let shownPage = this.pages.last()
-    //
-    //       this.emitPageHidden(hiddenPage, true)
-    //
-    //       return this.getContent().popPage({
-    //         'animation': options.animation,
-    //         'animationOptions': options.animationOptions
-    //       })
-    //         .then(() => {
-    //
-    //           this.emitPageShown(shownPage, false)
-    //
-    //           return Promise.resolve(hiddenPage, shownPage)
-    //
-    //         })
-    //
-    //     }
-    //     else
-    //       return Promise.reject(new RangeError('The last page on the stack cannot be removed.'))
-    //
-    //   })
+    }
+    else
+      throw new RangeError('The last page on the stack cannot be removed.')
 
   }
 

@@ -2,6 +2,7 @@
 
 const Server = require('restify')
 
+const Configuration = require('../configuration')
 const Path = require('../path')
 
 const REGEXP_MOCHA = /^\/www\/vendor\/mocha\/(.*)$/
@@ -41,6 +42,13 @@ class Static {
     server.get('/www', (request, response, next) => {
       response.redirect('/www/index.html', next)
     })
+
+    // server.get('/www/configuration.json', (request, response, next) => {
+    //   response.send({
+    //     'configurationName': Configuration.configurationName
+    //   })
+    //   next()
+    // })
 
     server.head(REGEXP_MOCHA, (request, response, next) => {
       response.send(200)

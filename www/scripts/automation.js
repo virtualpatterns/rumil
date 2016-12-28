@@ -79,7 +79,7 @@ class Automation {
 
   static whenDialogShown(whenFn) {
     Log.debug('- Automation.whenDialogShown(whenFn)')
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
       let _onDialogShown = null
 
@@ -97,7 +97,7 @@ class Automation {
 
   static whenDialogHidden(whenFn) {
     Log.debug('- Automation.whenDialogHidden(whenFn)')
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
       let _onDialogHidden = null
 
@@ -105,7 +105,31 @@ class Automation {
       window.application.on('dialogHidden', _onDialogHidden = (dialog, response) => {
         window.application.off('dialogHidden', _onDialogHidden)
         Log.debug('- window.application.on(\'dialogHidden\', (dialog, response) => { ... })\n\n%s\n\n', Utilities.inspect(response))
-        resolve(dialog, response)
+        resolve({
+          'dialog': dialog,
+          'response': response
+        })
+      })
+
+      whenFn()
+
+    })
+  }
+
+  static whenAuthorized(whenFn) {
+    Log.debug('- Automation.whenAuthorized(whenFn)')
+    return new Promise((resolve) => {
+
+      let _onAuthorized = null
+
+      // Log.debug('> window.application.on(\'authorized\', (authorizationId, token) => { ... })')
+      window.application.once('authorized', _onAuthorized = (authorizationId, token) => {
+        // window.application.off('authorized', _onAuthorized)
+        Log.debug('- window.application.on(\'authorized\', (%j, token) => { ... })\n\n%s\n\n', authorizationId, Utilities.inspect(token))
+        resolve({
+          'authorizationId': authorizationId, 
+          'token': token
+        })
       })
 
       whenFn()

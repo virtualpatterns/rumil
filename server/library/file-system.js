@@ -3,6 +3,7 @@
 const Directory = require('mkdirp')
 const _FileSystem = require('fs')
 const Promisify = require("es6-promisify");
+const Touch = require('touch')
 // const Utilities = require('util')
 
 const Path = require('./path')
@@ -13,26 +14,22 @@ const ProcessError = require('./errors/process-error')
 let FileSystem = Object.create(_FileSystem)
 
 FileSystem.mkdirp = Directory
+FileSystem.touch = Touch
 
 FileSystem.accessUnlink = function(path, mode, callback) {
-
-  const Log = require('./log')
-
-  // Log.debug('> FileSystem.accessUnlink(%j, %d, callback)', Path.trim(path), mode)
-
   FileSystem.access(path, mode, (error) => {
-    if (error) {
-      // Log.error('- FileSystem.access(%j, %d, (error) => { ... })', Path.trim(path), mode)
-      // Log.error('    error.message=%j\n\n%s\n', error.message, error.stack);
+    if (error)
       callback()
-    }
-    else {
-      // Log.debug('- FileSystem.unlink(%j, callback)', Path.trim(path))
+    else
       FileSystem.unlink(path, callback)
-    }
   })
-
 }
+
+// FileSystem.writeNow = function(path, callback) {
+//   FileSystem.writeFile(path, new Date().toISOString(), {
+//     'encoding': 'utf-8'
+//   }, callback)
+// }
 
 FileSystem.whenFileExists = function(timeout, maximumDuration, path) {
 
@@ -66,8 +63,11 @@ FileSystem.whenFileNotExists = function(timeout, maximumDuration, path) {
 FileSystem.Promise = {}
 FileSystem.Promise.access = Promisify(FileSystem.access)
 FileSystem.Promise.accessUnlink = Promisify(FileSystem.accessUnlink)
+FileSystem.Promise.mkdirp = Promisify(FileSystem.mkdirp)
 FileSystem.Promise.readFile = Promisify(FileSystem.readFile)
+FileSystem.Promise.touch = Promisify(FileSystem.touch)
 FileSystem.Promise.unlink = Promisify(FileSystem.unlink)
 FileSystem.Promise.writeFile = Promisify(FileSystem.writeFile)
+// FileSystem.Promise.writeNow = Promisify(FileSystem.writeNow)
 
 module.exports = FileSystem

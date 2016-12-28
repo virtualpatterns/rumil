@@ -69,7 +69,8 @@ class Log {
                                   Pad(level, 5))
 
       levelFn(message)
-      levelFn(object)
+      // levelFn(object)
+      levelFn(`\n${Utilities.inspect(object)}\n\n`)
 
     }
 

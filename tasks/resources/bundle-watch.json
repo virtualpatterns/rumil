@@ -1,0 +1,19 @@
+{
+  "exec": "jake bundle:create",
+  "ext": "css eot html ico js json otf pug svg ttf woff woff2",
+  "ignore": [
+    "./www/scripts/bundles",
+    "./www/index.manifest",
+    "./www/sandbox.manifest"
+  ],
+  "ignoreRoot": [
+    ".git",
+    "node_modules"
+  ],
+  "on-change-only": true,
+  "quiet": true,
+  "verbose": false,
+  "watch": [
+    "./www"
+  ]
+}

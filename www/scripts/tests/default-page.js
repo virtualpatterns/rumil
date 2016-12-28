@@ -2,16 +2,18 @@
 
 const Assert = require('assert')
 const Co = require('co')
+const Is = require('@pwn/is')
 
 const DefaultAutomation = require('../applications/default-automation')
 const DefaultPage = require('../elements/pages/default-page')
+const Log = require('../log')
 
 describe('DefaultPage', () => {
 
   before(() => {
-    return DefaultAutomation.whenPageShown(() => {
-      window.application.pushPage(new DefaultPage())
-    })
+    return DefaultAutomation.whenPageShown(Co.wrap(function* () {
+      yield window.application.pushPage(new DefaultPage())
+    }))
   })
 
   it('should contain the title Features', () => {
@@ -50,12 +52,28 @@ describe('DefaultPage', () => {
     Assert.equal(DefaultAutomation.existsListItem('Confirmation'), true)
   })
 
-  it('should contain an item for Spinner', () => {
-    Assert.equal(DefaultAutomation.existsListItem('Spinner'), true)
+  // it('should contain an item for Spinner', () => {
+  //   Assert.equal(DefaultAutomation.existsListItem('Spinner'), true)
+  // })
+
+  it('should contain an item for Simple', () => {
+    Assert.equal(DefaultAutomation.existsListItem('Simple'), true)
+  })
+
+  it('should contain an item for OAuth2', () => {
+    Assert.equal(DefaultAutomation.existsListItem('OAuth2'), true)
   })
 
   it('should contain an item for GitHub', () => {
     Assert.equal(DefaultAutomation.existsListItem('GitHub'), true)
+  })
+
+  it('should contain an item for Google', () => {
+    Assert.equal(DefaultAutomation.existsListItem('Google'), true)
+  })
+
+  it('should contain an item for Twitter', () => {
+    Assert.equal(DefaultAutomation.existsListItem('Twitter'), true)
   })
 
   // describe('(when the item for Pop is clicked)', () => {
@@ -86,9 +104,9 @@ describe('DefaultPage', () => {
   describe('(when the item for Status is clicked)', () => {
 
     before(() => {
-      return DefaultAutomation.whenPageShown(() => {
-        DefaultAutomation.clickListItem('Status')
-      })
+      return DefaultAutomation.whenPageShown(Co.wrap(function* () {
+        yield DefaultAutomation.clickListItem('Status')
+      }))
     })
 
     it('should contain the title Status', () => {
@@ -96,9 +114,9 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomation.whenPageShown(() => {
-        window.application.popPage()
-      })
+      return DefaultAutomation.whenPageShown(Co.wrap(function* () {
+        yield window.application.popPage()
+      }))
     })
 
   })
@@ -121,13 +139,11 @@ describe('DefaultPage', () => {
 
         yield DefaultAutomation.whenPageShown(() => {
           DefaultAutomation.clickListItem('Status')
-          }
-        )
+        })
 
         yield DefaultAutomation.whenPageShown(() => {
           DefaultAutomation.clickToolbarButton('Features')
-          }
-        )
+        })
 
     }))
 
@@ -150,9 +166,9 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomation.whenPageShown(() => {
-        window.application.popPage()
-      })
+      return DefaultAutomation.whenPageShown(Co.wrap(function* () {
+        yield window.application.popPage()
+      }))
     })
 
   })
@@ -161,15 +177,13 @@ describe('DefaultPage', () => {
 
     before(Co.wrap(function* () {
 
-        yield DefaultAutomation.whenPageShown(() => {
-          DefaultAutomation.clickListItem('Updates')
-          }
-        )
+      yield DefaultAutomation.whenPageShown(() => {
+        DefaultAutomation.clickListItem('Updates')
+      })
 
-        yield DefaultAutomation.whenPageShown(() => {
-          DefaultAutomation.clickToolbarButton('Features')
-          }
-        )
+      yield DefaultAutomation.whenPageShown(() => {
+        DefaultAutomation.clickToolbarButton('Features')
+      })
 
     }))
 
@@ -203,9 +217,9 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomation.whenDialogHidden(() => {
-        window.application.hideDialog(dialog)
-      })
+      return DefaultAutomation.whenDialogHidden(Co.wrap(function* () {
+        yield window.application.hideDialog(dialog)
+      }))
     })
 
   })
@@ -278,13 +292,13 @@ describe('DefaultPage', () => {
 
     after(Co.wrap(function* () {
 
-      dialog = yield DefaultAutomation.whenDialogShown(() => {
-        window.application.hideDialog(dialog)
-      })
+      dialog = yield DefaultAutomation.whenDialogShown(Co.wrap(function* () {
+        yield window.application.hideDialog(dialog)
+      }))
 
-      yield DefaultAutomation.whenDialogHidden(() => {
-        window.application.hideDialog(dialog)
-      })
+      yield DefaultAutomation.whenDialogHidden(Co.wrap(function* () {
+        yield window.application.hideDialog(dialog)
+      }))
 
     }))
 
@@ -324,9 +338,9 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomation.whenDialogHidden(() => {
-        window.application.hideDialog(dialog)
-      })
+      return DefaultAutomation.whenDialogHidden(Co.wrap(function* () {
+        yield window.application.hideDialog(dialog)
+      }))
     })
 
   })
@@ -365,39 +379,123 @@ describe('DefaultPage', () => {
     })
 
     after(() => {
-      return DefaultAutomation.whenDialogHidden(() => {
-        window.application.hideDialog(dialog)
-      })
+      return DefaultAutomation.whenDialogHidden(Co.wrap(function* () {
+        yield window.application.hideDialog(dialog)
+      }))
     })
 
   })
 
-  describe('(when the item for Spinner is clicked)', () => {
+  // describe('(when the item for Spinner is clicked)', () => {
+  //
+  //   let dialog = null
+  //
+  //   before(Co.wrap(function* () {
+  //     dialog = yield DefaultAutomation.whenDialogShown(() => {
+  //       DefaultAutomation.clickListItem('Spinner')
+  //     })
+  //   }))
+  //
+  //   it('should show the spinner dialog', () => {
+  //     Assert.equal(DefaultAutomation.existsSpinner(), true)
+  //   })
+  //
+  //   after(() => {
+  //     return DefaultAutomation.whenDialogHidden(() => {
+  //       // Do nothing ...
+  //     })
+  //   })
+  //
+  // })
 
-    let dialog = null
+  describe('(when the item for Simple is clicked)', () => {
+
+    let result = null
 
     before(Co.wrap(function* () {
-      dialog = yield DefaultAutomation.whenDialogShown(() => {
-        DefaultAutomation.clickListItem('Spinner')
+      result = yield DefaultAutomation.whenAuthorized(() => {
+        DefaultAutomation.clickListItem('Simple')
+      })
+      // let results = yield DefaultAutomation.whenAuthorized(() => {
+      //   DefaultAutomation.clickListItem('Simple')
+      // })
+      // Log.debug(results)
+    }))
+
+    it('should authorize with an authorization id', () => {
+      Assert.ok(result.authorizationId)
+    })
+
+    it('should authorize with an empty token', () => {
+      Assert.ok(Is.emptyObject(result.token))
+    })
+
+  })
+
+  describe('(when the item for GitHub is clicked)', () => {
+
+    let result = null
+
+    before(Co.wrap(function* () {
+      result = yield DefaultAutomation.whenAuthorized(() => {
+        DefaultAutomation.clickListItem('GitHub')
       })
     }))
 
-    it('should show the spinner dialog', () => {
-      Assert.equal(DefaultAutomation.existsSpinner(), true)
+    it('should authorize with an authorization id', () => {
+      Assert.ok(result.authorizationId)
     })
 
-    after(() => {
-      return DefaultAutomation.whenDialogHidden(() => {
-        // Do nothing ...
+    it('should authorize with a non-empty token', () => {
+      Assert.ok(!Is.emptyObject(result.token))
+    })
+
+  })
+
+  describe('(when the item for Google is clicked)', () => {
+
+    let result = null
+
+    before(Co.wrap(function* () {
+      result = yield DefaultAutomation.whenAuthorized(() => {
+        DefaultAutomation.clickListItem('Google')
       })
+    }))
+
+    it('should authorize with an authorization id', () => {
+      Assert.ok(result.authorizationId)
+    })
+
+    it('should authorize with a non-empty token', () => {
+      Assert.ok(!Is.emptyObject(result.token))
+    })
+
+  })
+
+  describe('(when the item for Twitter is clicked)', () => {
+
+    let result = null
+
+    before(Co.wrap(function* () {
+      result = yield DefaultAutomation.whenAuthorized(() => {
+        DefaultAutomation.clickListItem('Twitter')
+      })
+    }))
+
+    it('should authorize with an authorization id', () => {
+      Assert.ok(result.authorizationId)
+    })
+
+    it('should authorize with a non-empty token', () => {
+      Assert.ok(!Is.emptyObject(result.token))
     })
 
   })
 
   after(() => {
-    return DefaultAutomation.whenPageShown(() => {
-      window.application.popPage()
-    })
+    return DefaultAutomation.whenPageShown(Co.wrap(function* () {
+      yield window.application.popPage()
+    }))
   })
 
 })

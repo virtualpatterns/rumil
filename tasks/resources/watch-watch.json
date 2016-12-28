@@ -1,0 +1,11 @@
+{
+  "exec": "jake watch:restart",
+  "ext": "js json",
+  "ignore": [],
+  "on-change-only": true,
+  "quiet": true,
+  "verbose": false,
+  "watch": [
+    "./tasks"
+  ]
+}

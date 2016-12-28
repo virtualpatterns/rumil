@@ -1,6 +1,6 @@
 'use strict'
 
-const Process = require('../../process')
+const Configuration = require('../../configuration')
 
 const OAuth2Authorization = require('./oauth2-authorization')
 
@@ -12,12 +12,12 @@ class GoogleAuthorization extends OAuth2Authorization {
 
   getOptions() {
     return Object.assign({
-      'clientId': Process.env.RUMIL_GOOGLE_PUBLIC_ID,
-      'clientSecret': Process.env.RUMIL_GOOGLE_PRIVATE_ID,
+      'clientId': Configuration.googlePublicKey,
+      'clientSecret': Configuration.googlePrivateKey,
       'accessTokenUri': 'https://www.googleapis.com/oauth2/v4/token',
       'authorizationUri': 'https://accounts.google.com/o/oauth2/v2/auth',
       'authorizationGrants': ['authorization_code'],
-      'redirectUri': 'http://localhost:8081/api/authorize/Google',
+      'redirectUri': Configuration.googleRedirectUri
     }, super.getOptions())
   }
 

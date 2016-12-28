@@ -1,5 +1,7 @@
 'use strict'
 
+const Co = require('co')
+
 const SimpleAlertDialog = require('./simple-alert-dialog')
 const Log = require('../../log')
 
@@ -16,8 +18,8 @@ class ConfirmationDialog extends SimpleAlertDialog {
   bind() {
     super.bind()
 
-    this.getContent().querySelector('#yes').addEventListener('click', this._onYes = this.onYes.bind(this))
-    this.getContent().querySelector('#no').addEventListener('click', this._onNo = this.onNo.bind(this))
+    this.getContent().querySelector('#yes').addEventListener('click', this._onYes = Co.wrap(this.onYes).bind(this))
+    this.getContent().querySelector('#no').addEventListener('click', this._onNo = Co.wrap(this.onNo).bind(this))
 
   }
 
@@ -29,14 +31,14 @@ class ConfirmationDialog extends SimpleAlertDialog {
     super.unbind()
   }
 
-  onYes() {
+  *onYes() {
     Log.debug('- ConfirmationDialog.onYes()')
-    window.application.hideDialog(this, true)
+    yield window.application.hideDialog(this, true)
   }
 
-  onNo() {
+  *onNo() {
     Log.debug('- ConfirmationDialog.onNo()')
-    window.application.hideDialog(this, false)
+    yield window.application.hideDialog(this, false)
   }
 
 }

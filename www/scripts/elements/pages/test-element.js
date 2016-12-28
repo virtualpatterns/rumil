@@ -15,7 +15,7 @@ class TestElement extends Element {
   }
 
   renderContent(data = {}) {
-    Log.debug('- TestElement.renderContent(data)')
+    // Log.debug('- TestElement.renderContent(data)')
 
     data.statistics = data.statistics || {}
 
@@ -23,14 +23,14 @@ class TestElement extends Element {
 
   }
 
-  updateContent(statistics = {}) {
-    Log.debug('- TestElement.updateContent(data)')
-
-    return super.updateContent({
-      'statistics': statistics
-    })
-
-  }
+  // updateContent(statistics = {}) {
+  //   // Log.debug('- TestElement.updateContent(data)')
+  //
+  //   return super.updateContent({
+  //     'statistics': statistics
+  //   })
+  //
+  // }
 
 }
 

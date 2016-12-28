@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">82.76% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>24/29</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/1</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">82.76% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>24/29</span>
       </div>
     </div>
   </div>
@@ -84,13 +84,56 @@
 39
 40
 41
-42</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -101,11 +144,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -117,6 +177,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,10 +203,15 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
 &nbsp;
-const Index = require('../../../index.json')
+const Co = require('co')
+const Utilities = require('util')
+&nbsp;
+const Configuration = require('../configuration')
+// const Build = require('../../build.json')
+const Log = require('../log')
 const Package = require('../../../package.json')
-// const Timestamp = require('../../../cacheTimestamp.json')
 const Process = require('../process')
+const TwitterAuthorization = require('./systems/twitter-authorization')
 &nbsp;
 class Status {
 &nbsp;
@@ -141,25 +222,58 @@ class Status {
       next()
     })
 &nbsp;
-    server.get('/api/status', (request, response, next) =&gt; {
+    server.get('/api/status', Co.wrap(function* (request, response, next) {
+      Log.debug('- server.get(\'/api/status\', Co.wrap(function* (request, response, next) =&gt; { ... })')
 &nbsp;
-      let memory = Process.memoryUsage()
+      try {
 &nbsp;
-      let status = {
-        // 'cacheTimestamp': Timestamp.value,
-        'name': Package.name,
-        'now': new Date().toISOString(),
-        'version': `${Package.version}-${Index.value}`,
-        'heap': {
-          'total': memory.heapTotal,
-          'used': memory.heapUsed
+        let memory = Process.memoryUsage()
+&nbsp;
+        let authorization = new TwitterAuthorization()
+        authorization.open()
+&nbsp;
+        try {
+&nbsp;
+          let information = yield authorization.info()
+&nbsp;
+          Log.debug('-   information ...\n\n%s\n', Utilities.inspect(information))
+&nbsp;
+          let status = {
+            'name': Package.name,
+            'now': new Date().toISOString(),
+            // 'version': `${Package.version}-${Build.value}`,
+            'version': Package.version,
+            'heap': {
+              'total': memory.heapTotal,
+              'used': memory.heapUsed
+            },
+            'storage': {
+              'uri': Configuration.twitterStorageUri,
+              'version': information.redis_version,
+              'os': information.os
+            }
+          }
+&nbsp;
+          response.send(status)
+          next()
+&nbsp;
         }
+        finally {
+          authorization.close()
+        }
+&nbsp;
+      }
+      catch (error) {
+<span class="cstat-no" title="statement not covered" >        Log.error('- server.get(\'/api/status\', Co.wrap(function* (request, response, next) =&gt; { ... })')</span>
+<span class="cstat-no" title="statement not covered" >        Log.error('-   error.message=%j', error.message)</span>
+<span class="cstat-no" title="statement not covered" >        Log.error('-   error.stack ...\n\n%s\n', error.stack)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        response.send(error)</span>
+<span class="cstat-no" title="statement not covered" >        next()</span>
+&nbsp;
       }
 &nbsp;
-      response.send(status)
-      next()
-&nbsp;
-    })
+    }))
 &nbsp;
   }
 &nbsp;
@@ -172,7 +286,7 @@ module.exports = Status
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Dec 03 2016 00:02:39 GMT-0500 (EST)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 21:57:11 GMT-0500 (EST)
 </div>
 </div>
 <script src="../../prettify.js"></script>

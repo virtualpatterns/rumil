@@ -25,9 +25,9 @@ class Authorization {
         let authorizationModuleName = `${request.params.system.toLowerCase()}-authorization`
         let authorizationModulePath = Path.join(__dirname, 'systems', authorizationModuleName)
 
-        // Log.debug('-   authorizationModulePath=%j', Path.trim(authorizationModulePath))
-
+        Log.debug('> require(%j)', Path.trim(authorizationModulePath))
         const AuthorizationModule = require(authorizationModulePath)
+        
         let authorizationModule = new AuthorizationModule(request, response, next)
 
         yield authorizationModule.authorize()

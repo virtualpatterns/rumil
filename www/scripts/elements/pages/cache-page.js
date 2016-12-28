@@ -1,5 +1,7 @@
 'use strict'
 
+const Co = require('co')
+
 const CacheElement = require('./cache-element')
 const Log = require('../../log')
 const StackedPage = require('./stacked-page')
@@ -24,7 +26,7 @@ class CachePage extends StackedPage {
     window.applicationCache.addEventListener('downloading', this._onDownloading = this.cacheElement.onDownloading.bind(this.cacheElement));
     // window.applicationCache.addEventListener('progress', this._onDownloaded = this.cacheElement.onDownloaded.bind(this.cacheElement));
     // window.applicationCache.addEventListener('cached', this._onUpdated = this.cacheElement.onUpdated.bind(this.cacheElement));
-    window.applicationCache.addEventListener('updateready', this._onUpdateReady = this.cacheElement.onUpdateReady.bind(this.cacheElement));
+    window.applicationCache.addEventListener('updateready', this._onUpdateReady = Co.wrap(this.cacheElement.onUpdateReady).bind(this.cacheElement));
     window.applicationCache.addEventListener('noupdate', this._onNoUpdate = this.cacheElement.onNoUpdate.bind(this.cacheElement));
     // window.applicationCache.addEventListener('obsolete', this._onObsolete = this.cacheElement.onObsolete.bind(this.cacheElement));
     window.applicationCache.addEventListener('error', this._onError = this.cacheElement.onError.bind(this.cacheElement));
@@ -62,12 +64,14 @@ class CachePage extends StackedPage {
   }
 
   onShown(isInitial) {
-    super.onShown(isInitial)
-
     Log.debug('- CachePage.onShown(%s)', isInitial)
 
     try {
+
+      super.onShown(isInitial)
+
       window.applicationCache.update()
+
     }
     catch (error) {
       window.application.showError(error)

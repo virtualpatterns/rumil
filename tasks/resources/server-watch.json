@@ -1,0 +1,15 @@
+{
+  "delay": "2000",
+  "exec": "jake server:restart",
+  "ext": "js",
+  "ignore": [
+    "./server/tests"
+  ],
+  "on-change-only": true,
+  "quiet": true,
+  "verbose": false,
+  "watch": [
+    "./www/scripts/bundles",
+    "./server"
+  ]
+}

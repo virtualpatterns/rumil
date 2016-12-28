@@ -33,9 +33,9 @@ class TestPage extends StackedPage {
   }
 
   onShown(isInitial) {
-    super.onShown(isInitial)
-
     Log.debug('- TestPage.onShown(%s)', isInitial)
+
+    super.onShown(isInitial)
 
     if (isInitial) {
 
@@ -59,7 +59,9 @@ class TestPage extends StackedPage {
 
   onFinished(tests) {
     Log.debug('- TestPage.onFinished(statistics)\n\n%s\n\n', Utilities.inspect(tests.stats))
-    this.testElement.updateContent(tests.stats)
+    this.testElement.updateContent({
+      'statistics': tests.stats
+    })
   }
 
  // *   - `start`  execution started

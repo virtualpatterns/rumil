@@ -28,7 +28,8 @@ class SimpleAuthorization {
 
   *authorize(token = {}) {
     Log.debug('- SimpleAuthorization.*authorize(token) { ... }\n\n%s\n', Utilities.inspect(token))
-    this.redirect(`/www/index.html?application=${encodeURI('./authorized-application.js')}&authorizationId=${encodeURI(this.getAuthorizationId())}&token=${encodeURI(JSON.stringify(token))}`)
+    // this.redirect(`/www/index.html?application=${encodeURI('./authorized-application.js')}&authorizationId=${encodeURI(this.getAuthorizationId())}&token=${encodeURI(JSON.stringify(token))}`)
+    this.redirect(`/www/index.html?application=Authorized&authorizationId=${encodeURI(this.getAuthorizationId())}&token=${encodeURI(JSON.stringify(token))}`)
   }
 
 }

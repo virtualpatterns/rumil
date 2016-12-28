@@ -1,5 +1,7 @@
 'use strict'
 
+const Co = require('co')
+
 const SimpleAlertDialog = require('./simple-alert-dialog')
 const Log = require('../../log')
 
@@ -16,7 +18,7 @@ class AlertDialog extends SimpleAlertDialog {
   bind() {
     super.bind()
 
-    this.getContent().querySelector('#ok').addEventListener('click', this._onOk = this.onOk.bind(this))
+    this.getContent().querySelector('#ok').addEventListener('click', this._onOk = Co.wrap(this.onOk).bind(this))
 
   }
 
@@ -27,9 +29,9 @@ class AlertDialog extends SimpleAlertDialog {
     super.unbind()
   }
 
-  onOk() {
+  *onOk() {
     Log.debug('- AlertDialog.onOk()')
-    window.application.hideDialog(this, false)
+    yield window.application.hideDialog(this, false)
   }
 
 }

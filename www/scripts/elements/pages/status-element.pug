@@ -31,6 +31,17 @@ block body
             | Your version of the application is the latest version.  No updates are available.
 
   ons-list(modifier='inset')
+    //- ons-list-item(modifier='longdivider')
+    //-   div.left
+    //-     | Location
+    //-   div.right
+    //-     if data.status.serverUri
+    //-         code
+    //-           = data.status.storage.uri
+    //-       else
+    //-         | (local)
+    //-     else
+    //-       | (unknown)
     ons-list-item(modifier='longdivider')
       div.left
         | Server Version
@@ -65,3 +76,33 @@ block body
         | Used
       div.right
         = data.status.heap ? data.status.heap.usedAsString : '(unknown)'
+
+  ons-list(modifier='inset')
+    ons-list-header
+      | STORAGE
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Location
+      div.right
+        if data.status.storage
+          if data.status.storage.uri
+            code
+              = data.status.storage.uri
+          else
+            | (local)
+        else
+          | (unknown)
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Version
+      div.right
+        = data.status.storage ? data.status.storage.version : '(unknown)'
+    ons-list-item(modifier='longdivider')
+      div.left
+        | Operating System
+      div.right
+        if data.status.storage
+          code
+            = data.status.storage.os
+        else
+          | (unknown)

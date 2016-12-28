@@ -1,5 +1,6 @@
 'use strict'
 
+const Co = require('co')
 const Emitter = require('event-emitter')
 
 const Element = require('../element')
@@ -54,11 +55,11 @@ class Page extends Element {
   // }
 
   onShown(isInitial) {
-    // Log.debug('- Page.onShown(%s) id=%j', isInitial, this.id)
+    // Log.debug('- Page.onShown(%s)', isInitial)
   }
 
   onHidden(isFinal) {
-    // Log.debug('- Page.onHidden(%s) id=%j', isFinal, this.id)
+    // Log.debug('- Page.onHidden(%s)', isFinal)
   }
 
   // onRemoved() {

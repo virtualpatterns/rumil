@@ -6,7 +6,7 @@ const IntervalError = require('./errors/interval-error')
 
 class Interval {
 
-  static start(name, ...parameters) { // from = 99, every = 1000, decrement = 1, intervalFn = () => {}) {
+  static start(name, ...parameters) {
     return new Promise((resolve, reject) => {
 
       // Interval.start('name')
@@ -51,7 +51,7 @@ class Interval {
 
       }
 
-      // Log.debug('- Interval.start(%j, %j, %j, %j, intervalFn)', name, from, every, decrement)
+      Log.debug('- Interval.start(%j, %j, %j, %j, intervalFn)', name, from, every, decrement)
 
       Interval.stop(name)
 
@@ -87,7 +87,7 @@ class Interval {
   }
 
   static stop(name) {
-    // Log.debug('- Interval.stop(%j)', name)
+    Log.debug('- Interval.stop(%j)', name)
 
     let interval = Interval.intervals[name]
 

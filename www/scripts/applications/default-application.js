@@ -3,7 +3,6 @@
 const DefaultPage = require('../elements/pages/default-page')
 const StackedApplication = require('./stacked-application')
 const Log = require('../log')
-// const TestPage = require('../elements/pages/test-page')
 
 const ContentFn = require('./default-application.pug')
 
@@ -14,6 +13,7 @@ class DefaultApplication extends StackedApplication {
   }
 
   onReady(Page = DefaultPage) {
+    Log.debug('- DefaultApplication.onReady()');
     super.onReady(Page)
   }
 

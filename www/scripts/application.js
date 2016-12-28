@@ -9,7 +9,6 @@ const UUID = require('uuid/v4')
 const AlertDialog = require('./elements/dialogs/alert-dialog')
 const ConfirmationDialog = require('./elements/dialogs/confirmation-dialog')
 const Element = require('./element')
-const Index = require('../../index.json')
 const Log = require('./log')
 const Package = require('../../package.json')
 const SpinnerDialog = require('./elements/dialogs/spinner-dialog')
@@ -20,8 +19,8 @@ class Application extends Element {
 
   constructor(contentFn = ContentFn) {
     super(false, contentFn)
-    this.name = `${Package.name} v${Package.version}-${Index.value}`
-    this.version = `${Package.version}-${Index.value}`
+    this.name = `${Package.name} v${Package.version}`
+    this.version = Package.version
   }
 
   emitReady() {
@@ -65,24 +64,23 @@ class Application extends Element {
   }
 
   onReady() {
+    Log.debug('- Application.onReady()')
+    Log.debug('-   window.applicationCache.status=%j', window.applicationCache.status)
+    Log.debug('-   window.applicationCache.UNCACHED=%j', window.applicationCache.UNCACHED)
+    Log.debug('-   window.applicationCache.IDLE=%j', window.applicationCache.IDLE)
+    Log.debug('-   window.applicationCache.CHECKING=%j', window.applicationCache.CHECKING)
+    Log.debug('-   window.applicationCache.DOWNLOADING=%j', window.applicationCache.DOWNLOADING)
+    Log.debug('-   window.applicationCache.UPDATEREADY=%j', window.applicationCache.UPDATEREADY)
+    Log.debug('-   window.applicationCache.OBSOLETE=%j', window.applicationCache.OBSOLETE)
+
+    // UNCACHED ...... A special value that indicates that an application cache object is not fully initialized.
+    // IDLE .......... The application cache is not currently in the process of being updated.
+    // CHECKING ...... The manifest is being fetched and checked for updates.
+    // DOWNLOADING ... Resources are being downloaded to be added to the cache, due to a changed resource manifest.
+    // UPDATEREADY ... There is a new version of the application cache available. There is a corresponding updateready event, which is fired instead of the cached event when a new update has been downloaded but not yet activated using the swapCache() method.
+    // OBSOLETE ...... The application cache group is now obsolete.
 
     try {
-
-      Log.debug('- Application.onReady() this.name=%j', this.name)
-      Log.debug('-   window.applicationCache.status=%j', window.applicationCache.status)
-      Log.debug('-   window.applicationCache.UNCACHED=%j', window.applicationCache.UNCACHED)
-      Log.debug('-   window.applicationCache.IDLE=%j', window.applicationCache.IDLE)
-      Log.debug('-   window.applicationCache.CHECKING=%j', window.applicationCache.CHECKING)
-      Log.debug('-   window.applicationCache.DOWNLOADING=%j', window.applicationCache.DOWNLOADING)
-      Log.debug('-   window.applicationCache.UPDATEREADY=%j', window.applicationCache.UPDATEREADY)
-      Log.debug('-   window.applicationCache.OBSOLETE=%j', window.applicationCache.OBSOLETE)
-
-      // UNCACHED ... A special value that indicates that an application cache object is not fully initialized.
-      // IDLE ... The application cache is not currently in the process of being updated.
-      // CHECKING ... The manifest is being fetched and checked for updates.
-      // DOWNLOADING ... Resources are being downloaded to be added to the cache, due to a changed resource manifest.
-      // UPDATEREADY ... There is a new version of the application cache available. There is a corresponding updateready event, which is fired instead of the cached event when a new update has been downloaded but not yet activated using the swapCache() method.
-      // OBSOLETE ... The application cache group is now obsolete.
 
       switch (window.applicationCache.status) {
           case window.applicationCache.UNCACHED:
@@ -122,70 +120,55 @@ class Application extends Element {
     Log.debug('- Application.onAuthorized(%j, token)\n\n%s\n\n', authorizationId, Utilities.inspect(token))
   }
 
-  showDialog(dialog, options = {
+  *showDialog(dialog, options = {
     'animation': 'slide'
   }) {
+    // Log.debug('- Application.showDialog(dialog, options)')
 
-    let self = this
+    dialog.addContent()
 
-    return Co(function* () {
-
-      Log.debug('- Application.showDialog(dialog, options)')
-
-      dialog.addContent()
-
-      yield Timeout.start('Application.showDialog', 0)
-      yield dialog.getContent().show({
-        'animation': options.animation,
-        'animationOptions': options.animationOptions
-      })
-
-      self.emitDialogShown(dialog)
-
-      return dialog
-
+    yield Timeout.start('Application.showDialog', 0)
+    yield dialog.getContent().show({
+      'animation': options.animation,
+      'animationOptions': options.animationOptions
     })
+
+    this.emitDialogShown(dialog)
+
+    return dialog
 
   }
 
-  hideDialog(dialog, response, options = {
+  *hideDialog(dialog, response, options = {
     'animation': 'slide'
   }) {
+    // Log.debug('- Application.hideDialog(dialog, response, options)\n\n%s\n\n', Utilities.inspect(response))
 
-    let self = this
-
-    return Co(function* () {
-
-      Log.debug('- Application.hideDialog(dialog, response, options)\n\n%s\n\n', Utilities.inspect(response))
-
-      yield dialog.getContent().hide({
-        'animation': options.animation,
-        'animationOptions': options.animationOptions
-      })
-
-      self.emitDialogHidden(dialog, response)
-
-      dialog.removeContent()
-
-      return { dialog, response }
-
+    yield dialog.getContent().hide({
+      'animation': options.animation,
+      'animationOptions': options.animationOptions
     })
+
+    this.emitDialogHidden(dialog, response)
+
+    dialog.removeContent()
+
+    return { dialog, response }
 
   }
 
-  whenDialog(dialog, options = {
+  whenDialogHidden(dialog, options = {
     'animation': 'slide'
   }) {
-
-    let self = this
+    // Log.debug('- Application.whenDialogHidden(dialog, options)')
 
     return new Promise((resolve, reject) => {
+
+      let self = this
 
       Co(function* () {
 
         try {
-
-          Log.debug('- whenDialog(dialog, options)')
 
           yield self.showDialog(dialog, options)
 
@@ -205,100 +188,74 @@ class Application extends Element {
   }
 
   showAlert(text, title = 'Alert') {
-    Log.debug('- Application.showAlert(%j, %j)', text, title)
-    return this.whenDialog(new AlertDialog(text, title))
+    // Log.debug('- Application.showAlert(%j, %j)', text, title)
+    return this.whenDialogHidden(new AlertDialog(text, title))
   }
 
   showError(error) {
     Log.error('- Application.showError(error)')
     Log.error(error)
-    return this.whenDialog(new AlertDialog(error.message || error, 'Error'))
+    return this.whenDialogHidden(new AlertDialog(error.message || error, 'Error'))
   }
 
   showConfirmation(text, title = 'Confirm') {
-    Log.debug('- Application.showConfirmation(%j, %j)', text, title)
-    return this.whenDialog(new ConfirmationDialog(text, title))
+    // Log.debug('- Application.showConfirmation(%j, %j)', text, title)
+    return this.whenDialogHidden(new ConfirmationDialog(text, title))
   }
 
-  showSpinner(Dialog = SpinnerDialog) {
-    Log.debug('- Application.showSpinner(Dialog)')
-    return this.showDialog(new Dialog())
-  }
-
-  hideSpinner(dialog) {
-    Log.debug('- Application.hideSpinner(dialog)')
-    // let element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child')
-    // if (element)
-    //   return this.hideDialog(element.getElement(), false)
-    // else
-    //   Log.warn('- Application.hideSpinner() element=%j', element)
-    return this.hideDialog(dialog)
-  }
-
-  // authorize(system, scopes = []) {
-  //   Log.debug('> Application.authorize(%j, %j)', system, scopes)
+  // showSpinner(Dialog = SpinnerDialog) {
+  //   Log.debug('- Application.showSpinner(Dialog)')
+  //   return this.showDialog(new Dialog())
+  // }
   //
-  //   let authorizationId = UUID()
-  //
-  //   Log.debug('-   authorizationId=%j', authorizationId)
-  //
-  //   let url = `./authorize/${authorizationId}/${system}${scopes.length > 0 ? `?scopes=${scopes.join(',')}` : ''}`
-  //
-  //   Log.debug('-   url=%j', url)
-  //
-  //   window.open(url)
-  //
-  //   return new Promise((resolve, reject) => {
-  //     this.on('authorized', (token) => {
-  //
-  //       token.scopes = scopes
-  //
-  //       Log.debug('< Application.authorize(%j, %j)\n\n%s\n\n', system, scopes, Utilities.inspect(token))
-  //       resolve(token)
-  //
-  //     })
-  //   })
-  //
+  // hideSpinner(dialog) {
+  //   Log.debug('- Application.hideSpinner(dialog)')
+  //   // let element = document.querySelector('ons-dialog.rum-spinner-dialog:last-child')
+  //   // if (element)
+  //   //   return this.hideDialog(element.getElement(), false)
+  //   // else
+  //   //   Log.warn('- Application.hideSpinner() element=%j', element)
+  //   return this.hideDialog(dialog)
   // }
 
   authorize(system, options = {}) {
-    Log.debug('> Application.authorize(%j)', system)
+    // Log.debug('- Application.authorize(%j, options)\n\n%s\n\n', system, Utilities.inspect(options))
 
     let authorizationId = UUID()
     let url = `/api/authorize/${system}?authorizationId=${authorizationId}${Is.emptyObject(options) ? '' : `&options=${encodeURI(JSON.stringify(options))}`}`
 
-    Log.debug('> window.open(%j)', url)
+    // Log.debug('> window.open(%j)', url)
     window.open(url)
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
 
       let _onAuthorized = null
 
       this.once('authorized', _onAuthorized = (_authorizationId, _token) => {
-        // this.off('authorized', _onAuthorized)
-        if (authorizationId == _authorizationId) {
-          Log.debug('< Application.authorize(%j)\n\n%s\n\n', system, Utilities.inspect(_token))
-          resolve(_authorizationId, _token)
-        }
+        if (authorizationId == _authorizationId)
+          resolve({
+            'authorizationId': _authorizationId,
+            'token': _token
+          })
         else
-          Log.debug('- Application.authorize(%j) authorizationId=%j _authorizationId=%j', system, authorizationId, _authorizationId)
+          Log.debug('- Application.authorize(%j, options) authorizationId=%j _authorizationId=%j', system, authorizationId, _authorizationId)
       })
 
     })
 
   }
 
-  noop(event) {
-    Log.debug('- Application.noop(event)')
-
-    if (event) {
-      event.preventDefault()
-      event.stopPropagation()
-    }
-
-    return false
-
-  }
+  // noop(event) {
+  //   Log.debug('- Application.noop(event)')
+  //
+  //   if (event) {
+  //     event.preventDefault()
+  //     event.stopPropagation()
+  //   }
+  //
+  //   return false
+  //
+  // }
 
 }
 

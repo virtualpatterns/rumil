@@ -1,6 +1,6 @@
 'use strict'
 
-const Process = require('../../process')
+const Configuration = require('../../configuration')
 
 const OAuth2Authorization = require('./oauth2-authorization')
 
@@ -12,12 +12,12 @@ class GitHubAuthorization extends OAuth2Authorization {
 
   getOptions() {
     return Object.assign({
-      'clientId': Process.env.RUMIL_GITHUB_PUBLIC_ID,
-      'clientSecret': Process.env.RUMIL_GITHUB_PRIVATE_ID,
+      'clientId': Configuration.gitHubPublicKey,
+      'clientSecret': Configuration.gitHubPrivateKey,
       'accessTokenUri': 'https://github.com/login/oauth/access_token',
       'authorizationUri': 'https://github.com/login/oauth/authorize',
       'authorizationGrants': ['credentials'],
-      'redirectUri': 'http://localhost:8081/api/authorize/GitHub',
+      'redirectUri': Configuration.gitHubRedirectUri,
     }, super.getOptions())
   }
 

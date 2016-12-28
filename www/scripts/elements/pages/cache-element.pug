@@ -2,7 +2,7 @@ extends ../../element.pug
 block body
   ons-list(modifier='inset')
     ons-list-item(modifier='longdivider')
-      if status.isUpdating
+      if data.status.isUpdating
         div.left
           ons-icon( icon='fa-ellipsis-h',
                     size='20px')
@@ -11,7 +11,7 @@ block body
             | Checking
           span.list__item__subtitle
             | Checking for application updates ...
-      else if status.isDownloading
+      else if data.status.isDownloading
         div.left
           ons-icon( icon='fa-cloud-download',
                     size='20px')
@@ -20,7 +20,7 @@ block body
             | Downloading Updates
           span.list__item__subtitle
             | Downloading application updates ...
-      else if status.isUpdateRequired
+      else if data.status.isUpdateRequired
         div.left
           ons-icon( icon='fa-cloud-download',
                     size='20px')

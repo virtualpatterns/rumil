@@ -3,6 +3,7 @@
 const Assert = require('assert')
 const Asynchronous = require('async')
 // const HTTP = require('http');
+const Query = require('querystring')
 const Request = require('request-promise-native')
 const Utilities = require('util')
 
@@ -13,13 +14,45 @@ const Process = require('../library/process')
 const Server = require('../library/server')
 
 const ADDRESS = '0.0.0.0'
-const PORT = 8081
-const STATIC_PATH = Path.join(Process.cwd(), 'www')
-const MODULES_PATH = Path.join(Process.cwd(), 'node_modules')
+const PORT = 8181
+const STATIC_PATH = Path.join(__dirname, '..', '..', 'www')
+const MODULES_PATH = Path.join(__dirname, '..', '..', 'node_modules')
+
+const METHODS = [
+  'HEAD',
+  'GET'
+]
+
+const URLS_200 = [
+  '/favicon.ico',
+  '/',
+  '/www',
+  '/www/vendor/mocha/mocha.css',
+  '/www/vendor/mocha/mocha.js',
+  '/www/index.html',
+  '/api/authorize/simple?authorizationId=123',
+  '/api/authorize/twitter?authorizationId=123',
+  '/api/status'
+]
+
+const URLS_500 = [
+  '/api/authorize/oauth2?authorizationId=123',
+  '/api/authorize/github?authorizationId=123',
+  `/api/authorize/google?authorizationId=123&options=${Query.escape(JSON.stringify({
+    'scopes': [ 'profile' ]
+  }))}`,
+  '/api/authorize/system?authorizationId=123'
+]
 
 const Defaults = Request.defaults({
   'baseUrl': `http://${ADDRESS}:${PORT}`,
   'resolveWithFullResponse': true
+})
+
+before(() => {
+})
+
+after(() => {
 })
 
 describe('Server', () => {
@@ -38,15 +71,9 @@ describe('Server', () => {
         .once('listening', callback)
     })
 
-    // vendor/mocha/mocha.css
-    // vendor/mocha/mocha.js
+    for (let method of METHODS) {
 
-    let methods = ['HEAD', 'GET']
-    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/api/authorize/GitHub', '/api/authorize/GitHub?scopes=user,repo', '/api/status']
-
-    for (let method of methods) {
-
-      for (let url of urls) {
+      for (let url of URLS_200) {
 
         describe(`${method} ${url}`, () => {
 
@@ -64,27 +91,20 @@ describe('Server', () => {
 
     }
 
-    methods = ['GET']
-    urls = ['/api/authorize/GitHub?code=123']
+    for (let method of [
+      'GET'
+    ]) {
 
-    for (let method of methods) {
-
-      for (let url of urls) {
+      for (let url of URLS_500) {
 
         describe(`${method} ${url}`, () => {
 
-          // it('should respond with 500 Internal Server Error', () => {
           it('should respond with 500 Internal Server Error', () => {
             return Defaults({
               'method': method,
               'uri': url
             })
-              // .then((response) => {
-              //   Log.debug('- response.statusCode=%j', response.statusCode)
-              //   // Assert.equal(500, response.statusCode)
-              // })
               .catch((error) => {
-                // Log.inspect(error)
                 Assert.equal(500, error.statusCode)
               })
           })
@@ -97,7 +117,7 @@ describe('Server', () => {
 
     describe(`GET /api/status`, () => {
 
-      it('should respond with name, now, ...', (callback) => {
+      it('should respond with name, version, ...', (callback) => {
         Defaults({
           'json': true,
           'method': 'GET',
@@ -110,9 +130,14 @@ describe('Server', () => {
             Assert.ok(response.body.name, Utilities.format(message, 'name'))
             Assert.ok(response.body.now, Utilities.format(message, 'now'))
             Assert.ok(response.body.version, Utilities.format(message, 'version'))
+
             Assert.ok(response.body.heap, Utilities.format(message, 'heap'))
             Assert.ok(response.body.heap.total, Utilities.format(message, 'heap.total'))
             Assert.ok(response.body.heap.used, Utilities.format(message, 'heap.used'))
+
+            Assert.ok(response.body.storage, Utilities.format(message, 'storage'))
+            Assert.ok(response.body.storage.version, Utilities.format(message, 'storage.version'))
+            Assert.ok(response.body.storage.os, Utilities.format(message, 'storage.os'))
 
             callback()
 
@@ -149,13 +174,9 @@ describe('Server', () => {
 
     })
 
-    let methods = ['HEAD', 'GET']
-    // let urls = ['/favicon.ico', '/', '/www', '/www/index.html', '/api/authorize/GitHub', '/api/status']
-    let urls = ['/favicon.ico', '/', '/www', '/www/vendor/mocha/mocha.css', '/www/vendor/mocha/mocha.js', '/www/index.html', '/api/authorize/GitHub', '/api/authorize/GitHub?scopes=user,repo', '/api/authorize/GitHub?code=123', '/api/status']
+    for (let method of METHODS) {
 
-    for (let method of methods) {
-
-      for (let url of urls) {
+      for (let url of [].concat(URLS_200, URLS_500)) {
 
         describe(`${method} ${url}`, () => {
 

@@ -9,7 +9,7 @@ Log.createHandlers = function(server) {
 
   server.use((request, response, next) => {
     // this.info('- %s %s\n\n%s\n', request.method, request.url, Utilities.inspect(request.params))
-    this.info('- %s %s', request.method, request.url)
+    this.debug('- %s %s', request.method, request.url)
     next()
   })
 

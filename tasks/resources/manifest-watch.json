@@ -1,0 +1,18 @@
+{
+  "exec": "jake manifest:create",
+  "ext": "css eot finished html ico js json otf svg ttf woff woff2",
+  "ignore": [],
+  "ignoreRoot": [
+    ".git",
+    "node_modules"
+  ],
+  "quiet": true,
+  "verbose": false,
+  "watch": [
+    "./www/coverage",
+    "./www/resources",
+    "./process/output/bundle-create",
+    "./www/styles",
+    "./www/vendor"
+  ]
+}

@@ -1,13 +1,14 @@
 'use strict'
 
 const Co = require('co')
-// const Promisify = require("es6-promisify")
-// const Redis = require("redis")
-// const Parser = require('redis-info')
+const Utilities = require('util')
 
-const Index = require('../../../index.json')
+const Configuration = require('../configuration')
+// const Build = require('../../build.json')
+const Log = require('../log')
 const Package = require('../../../package.json')
 const Process = require('../process')
+const TwitterAuthorization = require('./systems/twitter-authorization')
 
 class Status {
 
@@ -19,34 +20,55 @@ class Status {
     })
 
     server.get('/api/status', Co.wrap(function* (request, response, next) {
+      Log.debug('- server.get(\'/api/status\', Co.wrap(function* (request, response, next) => { ... })')
 
-      let memory = Process.memoryUsage()
+      try {
 
-      // let storage = Process.env.RUMIL_TWITTER_STORAGE_URL ? Redis.createClient(Process.env.RUMIL_TWITTER_STORAGE_URL) : Redis.createClient()
-      //
-      // storage.Promise = {}
-      // storage.Promise.info = Promisify(storage.info, storage)
-      //
-      // let storageInformation = Parser.parse(yield storage.info())
+        let memory = Process.memoryUsage()
 
-      let status = {
-        'name': Package.name,
-        'now': new Date().toISOString(),
-        'version': `${Package.version}-${Index.value}`,
-        'heap': {
-          'total': memory.heapTotal,
-          'used': memory.heapUsed
+        let authorization = new TwitterAuthorization()
+        authorization.open()
+
+        try {
+
+          let information = yield authorization.info()
+
+          Log.debug('-   information ...\n\n%s\n', Utilities.inspect(information))
+
+          let status = {
+            'name': Package.name,
+            'now': new Date().toISOString(),
+            // 'version': `${Package.version}-${Build.value}`,
+            'version': Package.version,
+            'heap': {
+              'total': memory.heapTotal,
+              'used': memory.heapUsed
+            },
+            'storage': {
+              'uri': Configuration.twitterStorageUri,
+              'version': information.redis_version,
+              'os': information.os
+            }
+          }
+
+          response.send(status)
+          next()
+
         }
-        // ,
-        // 'storage': {
-        //   'uri': Process.env.RUMIL_TWITTER_STORAGE_URL,
-        //   'version': storageInformation.redis_version,
-        //   'os': storageInformation.os
-        // }
-      }
+        finally {
+          authorization.close()
+        }
 
-      response.send(status)
-      next()
+      }
+      catch (error) {
+        Log.error('- server.get(\'/api/status\', Co.wrap(function* (request, response, next) => { ... })')
+        Log.error('-   error.message=%j', error.message)
+        Log.error('-   error.stack ...\n\n%s\n', error.stack)
+
+        response.send(error)
+        next()
+
+      }
 
     }))
 

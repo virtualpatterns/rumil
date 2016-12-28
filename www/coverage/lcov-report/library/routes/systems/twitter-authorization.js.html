@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for library/routes/systems/twitter-authorization.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">library/routes/systems/</a> twitter-authorization.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">42.5% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>17/40</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">50% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>1/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>4/5</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">42.5% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>17/40</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+&nbsp;
+const Promisify = require("es6-promisify");
+const _Twitter = require('node-twitter-api')
+const Utilities = require('util')
+&nbsp;
+const Configuration = require('../../configuration')
+const Log = require('../../log')
+const StoredAuthorization = require('./stored-authorization')
+&nbsp;
+class TwitterAuthorization extends StoredAuthorization {
+&nbsp;
+  constructor(request, response, next) {
+    super(request, response, next)
+  }
+&nbsp;
+  getRequestToken() {
+    return this.request.params.oauth_token
+  }
+&nbsp;
+  getVerifier<span class="fstat-no" title="function not covered" >() {</span>
+<span class="cstat-no" title="statement not covered" >    return this.request.params.oauth_verifier</span>
+  }
+&nbsp;
+  open(uri = Configuration.twitterStorageUri, options = Configuration.twitterStorageOptions) {
+    return super.open(uri, options)
+  }
+&nbsp;
+  *authorize(token = {}) {
+    Log.debug('- TwitterAuthorization.authorize(token) { ... }')
+&nbsp;
+    const Twitter = new _Twitter({
+      'callback': `${Configuration.twitterRedirectUri}?authorizationId=${this.getAuthorizationId()}`,
+      'consumerKey': Configuration.twitterPublicKey,
+      'consumerSecret': Configuration.twitterPrivateKey
+    })
+&nbsp;
+    Twitter.Promise = {}
+    Twitter.Promise.getRequestToken = Promisify(Twitter.getRequestToken, {
+      'multiArgs': true,
+      'thisArg': Twitter
+    })
+    Twitter.Promise.getAccessToken = Promisify(Twitter.getAccessToken, {
+      'multiArgs': true,
+      'thisArg': Twitter
+    })
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.getRequestToken()) {
+&nbsp;
+      let requestToken = yield Twitter.Promise.getRequestToken()
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let [ publicRequestId, privateRequestId, ...parameters ] = requestToken</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   publicRequestId=%j', publicRequestId)</span>
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   privateRequestId=%j', privateRequestId)</span>
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.open()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      try {</span>
+<span class="cstat-no" title="statement not covered" >        yield this.set({</span>
+          'publicRequestId': publicRequestId,
+          'privateRequestId': privateRequestId,
+        })
+      }
+      finally {
+<span class="cstat-no" title="statement not covered" >        this.close()</span>
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.redirect(Twitter.getAuthUrl(publicRequestId))</span>
+&nbsp;
+    }
+    else {
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let data = null</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.open()</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      try {</span>
+<span class="cstat-no" title="statement not covered" >        data = yield this.get()</span>
+      }
+      finally {
+<span class="cstat-no" title="statement not covered" >        this.close()</span>
+      }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   data.publicRequestId=%j', data.publicRequestId)</span>
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   data.privateRequestId=%j', data.privateRequestId)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let accessToken = yield Twitter.Promise.getAccessToken(data.publicRequestId, data.privateRequestId, this.getVerifier())</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      let [ publicAccessId, privateAccessId, ...parameters ] = accessToken</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   publicAccessId=%j', publicAccessId)</span>
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   privateAccessId=%j', privateAccessId)</span>
+<span class="cstat-no" title="statement not covered" >      Log.debug('-   parameters=\n\n%s\n', Utilities.inspect(parameters))</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      yield super.authorize({</span>
+        'publicAccessId': publicAccessId,
+        'privateAccessId': privateAccessId
+      })
+&nbsp;
+    }
+&nbsp;
+  }
+&nbsp;
+}
+&nbsp;
+module.exports = TwitterAuthorization
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 21:57:11 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

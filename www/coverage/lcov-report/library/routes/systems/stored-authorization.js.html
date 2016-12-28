@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for library/routes/systems/stored-authorization.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">library/routes/systems/</a> stored-authorization.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">73.53% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>25/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">62.5% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>5/8</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">57.14% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>4/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">73.53% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>25/34</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+&nbsp;
+const Parser = require('redis-info')
+const Promisify = require("es6-promisify")
+const Redis = require("redis")
+const Utilities = require('util')
+&nbsp;
+const Log = require('../../log')
+const SimpleAuthorization = require('./simple-authorization')
+&nbsp;
+class StoredAuthorization extends SimpleAuthorization {
+&nbsp;
+  constructor(request, response, next) {
+    super(request, response, next)
+  }
+&nbsp;
+  open(uri, options = {}) {
+    Log.debug('- StoredAuthorization.open(%j, options)\n\n%s\n', uri, Utilities.inspect(options))
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!this.storage) {
+&nbsp;
+      options.retry_strategy = options.retry_strategy || ((retry) =&gt; {
+<span class="cstat-no" title="statement not covered" >        Log.warn('- retryFn(retry) { ... }\n\n%s\n', Utilities.inspect(retry))</span>
+<span class="cstat-no" title="statement not covered" >        return new Error(retry.error.message)</span>
+      })
+&nbsp;
+      let storage = uri ? <span class="branch-0 cbranch-no" title="branch not covered" >Redis.createClient(uri, options) </span>: Redis.createClient(options)
+&nbsp;
+      storage.Promise = {}
+      storage.Promise.ping = Promisify(storage.ping, storage)
+      storage.Promise.info = Promisify(storage.info, storage)
+      storage.Promise.set = Promisify(storage.hmset, storage)
+      storage.Promise.get = Promisify(storage.hgetall, storage)
+      storage.Promise.expire = Promisify(storage.expire, storage)
+&nbsp;
+      this.storage = storage
+&nbsp;
+    }
+&nbsp;
+  }
+&nbsp;
+  close() {
+    Log.debug('- StoredAuthorization.close()')
+&nbsp;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (this.storage) {
+      this.storage.quit()
+      delete this.storage
+    }
+&nbsp;
+  }
+&nbsp;
+  *ping<span class="fstat-no" title="function not covered" >() {</span>
+<span class="cstat-no" title="statement not covered" >    Log.debug('- StoredAuthorization.ping()')</span>
+<span class="cstat-no" title="statement not covered" >    yield this.storage.Promise.ping()</span>
+  }
+&nbsp;
+  *info() {
+    Log.debug('- StoredAuthorization.info()')
+    return Parser.parse(yield this.storage.Promise.info())
+  }
+&nbsp;
+  *set<span class="fstat-no" title="function not covered" >(value, seconds = 60) {</span>
+<span class="cstat-no" title="statement not covered" >    Log.debug('- StoredAuthorization.set(value)\n\n%s\n', Utilities.inspect(value))</span>
+<span class="cstat-no" title="statement not covered" >    yield this.storage.Promise.set(this.getAuthorizationId(), value)</span>
+<span class="cstat-no" title="statement not covered" >    yield this.storage.Promise.expire(this.getAuthorizationId(), seconds)</span>
+  }
+&nbsp;
+  *get<span class="fstat-no" title="function not covered" >() {</span>
+<span class="cstat-no" title="statement not covered" >    Log.debug('- StoredAuthorization.get()')</span>
+<span class="cstat-no" title="statement not covered" >    return yield this.storage.Promise.get(this.getAuthorizationId())</span>
+  }
+&nbsp;
+}
+&nbsp;
+module.exports = StoredAuthorization
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Dec 23 2016 21:57:11 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

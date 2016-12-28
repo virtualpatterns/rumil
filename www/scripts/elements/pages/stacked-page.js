@@ -17,7 +17,7 @@ class StackedPage extends Page {
     super.bind()
 
     if (this.getContent().querySelector('#goBack'))
-      this.getContent().querySelector('#goBack').addEventListener('click', this._onGoBack = this.onGoBack.bind(this))
+      this.getContent().querySelector('#goBack').addEventListener('click', this._onGoBack = Co.wrap(this.onGoBack).bind(this))
 
   }
 
@@ -29,19 +29,19 @@ class StackedPage extends Page {
     super.unbind()
   }
 
-  onGoBack() {
+  *onGoBack() {
+    Log.debug('- StackedPage.onGoBack()')
 
-    Co(function* () {
+    // Co(function* () {
 
       try {
-        Log.debug('- StackedPage.onGoBack()')
-        window.application.popPage()
+        yield window.application.popPage()
       }
       catch (error) {
         window.application.showError(error)
       }
 
-    })
+    // })
 
   }
 

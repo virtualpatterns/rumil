@@ -1,16 +1,37 @@
 'use strict'
 
+const Is = require('@pwn/is')
+const Pad = require('pad')
 const Utilities = require('util')
 const Winston = require('winston')
 
 let Log = Object.create(Winston)
 
-Log.format = function(options) {
-
-  const Pad = require('pad')
-  // const Utilities = require('util')
+Log.format = function(...parameters) {
 
   const Process = require('./process')
+
+  let options = null
+
+  switch (parameters.length) {
+    case 0:
+      options = {
+        'level': 'debug',
+        'message': ''
+      }
+      break
+    case 1:
+      options = Is.string(parameters[0]) ? {
+        'level': 'debug',
+        'message': parameters[0]
+      } : parameters[0]
+      break
+    default:
+      options = {
+        'level': parameters.shift(),
+        'message': Utilities.format.apply(Utilities.format, parameters),
+      }
+  }
 
   return Utilities.format(  '%s %d %s %s',
                             new Date().toISOString(),
@@ -57,12 +78,32 @@ Log.removeFile = function(path) {
   return this
 }
 
-Log.inspect = function(object) {
-  this.debug('- Log.inspect(object) { ... }\n\n%s', Utilities.inspect(object))
+Log.inspect = function(...parameters) {
+
+  let level = null
+  let object = null
+
+  switch (parameters.length) {
+    case 0:
+      level = 'debug'
+      object = null
+      break
+    case 1:
+      level = 'debug'
+      object = parameters[0]
+      break
+    default:
+      level = parameters[0]
+      object = parameters[1]
+  }
+
+  this.log(level, '- Log.inspect(object) { ... }\n\n%s\n', Utilities.inspect(object))
+
   return this
+
 }
 
-Log.line = function(level = 'info') {
+Log.line = function(level = 'debug') {
   this.log(level, '-'.repeat(80))
   return this
 }

@@ -7,12 +7,8 @@ const Server = require('./server')
 
 class Application {
 
-  constructor() {
-  }
-
   static start(address, port, staticPath, modulesPath, pidPath) {
-
-    // Log.debug('> Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
+    Log.debug('- Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
 
     Process
       .createPID(pidPath)
@@ -33,18 +29,15 @@ class Application {
       .createServer(staticPath, modulesPath)
       .listen(port, address)
 
-    Log.debug('< Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
+    // Log.debug('< Application.start(%j, %d, %j, %j, %j) { ... }', address, port, Path.trim(staticPath), Path.trim(modulesPath), Path.trim(pidPath))
 
   }
 
   static stop(pidPath) {
-
-    Log.debug('> Application.stop(%j) { ... }', Path.trim(pidPath))
+    Log.debug('- Application.stop(%j) { ... }', Path.trim(pidPath))
 
     if (Process.existsPID(pidPath))
       Process.killPID(pidPath)
-
-    Log.debug('< Application.stop(%j) { ... }', Path.trim(pidPath))
 
   }
 

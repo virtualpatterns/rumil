@@ -1,6 +1,5 @@
 'use strict'
 
-const Co = require('co')
 const Is = require('@pwn/is')
 
 const CountDown = require('../../count-down')
@@ -45,7 +44,6 @@ class CacheElement extends Element {
   onUpdating() {
 
     try {
-
       Log.debug('- CacheElement.onUpdating() this.onUpdatingIndex=%j', this.onUpdatingIndex)
 
       if (this.onUpdatingIndex >= 1)
@@ -69,7 +67,6 @@ class CacheElement extends Element {
   onDownloading() {
 
     try {
-
       Log.debug('- CacheElement.onDownloading()')
 
       this.updateContent({
@@ -87,51 +84,43 @@ class CacheElement extends Element {
 
   }
 
-  onUpdateReady() {
+  *onUpdateReady() {
 
-    let self = this
+    try {
+      Log.debug('- CacheElement.onUpdateReady()')
 
-    Co(function* () {
+      this.updateContent({
+        'status': {
+          'isUpdating': false,
+          'isDownloading': false,
+          'isUpdateRequired': true
+        }
+      })
 
       try {
-
-        Log.debug('- CacheElement.onUpdateReady()')
-
-        self.updateContent({
-          'status': {
-            'isUpdating': false,
-            'isDownloading': false,
-            'isUpdateRequired': true
-          }
-        })
-
-        try {
-          yield CountDown.start(self, '#onUpdateReady', 3)
-        }
-        catch (error) {
-          if (error instanceof IntervalError) {
-            Log.warn('- CacheElement.onUpdateReady()')
-            Log.warn(error)
-          }
-          else
-            throw error
-        }
-
-        window.location.reload(true)
-
+        yield CountDown.start(this, '#onUpdateReady', 3)
       }
       catch (error) {
-        window.application.showError(error)
+        if (error instanceof IntervalError) {
+          Log.warn('- CacheElement.onUpdateReady()')
+          Log.warn(error)
+        }
+        else
+          throw error
       }
 
-    })
+      window.location.reload(true)
+
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
 
   }
 
   onNoUpdate() {
 
     try {
-
       Log.debug('- CacheElement.onNoUpdate()')
 
       this.updateContent({

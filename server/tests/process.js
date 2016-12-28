@@ -11,11 +11,14 @@ const Process = require('../library/process')
 
 const ArgumentError = require('../library/errors/argument-error')
 
-const PID_PATH = Path.join(Process.PID_PATH, `${Package.name}.mocha.pid`)
+const LOGS_PATH = Path.join(__dirname, '..', '..', 'process', 'logs')
+const PIDS_PATH = Path.join(__dirname, '..', '..', 'process', 'pids')
+
+const PID_PATH = Path.join(PIDS_PATH, `${Package.name}.mocha.pid`)
 
 const MODULE_PATH = Path.join(__dirname, 'resources', `process.killPID.js`)
-const MODULE_LOG_PATH = Path.join(Process.LOG_PATH, `process.killPID.log`)
-const MODULE_PID_PATH = Path.join(Process.PID_PATH, `process.killPID.pid`)
+const MODULE_LOG_PATH = Path.join(LOGS_PATH, `process.killPID.log`)
+const MODULE_PID_PATH = Path.join(PIDS_PATH, `process.killPID.pid`)
 
 describe('Process', () => {
 

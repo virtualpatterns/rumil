@@ -20,7 +20,7 @@ class StatusPage extends StackedPage {
 
     this.statusElement.bind()
 
-    this.getContent().querySelector('#goRefresh').addEventListener('click', this._onGoRefresh = this.onGoRefresh.bind(this))
+    this.getContent().querySelector('#goRefresh').addEventListener('click', this._onGoRefresh = Co.wrap(this.onGoRefresh).bind(this))
 
   }
 
@@ -33,33 +33,29 @@ class StatusPage extends StackedPage {
     super.unbind()
   }
 
-  onGoRefresh() {
+  *onGoRefresh() {
+    Log.debug('- StatusPage.onGoRefresh()')
 
-    let self = this
-
-    Co(function* () {
-
-      try {
-        Log.debug('- StatusPage.onGoRefresh()')
-        yield self.statusElement.updateContent()
-      }
-      catch (error) {
-        window.application.showError(error)
-      }
-
-    })
+    try {
+      yield this.statusElement.updateContent()
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
 
   }
 
   onShown(isInitial) {
-    super.onShown(isInitial)
+    Log.debug('- StatusPage.onShown(%s)', isInitial)
 
     let self = this
+    let superFn = super.onShown.bind(self)
 
     Co(function* () {
 
+      superFn(isInitial)
+
       try {
-        Log.debug('- StatusPage.onShown(%s)', isInitial)
         yield self.statusElement.updateContent()
       }
       catch (error) {

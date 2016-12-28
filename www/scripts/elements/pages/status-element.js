@@ -1,9 +1,9 @@
 'use strict'
 
-const Co = require('co')
+// const Co = require('co')
 const _Date = require('datejs')
 const Format = require('human-format')
-const Is = require('@pwn/is')
+// const Is = require('@pwn/is')
 const Request = require('axios')
 
 const Element = require('../../element')
@@ -29,62 +29,55 @@ class StatusElement extends Element {
 
   }
 
-  updateContent(data = {}) {
+  *updateContent(data = {}) {
+    Log.debug('- StatusElement.updateContent(data)')
 
-    let self = this
-    let superFn = super.updateContent
+    try {
 
-    return Co(function* () {
+      self.updateContentCancellation = RequestCancellation.source()
 
-      try {
+      let response = yield Request.get('/api/status', {
+        cancelToken: self.updateContentCancellation.token
+      })
 
-        Log.debug('- StatusElement.updateContent(data)')
+      self.updateContentCancellation = null
 
-        self.updateContentCancellation = RequestCancellation.source()
+      let status = response.data
 
-        let response = yield Request.get('/api/status', {
-          cancelToken: self.updateContentCancellation.token
-        })
+      // Log.debug(status)
 
-        self.updateContentCancellation = null
+      status.nowAsDate = Date.parse(status.now)
+      status.nowAsDateString = status.nowAsDate.toString('MMM d, yyyy')
+      status.nowAsTimeString = status.nowAsDate.toString('h:mm tt')
 
-        let status = response.data
+      status.isUpdateRequired = window.application.version != status.version
 
-        // Log.debug(status)
+      status.heap.totalAsString = Format(status.heap.total, {
+       scale: 'binary',
+       unit: 'B'
+      })
 
-        status.nowAsDate = Date.parse(status.now)
-        status.nowAsDateString = status.nowAsDate.toString('MMM d, yyyy')
-        status.nowAsTimeString = status.nowAsDate.toString('h:mm tt')
+      status.heap.usedAsString = Format(status.heap.used, {
+       scale: 'binary',
+       unit: 'B'
+      })
 
-        status.isUpdateRequired = window.application.version != status.version
+      Log.debug(status)
 
-        status.heap.totalAsString = Format(status.heap.total, {
-         scale: 'binary',
-         unit: 'B'
-        })
+      super.updateContent({
+        'status': status
+      })
 
-        status.heap.usedAsString = Format(status.heap.used, {
-         scale: 'binary',
-         unit: 'B'
-        })
-
-        // Log.debug(status)
-
-        superFn.call(self, {
-          'status': status
-        })
-
+    }
+    catch (error) {
+      if (Request.isCancel(error)) {
+        Log.warn('- StatusElement.updateContent(data)')
+        Log.warn('-   error.message=%j', error.message)
       }
-      catch (error) {
-        if (Request.isCancel(error)) {
-          Log.warn('- StatusElement.updateContent(data)')
-          Log.warn('-   error.message=%j', error.message)
-        }
-        else
-          window.application.showError(error)
-      }
+      else
+        window.application.showError(error)
+    }
 
-    })
   }
 
   bind() {
