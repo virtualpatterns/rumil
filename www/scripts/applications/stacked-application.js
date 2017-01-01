@@ -59,7 +59,7 @@ class StackedApplication extends Application {
 
           let search = Search.parse(window.location.search);
 
-          // Log.debug(search);
+          Log.debug(search);
 
           yield window.application.pushPage(new (search.page ? PageContext(search.page) : Page))
 

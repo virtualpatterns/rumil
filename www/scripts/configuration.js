@@ -1,14 +1,14 @@
 'use strict'
 
-const Utilities = require('util')
+const Request = require('axios')
 
 const Log = require('./log')
 
 class Configuration {
 
-  static assign(configuration) {
-    // Log.debug('- Configuration.assign(configuration) { ... }\n\n%s\n\n', Utilities.inspect(configuration))
-    Object.assign(this, configuration)
+  static *assignPath(path) {
+    Log.debug('- Configuration.assignPath(%j) { ... }', path)
+    Object.assign(this, (yield Request.get(path)).data)
   }
 
 }

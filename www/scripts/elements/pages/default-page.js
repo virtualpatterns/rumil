@@ -5,10 +5,9 @@ const Timeout = require('timer-promise')
 
 const CachePage = require('./cache-page')
 const CountDown = require('../../count-down')
-const GitHubPage = require('./github-page')
-const GooglePage = require('./google-page')
 const Log = require('../../log')
-const Spinner = require('../dialogs/spinner-dialog')
+const SettingsPage = require('./settings-page')
+// const Spinner = require('../dialogs/spinner-dialog')
 const StackedPage = require('./stacked-page')
 const StatusPage = require('./status-page')
 const TestPage = require('./test-page')
@@ -33,6 +32,7 @@ class DefaultPage extends StackedPage {
     if (this.getContent().querySelector('#goCache'))
       this.getContent().querySelector('#goCache').addEventListener('click', this._onGoCache = Co.wrap(this.onGoCache).bind(this))
 
+    this.getContent().querySelector('#goSettings').addEventListener('click', this._onGoSettings = Co.wrap(this.onGoSettings).bind(this))
     this.getContent().querySelector('#goTests').addEventListener('click', this._onGoTests = this.onGoTests.bind(this))
     this.getContent().querySelector('#goCoverage').addEventListener('click', this._onGoCoverage = this.onGoCoverage.bind(this))
     this.getContent().querySelector('#goCountDown').addEventListener('click', this._onGoCountDown = Co.wrap(this.onGoCountDown).bind(this))
@@ -57,10 +57,10 @@ class DefaultPage extends StackedPage {
     // this.getContent().querySelector('#goSpinner').removeEventListener('click', this._onGoSpinner)
     this.getContent().querySelector('#goConfirmation').removeEventListener('click', this._onGoConfirmation)
     this.getContent().querySelector('#goAlert').removeEventListener('click', this._onGoAlert)
-    // this.getContent().querySelector('#goBlink').removeEventListener('click', this._onGoBlink)
     this.getContent().querySelector('#goCountDown').removeEventListener('click', this._onGoCountDown)
     this.getContent().querySelector('#goCoverage').removeEventListener('click', this._onGoCoverage)
     this.getContent().querySelector('#goTests').removeEventListener('click', this._onGoTests)
+    this.getContent().querySelector('#goSettings').removeEventListener('click', this._onGoSettings)
 
     if (this.getContent().querySelector('#goCache'))
       this.getContent().querySelector('#goCache').removeEventListener('click', this._onGoCache)
@@ -93,6 +93,18 @@ class DefaultPage extends StackedPage {
 
     try {
       yield window.application.pushPage(new CachePage())
+    }
+    catch (error) {
+      window.application.showError(error)
+    }
+
+  }
+
+  *onGoSettings() {
+    Log.debug('- DefaultPage.onGoSettings()')
+
+    try {
+      yield window.application.pushPage(new SettingsPage())
     }
     catch (error) {
       window.application.showError(error)
@@ -145,12 +157,6 @@ class DefaultPage extends StackedPage {
     }
 
   }
-
-  // onGoBlink() {
-  //   Log.debug('- DefaultPage.onGoBlink()')
-  //   window.application.pushPage(new BlinkPage())
-  //     .catch((error) => window.application.showError(error))
-  // }
 
   *onGoAlert() {
     Log.debug('- DefaultPage.onGoAlert()')

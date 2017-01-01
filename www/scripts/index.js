@@ -1,10 +1,8 @@
 'use strict'
 
 const Co = require('co')
-const Request = require('axios')
 const Search = require('query-string')
 const Timeout = require('timer-promise')
-const Utilities = require('util')
 
 const ApplicationContext = require.context('./applications', true, /-application\.js/)
 const Configuration = require('./configuration')
@@ -16,10 +14,7 @@ ons.ready(Co.wrap(function* () {
 
   try {
 
-    let response = yield Request.get('/www/configuration.json')
-    let configuration = response.data
-
-    Configuration.assign(configuration)
+    yield Configuration.assignPath('/www/configuration.json')
 
     Log.debug(Configuration)
 

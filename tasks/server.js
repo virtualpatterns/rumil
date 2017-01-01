@@ -22,6 +22,11 @@ namespace('server', () => {
     return ShellQuiet(`node-debug "${SERVER_PATH}" start --configurationPath "${CONFIGURATION_PATH}"`)
   })
 
+  // desc('Inspect the server')
+  // task('inspect', {'async': true}, () => {
+  //   return ShellQuiet(`node --inspect "${SERVER_PATH}" start --configurationPath "${CONFIGURATION_PATH}"`)
+  // })
+
   desc('Run the server')
   task('run', {'async': true}, () => {
     return ShellQuiet(`node "${SERVER_PATH}" start --configurationPath "${CONFIGURATION_PATH}"`)

@@ -11,9 +11,11 @@ const Path = require('../server/library/path')
 const Process = require('../server/library/process')
 const { ShellEcho, ShellQuiet, ShellSilent } = require('./library/shell')
 
+const DATA_PATH = Path.join(__dirname, '..', 'process', 'data')
 const LOG_PATH = Path.join(__dirname, '..', 'process', 'logs', `${Package.name}.jake.log`)
 const RESOURCES_PATH = Path.join(__dirname, 'resources')
 
+FileSystem.mkdirp.sync(DATA_PATH)
 FileSystem.mkdirp.sync(Path.dirname(LOG_PATH))
 
 Log
@@ -41,11 +43,10 @@ namespace('test', () => {
     return ShellQuiet(`istanbul cover "${Path.join(__dirname, '..', 'node_modules', '.bin', '_mocha')}" --dir "${Path.join(__dirname, '..', 'www', 'coverage')}" -- --bail --timeout 0 "${Path.join(__dirname, '..', 'server', 'tests')}"`)
   })
 
-  desc('Test /www')
-  task('www', {'async': true}, () => {
-    return ShellEcho(`mocha-phantomjs --bail --hooks "${Path.join(RESOURCES_PATH, 'hooks.js')}" --ignore-resource-errors http://localhost:8081/www/index.html?page=./test-page.js`)
-    // return ShellSilent('lsp')
-  })
+  // desc('Test /www')
+  // task('www', {'async': true}, () => {
+  //   return ShellEcho(`mocha-phantomjs --bail --hooks "${Path.join(RESOURCES_PATH, 'hooks.js')}" --ignore-resource-errors http://localhost:8081/www/index.html?page=./test-page.js`)
+  // })
 
 })
 
